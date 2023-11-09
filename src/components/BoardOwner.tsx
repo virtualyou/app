@@ -5,20 +5,18 @@ import EventBus from "../common/EventBus";
 import InfoAlert from "./notification/InfoAlert.tsx";
 import NameDisplay from "./display/NameDisplay.tsx";
 import { getNames } from '../services/name.service.ts';
+import AuthService from "../services/auth.service";
+const user = AuthService.getCurrentUser();
 
 const BoardOwner = () => {
     const [content, setContent] = useState("");
     const [names, setNames] = useState([]);
 
     useEffect(() => {
-        let mounted = true;
         getNames()
             .then(items => {
-                if(mounted) {
-                    setNames(items)
-                }
+                setNames(items)
             })
-        return () => mounted = false;
     }, [])
 
     useEffect(() => {
@@ -47,7 +45,7 @@ const BoardOwner = () => {
         <div className="container">
             <header className="jumbotron">
                 <h1 className="display-4">Owner Dashboard</h1>
-                <p>{content}</p>
+                <p>{content} <b>{user.username}</b></p>
                 <p className="lead">This dashboard provides notifications and key data on a single landing page.</p>
                 <InfoAlert note={"Hello Mom, from your favorite Agent, David L Whitehurst"} />
                 <h3 className="font-weight-light">Key Contacts</h3>
