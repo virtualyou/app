@@ -11,7 +11,8 @@ class UserService {
   }
 
   getOwnerBoard() {
-    return axios.get(API_URL + 'owner', { headers: authHeader() });
+    //alert(API_URL + 'owner');
+    return axios.get(API_URL + 'owner');
   }
 
   getAgentBoard() {

@@ -15,7 +15,8 @@ export default defineConfig({
         port: 3000,
         proxy: {
             // proxy all requests starting with /api to localhost:3004
-            '/api': 'http://localhost:3004'
+            '/api': 'http://localhost:3004',
+            '/test': 'http://localhost:3005'
         }
     },
 })

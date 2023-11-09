@@ -2,7 +2,8 @@ import axios from "axios";
 import authHeader from './auth-header';
 
 //const API_URL = import.meta.env.VITE_API_BASEPATH_AUTH; // "http://localhost:3000/api/v1/auth/";
-const API_URL = "http://localhost:3000/api/v1/auth/"
+//const API_URL = "http://localhost:3000/api/v1/auth/"
+const API_URL = "http://localhost:3000/api/v1/auth/";
 class AuthService {
     login(username: string, password: string) {
         return axios
@@ -11,7 +12,7 @@ class AuthService {
                 password
             }, { headers: authHeader() })
             .then(response => {
-                if (response.data.user) {
+                if (response.data.username) {
                     localStorage.setItem("user", JSON.stringify(response.data));
                 }
 

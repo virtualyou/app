@@ -47,7 +47,7 @@ class App extends Component<Props, State> {
         if (user) {
             this.setState({
                 currentUser: user,
-                showOwnerBoard: user.roles.includes(("ROLE_OWNER")),
+                //showOwnerBoard: user.roles.includes(("ROLE_OWNER")),
                 showAgentBoard: user.roles.includes(("ROLE_AGENT")),
                 showMonitorBoard: user.roles.includes(("ROLE_MONITOR")),
                 showAdminBoard: user.roles.includes("ROLE_ADMIN"),
@@ -64,7 +64,7 @@ class App extends Component<Props, State> {
     logOut() {
         AuthService.logout();
         this.setState({
-            showOwnerBoard: false,
+            //showOwnerBoard: false,
             showAgentBoard: false,
             showMonitorBoard: false,
             showAdminBoard: false,
@@ -73,7 +73,7 @@ class App extends Component<Props, State> {
     }
 
     render() {
-        const { currentUser, showOwnerBoard, showAgentBoard, showMonitorBoard, showAdminBoard } = this.state;
+        const { currentUser, showAgentBoard, showMonitorBoard, showAdminBoard } = this.state;
 
         return (
             <div>
@@ -88,18 +88,10 @@ class App extends Component<Props, State> {
                             </Link>
                         </li>
 
-                        {showOwnerBoard && (
-                            <li className="nav-item">
-                                <Link to={"/owner"} className="nav-link">
-                                    Owner
-                                </Link>
-                            </li>
-                        )}
-
                         {showAgentBoard && (
                             <li className="nav-item">
                                 <Link to={"/agent"} className="nav-link">
-                                    Agent
+                                    Dashboard
                                 </Link>
                             </li>
                         )}
@@ -107,7 +99,7 @@ class App extends Component<Props, State> {
                         {showMonitorBoard && (
                             <li className="nav-item">
                                 <Link to={"/monitor"} className="nav-link">
-                                    Monitor
+                                    Dashboard
                                 </Link>
                             </li>
                         )}
@@ -115,15 +107,15 @@ class App extends Component<Props, State> {
                         {showAdminBoard && (
                             <li className="nav-item">
                                 <Link to={"/admin"} className="nav-link">
-                                    Admin Board
+                                    Dashboard
                                 </Link>
                             </li>
                         )}
 
                         {currentUser && (
                             <li className="nav-item">
-                                <Link to={"/user"} className="nav-link">
-                                    User
+                                <Link to={"/owner"} className="nav-link">
+                                    Dashboard
                                 </Link>
                             </li>
                         )}
@@ -133,7 +125,8 @@ class App extends Component<Props, State> {
                         <div className="navbar-nav ml-auto">
                             <li className="nav-item">
                                 <Link to={"/profile"} className="nav-link">
-                                    {currentUser.username}
+                                    {/* currentUser.username */}
+                                    Profile
                                 </Link>
                             </li>
                             <li className="nav-item">
