@@ -1,4 +1,4 @@
-# vy-app
+# vite-mvp
 ![image info](./landing.png)
 
 ## Current Features
