@@ -7,7 +7,7 @@ const BoardAgent = () => {
     const [content, setContent] = useState("");
 
     useEffect(() => {
-        UserService.getAgentBoard().then(
+        UserService.getAdminBoard().then(
             (response) => {
                 setContent(response.data);
             },
