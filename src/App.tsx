@@ -1,27 +1,29 @@
-import { Component } from "react"
-import { Routes, Route, Link } from "react-router-dom"
-import "bootstrap/dist/css/bootstrap.min.css"
-import "./App.css"
+import { Component } from "react";
+import { Routes, Route, Link } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./App.css";
 
-import AuthService from "./services/auth.service"
-import Login from "./components/Login"
-import Register from "./components/Register"
-import Home from "./components/Home"
-import Profile from "./components/Profile.tsx"
+import AuthService from "./services/auth.service";
+import IUser from './types/user.type';
 
-//import Profile from "./components/Profile.tsx";
-//import BoardOwner from "./components/BoardOwner";
-//import BoardModerator from "./components/BoardModerator";
-//import BoardMonitor from "./components/BoardMonitor"
-//import BoardAdmin from "./components/BoardAdmin";
-//import BoardAgent from "./components/BoardAgent";
-//import Documentation from "./components/Documentation";
-// import AuthVerify from "./common/AuthVerify";
+import Login from "./components/Login.tsx";
+import Register from "./components/Register.tsx";
+import Home from "./components/Home.tsx";
+import Profile from "./components/Profile.tsx";
+import BoardOwner from "./components/BoardOwner.tsx";
+import BoardAgent from "./components/BoardAgent.tsx";
+import BoardMonitor from "./components/BoardMonitor.tsx";
+import BoardAdmin from "./components/BoardAdmin.tsx";
+
 import EventBus from "./common/EventBus";
 
 type Props = {};
 
 type State = {
+    showOwnerBoard: boolean,
+    showAgentBoard: boolean,
+    showMonitorBoard: boolean,
+    showAdminBoard: boolean,
     currentUser: IUser | undefined
 }
 
@@ -31,6 +33,10 @@ class App extends Component<Props, State> {
         this.logOut = this.logOut.bind(this);
 
         this.state = {
+            showOwnerBoard: false,
+            showAgentBoard: false,
+            showMonitorBoard: false,
+            showAdminBoard: false,
             currentUser: undefined,
         };
     }
@@ -41,6 +47,10 @@ class App extends Component<Props, State> {
         if (user) {
             this.setState({
                 currentUser: user,
+                showOwnerBoard: user.roles.includes(("ROLE_OWNER")),
+                showAgentBoard: user.roles.includes(("ROLE_AGENT")),
+                showMonitorBoard: user.roles.includes(("ROLE_MONITOR")),
+                showAdminBoard: user.roles.includes("ROLE_ADMIN"),
             });
         }
 
@@ -54,12 +64,16 @@ class App extends Component<Props, State> {
     logOut() {
         AuthService.logout();
         this.setState({
+            showOwnerBoard: false,
+            showAgentBoard: false,
+            showMonitorBoard: false,
+            showAdminBoard: false,
             currentUser: undefined,
         });
     }
 
     render() {
-        const { currentUser  } = this.state;
+        const { currentUser, showOwnerBoard, showAgentBoard, showMonitorBoard, showAdminBoard } = this.state;
 
         return (
             <div>
@@ -74,6 +88,38 @@ class App extends Component<Props, State> {
                             </Link>
                         </li>
 
+                        {showOwnerBoard && (
+                            <li className="nav-item">
+                                <Link to={"/owner"} className="nav-link">
+                                    Owner
+                                </Link>
+                            </li>
+                        )}
+
+                        {showAgentBoard && (
+                            <li className="nav-item">
+                                <Link to={"/agent"} className="nav-link">
+                                    Agent
+                                </Link>
+                            </li>
+                        )}
+
+                        {showMonitorBoard && (
+                            <li className="nav-item">
+                                <Link to={"/monitor"} className="nav-link">
+                                    Monitor
+                                </Link>
+                            </li>
+                        )}
+
+                        {showAdminBoard && (
+                            <li className="nav-item">
+                                <Link to={"/admin"} className="nav-link">
+                                    Admin Board
+                                </Link>
+                            </li>
+                        )}
+
                         {currentUser && (
                             <li className="nav-item">
                                 <Link to={"/user"} className="nav-link">
@@ -85,6 +131,11 @@ class App extends Component<Props, State> {
 
                     {currentUser ? (
                         <div className="navbar-nav ml-auto">
+                            <li className="nav-item">
+                                <Link to={"/profile"} className="nav-link">
+                                    {currentUser.username}
+                                </Link>
+                            </li>
                             <li className="nav-item">
                                 <a href="/login" className="nav-link" onClick={this.logOut}>
                                     LogOut
@@ -101,7 +152,7 @@ class App extends Component<Props, State> {
 
                             <li className="nav-item">
                                 <Link to={"/register"} className="nav-link">
-                                    Sign Up
+                                    Register
                                 </Link>
                             </li>
                         </div>
@@ -115,7 +166,10 @@ class App extends Component<Props, State> {
                         <Route path="/login" element={<Login />} />
                         <Route path="/register" element={<Register />} />
                         <Route path="/profile" element={<Profile />} />
-
+                        <Route path="/owner" element={<BoardOwner />} />
+                        <Route path="/agent" element={<BoardAgent />} />
+                        <Route path="/monitor" element={<BoardMonitor />} />
+                        <Route path="/admin" element={<BoardAdmin />} />
                     </Routes>
                 </div>
 
