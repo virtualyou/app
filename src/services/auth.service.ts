@@ -1,13 +1,15 @@
 import axios from "axios";
+import authHeader from './auth-header';
 
-const API_URL = import.meta.env.VITE_API_BASEPATH_AUTH; // "http://localhost:3000/api/v1/auth/";
+//const API_URL = import.meta.env.VITE_API_BASEPATH_AUTH; // "http://localhost:3000/api/v1/auth/";
+const API_URL = "http://localhost:3000/api/v1/auth/"
 class AuthService {
     login(username: string, password: string) {
         return axios
             .post(API_URL + "signin", {
                 username,
                 password
-            })
+            }, { headers: authHeader() })
             .then(response => {
                 if (response.data.user) {
                     localStorage.setItem("user", JSON.stringify(response.data));
@@ -26,7 +28,7 @@ class AuthService {
             username,
             email,
             password
-        });
+        }, { headers: authHeader() });
     }
 
     getCurrentUser() {

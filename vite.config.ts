@@ -1,24 +1,21 @@
 /// <reference types="vite/client" />
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-const authTarget = JSON.stringify(import.meta.env.VITE_USERAUTH_TARGET)// "http://localhost:3004"
-const testTarget = JSON.stringify(import.meta.env.VITE_TEST_TARGET) // "http://localhost:3005"
+import replace from '@rollup/plugin-replace';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-    plugins: [react()],
+    plugins: [
+        react(),
+        replace({
+            'process.env': JSON.stringify(process.env),
+        }),
+    ],
     server: {
         port: 3000,
         proxy: {
-            '^/api/v1/names': {
-                target: testTarget,
-                changeOrigin: true,
-            },
-            '^/api/v1/auth': {
-                target: authTarget,
-                changeOrigin: true,
-            }
-
-        },
+            // proxy all requests starting with /api to localhost:3004
+            '/api': 'http://localhost:3004'
+        }
     },
 })
