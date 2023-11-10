@@ -5,7 +5,9 @@ import * as Yup from "yup";
 
 import AuthService from "../services/auth.service";
 
-type Props = {};
+interface Props {
+    name: NonNullable<object>;
+}
 
 type State = {
     redirect: string | null,
@@ -34,7 +36,7 @@ export default class Login extends Component<Props, State> {
 
         if (currentUser) {
             this.setState({ redirect: "/profile" });
-        };
+        }
     }
 
     componentWillUnmount() {

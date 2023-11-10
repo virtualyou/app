@@ -4,7 +4,7 @@ import * as Yup from "yup";
 
 import AuthService from "../services/auth.service";
 
-type Props = {};
+type Props = object; //{};
 
 type State = {
     username: string,

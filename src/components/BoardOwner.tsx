@@ -4,7 +4,7 @@ import UserService from "../services/user.service";
 import EventBus from "../common/EventBus";
 import InfoAlert from "./notification/InfoAlert.tsx";
 import NameDisplay from "./display/NameDisplay.tsx";
-import { getNames } from '../services/name.service.ts';
+import NameService from '../services/name.service';
 import AuthService from "../services/auth.service";
 const user = AuthService.getCurrentUser();
 
@@ -13,9 +13,9 @@ const BoardOwner = () => {
     const [names, setNames] = useState([]);
 
     useEffect(() => {
-        getNames()
-            .then(items => {
-                setNames(items)
+        NameService.getNames()
+            .then((response) => {
+                setNames(response.data);
             })
     }, [])
 

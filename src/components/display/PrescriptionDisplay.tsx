@@ -1,6 +1,22 @@
-import { Table } from 'reactstrap';
+import type React from 'react';
+import { Table } from 'reactstrap'
 
-const PrescriptionDisplay = ({ data }) => {
+// Define the type for the Javascript data input into the component
+type Data = {
+    id: number;
+    name: string;
+    rxUnit: string;
+    note: string;
+    item: object;
+    index: number;
+}
+
+// Define the type of the props for the component
+type Props = {
+    data: Data[];
+}
+
+const PrescriptionDisplay: React.FC<Props> = ({ data }) => {
     return (
         <Table striped bordered hover>
             <thead>
@@ -23,6 +39,6 @@ const PrescriptionDisplay = ({ data }) => {
             </tbody>
         </Table>
     );
-};
+}
 
-export default PrescriptionDisplay;
+export default PrescriptionDisplay
