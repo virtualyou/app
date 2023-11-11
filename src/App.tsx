@@ -47,7 +47,7 @@ class App extends Component<Props, State> {
         if (user) {
             this.setState({
                 currentUser: user,
-                //showOwnerBoard: user.roles.includes(("ROLE_OWNER")),
+                showOwnerBoard: user.roles.includes(("ROLE_OWNER")),
                 showAgentBoard: user.roles.includes(("ROLE_AGENT")),
                 showMonitorBoard: user.roles.includes(("ROLE_MONITOR")),
                 showAdminBoard: user.roles.includes("ROLE_ADMIN"),
@@ -64,7 +64,7 @@ class App extends Component<Props, State> {
     logOut() {
         AuthService.logout();
         this.setState({
-            //showOwnerBoard: false,
+            showOwnerBoard: false,
             showAgentBoard: false,
             showMonitorBoard: false,
             showAdminBoard: false,
@@ -73,7 +73,7 @@ class App extends Component<Props, State> {
     }
 
     render() {
-        const { currentUser, showAgentBoard, showMonitorBoard, showAdminBoard } = this.state;
+        const { currentUser, showOwnerBoard, showAgentBoard, showMonitorBoard, showAdminBoard } = this.state;
 
         return (
             <div>
@@ -87,6 +87,14 @@ class App extends Component<Props, State> {
                                 Home
                             </Link>
                         </li>
+
+                        {showOwnerBoard && (
+                            <li className="nav-item">
+                                <Link to={"/owner"} className="nav-link">
+                                    Dashboard
+                                </Link>
+                            </li>
+                        )}
 
                         {showAgentBoard && (
                             <li className="nav-item">
@@ -111,7 +119,7 @@ class App extends Component<Props, State> {
                                 </Link>
                             </li>
                         )}
-
+                        {/*
                         {currentUser && (
                             <li className="nav-item">
                                 <Link to={"/owner"} className="nav-link">
@@ -119,6 +127,7 @@ class App extends Component<Props, State> {
                                 </Link>
                             </li>
                         )}
+                        */}
                     </div>
 
                     {currentUser ? (

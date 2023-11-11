@@ -26,6 +26,10 @@ class UserService {
   getAdminBoard() {
     return axios.get(API_URL + 'admin', { headers: authHeader() });
   }
+
+  getOwner(ownerId: number) {
+    return axios.get(API_URL + 'users/' + ownerId, { headers: authHeader() });
+  }
 }
 
 export default new UserService();
