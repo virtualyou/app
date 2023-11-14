@@ -32,6 +32,19 @@ class AuthService {
         }, { headers: authHeader() });
     }
 
+    registerAgent(username: string, email: string, password: string, dkey: string, ownerid: number) {
+        return axios.post(API_URL + "signup", {
+            username,
+            email,
+            password,
+            dkey,
+            ownerid
+        }, { headers: authHeader() });
+    }
+
+    registerMonitor(username: string, email: string, password: string, dkey: string, ownerId: number) {
+
+    }
     getCurrentUser() {
         const userStr = localStorage.getItem("user");
         if (userStr) return JSON.parse(userStr);

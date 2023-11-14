@@ -16,6 +16,9 @@ import BoardMonitor from "./components/BoardMonitor.tsx";
 import BoardAdmin from "./components/BoardAdmin.tsx";
 
 import EventBus from "./common/EventBus";
+import MyComponent from "./components/MyComponent.tsx";
+import RegisterAgent from "./components/RegisterAgent.tsx";
+import RegisterMonitor from "./components/RegisterMonitor.tsx";
 
 type Props = {};
 
@@ -172,6 +175,10 @@ class App extends Component<Props, State> {
                         <Route path="/agent" element={<BoardAgent />} />
                         <Route path="/monitor" element={<BoardMonitor />} />
                         <Route path="/admin" element={<BoardAdmin />} />
+                        <Route path="/mycomponent" element={<MyComponent />} />
+                        <Route path="/register-agent" element={<RegisterAgent />} />
+                        <Route path="/register-monitor" element={<RegisterMonitor />} />
+
                     </Routes>
                 </div>
 
