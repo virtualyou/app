@@ -6,6 +6,7 @@ import InfoAlert from "./notification/InfoAlert.tsx";
 import NameDisplay from "./display/NameDisplay.tsx";
 import NameService from '../services/name.service';
 import AuthService from "../services/auth.service";
+
 const user = AuthService.getCurrentUser();
 
 const BoardOwner = () => {
