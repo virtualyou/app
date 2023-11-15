@@ -33,6 +33,7 @@ class AuthService {
     }
 
     registerAgent(username: string, email: string, password: string, dkey: string, ownerid: number) {
+        // must generate deterministic key from owner mnemonic and verify against the registrant's query parameter dkey
         return axios.post(API_URL + "signup", {
             username,
             email,
@@ -42,13 +43,9 @@ class AuthService {
         }, { headers: authHeader() });
     }
 
-    registerMonitor(username: string, email: string, password: string, dkey: string, ownerId: number) {
-
-    }
     getCurrentUser() {
         const userStr = localStorage.getItem("user");
         if (userStr) return JSON.parse(userStr);
-
         return null;
     }
 }

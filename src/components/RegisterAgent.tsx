@@ -193,7 +193,6 @@ export default class RegisterAgent extends Component<Props, State> {
                             )}
                         </Form>
                     </Formik>
-                    <p>{key}</p>
                 </div>
             </div>
         );

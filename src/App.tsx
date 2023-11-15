@@ -4,7 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
 import AuthService from "./services/auth.service";
-import IUser from './types/user.type';
+import User from './types/user.type';
 
 import Login from "./components/Login.tsx";
 import Register from "./components/Register.tsx";
@@ -27,7 +27,7 @@ type State = {
     showAgentBoard: boolean,
     showMonitorBoard: boolean,
     showAdminBoard: boolean,
-    currentUser: IUser | undefined
+    currentUser: User | undefined
 }
 
 class App extends Component<Props, State> {
