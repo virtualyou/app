@@ -1,32 +1,62 @@
 import MailService from "../services/mail.service.ts"
 import { useState } from "react";
-import { Button, Modal } from 'react-bootstrap';
+import { Button, Form, Modal } from 'react-bootstrap';
 
+interface FormValues {
+    name: string;
+    email: string;
+}
 const Home = () => {
     const [showAgentModal, setShowAgentModal] = useState(false);
     const [showMonitorModal, setShowMonitorModal] = useState(false);
 
+    // agent modal state
+    const handleAgentSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const formData = new FormData(event.currentTarget);
+        const formAgentValues: FormValues = {
+            name: formData.get('name') as string,
+            email: formData.get('email') as string,
+        };
+        console.log(formAgentValues);
+        MailService.emailAgent(formAgentValues);
+        handleAgentClose();
+    };
+
     const handleAgentClose = () => {
         return setShowAgentModal(false);
     }
+
     const handleAgentShow = () => {
         return setShowAgentModal(true);
     }
 
+    const sendAgentInvite = () => {
+        handleAgentShow();
+    }
+
+    // monitor modal state
+    const handleMonitorSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const formData = new FormData(event.currentTarget);
+        const formMonitorValues: FormValues = {
+            name: formData.get('name') as string,
+            email: formData.get('email') as string,
+        };
+        console.log(formMonitorValues);
+        MailService.emailMonitor(formMonitorValues);
+        handleMonitorClose();
+    };
+
     const handleMonitorClose = () => {
         return setShowMonitorModal(false);
     }
+
     const handleMonitorShow = () => {
         return setShowMonitorModal(true);
     }
 
-    const sendAgentInvite = () => {
-        MailService.emailAgent();
-        handleAgentShow();
-    }
-
     const sendMonitorInvite = () => {
-        MailService.emailMonitor();
         handleMonitorShow();
     }
 
@@ -62,12 +92,24 @@ const Home = () => {
                                     <Modal.Header closeButton>
                                         <Modal.Title>Monitor Invitation Notification</Modal.Title>
                                     </Modal.Header>
-                                    <Modal.Body>An email invitation has been sent!</Modal.Body>
-                                    <Modal.Footer>
-                                        <Button variant="secondary" onClick={handleMonitorClose}>
-                                            Close
-                                        </Button>
-                                    </Modal.Footer>
+                                    <Modal.Body>
+                                        <Form onSubmit={handleMonitorSubmit}>
+                                            <Form.Group controlId="formBasicName">
+                                                <Form.Label>Name</Form.Label>
+                                                <Form.Control type="text" placeholder="Enter name" name="name" />
+                                            </Form.Group>
+                                            <Form.Group controlId="formBasicEmail">
+                                                <Form.Label><b>Monitor Email</b></Form.Label>
+                                                <Form.Control type="email" placeholder="Enter email" name="email" />
+                                            </Form.Group>
+                                            <Button variant="primary" type="submit">
+                                                Submit
+                                            </Button>&nbsp;
+                                            <Button variant="secondary" onClick={handleMonitorClose}>
+                                                Cancel
+                                            </Button>
+                                        </Form>
+                                    </Modal.Body>
                                 </Modal>
                             </p>
                         </div>
@@ -82,17 +124,31 @@ const Home = () => {
                                     <Modal.Header closeButton>
                                         <Modal.Title>Agent Invitation Notification</Modal.Title>
                                     </Modal.Header>
-                                    <Modal.Body>An email invitation has been sent!</Modal.Body>
-                                    <Modal.Footer>
-                                        <Button variant="secondary" onClick={handleAgentClose}>
-                                            Close
-                                        </Button>
-                                    </Modal.Footer>
+                                    <Modal.Body>
+                                        <Form onSubmit={handleAgentSubmit}>
+                                            <Form.Group controlId="formBasicName">
+                                                <Form.Label>Name</Form.Label>
+                                                <Form.Control type="text" placeholder="Enter name" name="name" />
+                                            </Form.Group>
+                                            <Form.Group controlId="formBasicEmail">
+                                                <Form.Label><b>Agent Email</b></Form.Label>
+                                                <Form.Control type="email" placeholder="Enter email" name="email" />
+                                            </Form.Group>
+                                            <Button variant="primary" type="submit">
+                                                Submit
+                                            </Button>&nbsp;
+                                            <Button variant="secondary" onClick={handleAgentClose}>
+                                                Cancel
+                                            </Button>
+                                        </Form>
+                                    </Modal.Body>
                                 </Modal>
                             </p>
                         </div>
                     </div>
                 </div>
+                <p></p>
+                <p></p>
                 <footer className="container">
                     <p>&copy; VirtualYou and David L Whitehurst 2023</p>
                 </footer>
