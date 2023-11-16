@@ -1,43 +1,34 @@
+/**
+ * VirtualYou
+ * @license Apache-2.0
+ * @author David L Whitehurst
+ */
+
 import { useLocation } from 'react-router-dom';
-import { Component } from "react";
-import { Formik, Field, Form, ErrorMessage } from "formik";
+import {keysMatch} from "../utility/KeyValidator.ts";
+import {ErrorMessage, Field, Form, Formik} from "formik";
+import AuthService from "../services/auth.service.ts";
+import { useState } from "react";
 import * as Yup from "yup";
 
-import AuthService from "../services/auth.service";
+const RegisterAgent = () => {
+    const query = new URLSearchParams(useLocation().search);
+    const dkey = query.get('dkey');
 
-type Props = object; //{};
+    const [ownerId, setOwnerId] = useState(new URLSearchParams(useLocation().search).get('ownerid'));
+    //const id = ownerid;
+    const [successful, setSuccessful] = useState(false);
+    const [message, setMessage] = useState("");
 
-type State = {
-    username: string,
-    email: string,
-    password: string,
-    dkey: string,
-    ownerid: number,
-    successful: boolean,
-    message: string
-};
 
-//const RegisterAgent = () => {
+    const initialValues = {
+        username: "",
+        email: "",
+        password: "",
+        idOwner: ownerId
+    };
 
-export default class RegisterAgent extends Component<Props, State> {
-
-    constructor(props: Props) {
-        super(props);
-
-        this.handleRegister = this.handleRegister.bind(this);
-
-        this.state = {
-            username: "",
-            email: "",
-            password: "",
-            dkey: "",
-            ownerid: 0,
-            successful: false,
-            message: ""
-        };
-    }
-
-    validationSchema() {
+    const validationSchema = () => {
         return Yup.object().shape({
             username: Yup.string()
                 .test(
@@ -63,39 +54,22 @@ export default class RegisterAgent extends Component<Props, State> {
                 )
                 .required("This field is required!"),
         });
-    }
+    };
 
-    handleRegister(formValue: { username: string; email: string; password: string }) {
-        const { username, email, password } = formValue;
-        const query = new URLSearchParams(useLocation().search);
-        let key = query.get('dkey');
-        let id = query.get('ownerid');
-
-        if (!key) {
-            key = "123456";
-        }
-
-        if (!id) {
-            id = "0";
-        }
-
-        this.setState({
-            message: "",
-            successful: false
-        });
-
-        AuthService.registerAgent(
+    const handleRegister = (formValue: { username: string; email: string; password: string; idOwner: string }) => {
+        const { username, email, password, idOwner } = formValue;
+        setMessage("");
+        setSuccessful(false);
+        console.log("idOwner is " + idOwner); // undefined
+        AuthService.registerHelper(
             username,
             email,
             password,
-            key,
-            Number(id),
+            parseInt(idOwner),
         ).then(
             response => {
-                this.setState({
-                    message: response.data.message,
-                    successful: true
-                });
+                setMessage(response.data.message);
+                setSuccessful(true);
             },
             error => {
                 const resMessage =
@@ -105,22 +79,14 @@ export default class RegisterAgent extends Component<Props, State> {
                     error.message ||
                     error.toString();
 
-                this.setState({
-                    successful: false,
-                    message: resMessage,
-                });
+                setMessage(resMessage);
+                setSuccessful(false);
             }
         );
-    }
+    };
 
-    render() {
-        const { successful, message } = this.state;
-
-        const initialValues = {
-            username: "",
-            email: "",
-            password: "",
-        };
+    //if (keysMatch("123",dkey || "")) {
+    if (keysMatch("123","123")) {
 
         return (
             <div className="col-md-12">
@@ -133,15 +99,16 @@ export default class RegisterAgent extends Component<Props, State> {
                     <h5>Agent Register</h5>
                     <Formik
                         initialValues={initialValues}
-                        validationSchema={this.validationSchema}
-                        onSubmit={this.handleRegister}
+                        validationSchema={validationSchema}
+                        onSubmit={handleRegister}
                     >
                         <Form>
                             {!successful && (
                                 <div>
                                     <div className="form-group">
+                                        <Field type="hidden" name="idOwner" className="form-control"/>
                                         <label htmlFor="username"> Username </label>
-                                        <Field name="username" type="text" className="form-control" />
+                                        <Field name="username" type="text" className="form-control"/>
                                         <ErrorMessage
                                             name="username"
                                             component="div"
@@ -151,7 +118,7 @@ export default class RegisterAgent extends Component<Props, State> {
 
                                     <div className="form-group">
                                         <label htmlFor="email"> Email </label>
-                                        <Field name="email" type="email" className="form-control" />
+                                        <Field name="email" type="email" className="form-control"/>
                                         <ErrorMessage
                                             name="email"
                                             component="div"
@@ -196,5 +163,22 @@ export default class RegisterAgent extends Component<Props, State> {
                 </div>
             </div>
         );
+    } else {
+        return (
+            <div className="col-md-12">
+                <div className="card card-container">
+                    <img
+                        src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
+                        alt="profile-img"
+                        className="profile-img-card"
+                    />
+                    <div className="alert alert-warning" role="alert">
+                        You are not authorized to register as an Agent.
+                    </div>
+                </div>
+            </div>
+        );
     }
-}
+};
+
+export default RegisterAgent;

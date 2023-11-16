@@ -25,22 +25,23 @@ class AuthService {
     }
 
     register(username: string, email: string, password: string) {
-        return axios.post(API_URL + "signup", {
-            username,
-            email,
-            password
-        }, { headers: authHeader() });
-    }
-
-    registerAgent(username: string, email: string, password: string, dkey: string, ownerid: number) {
-        // must generate deterministic key from owner mnemonic and verify against the registrant's query parameter dkey
+        const ownerId = 0;
         return axios.post(API_URL + "signup", {
             username,
             email,
             password,
-            dkey,
-            ownerid
+            ownerId
         }, { headers: authHeader() });
+    }
+
+    registerHelper(username: string, email: string, password: string, ownerId: number) {
+        // must generate deterministic key from owner mnemonic and verify against the registrant's query parameter dkey
+            return axios.post(API_URL + "signup", {
+                username,
+                email,
+                password,
+                ownerId
+            }, { headers: authHeader() });
     }
 
     getCurrentUser() {
