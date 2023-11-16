@@ -1,6 +1,17 @@
+/**
+ * VirtualYou
+ * @license Apache-2.0
+ * @author David L Whitehurst
+ */
 import AuthService from "../services/auth.service.ts";
 import forge from "node-forge";
 
+/**
+ * This is a function that prepares an AWS SES email body.
+ *
+ * @param {string} name - The person the email is addressing.
+ * @returns {string} The text email body.
+ */
 export function getAgentBody(name: string) {
     const currentUser = AuthService.getCurrentUser();
     const id = currentUser.id;
