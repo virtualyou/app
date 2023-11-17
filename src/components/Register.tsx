@@ -4,14 +4,16 @@
  * @author David L Whitehurst
  */
 
-import { Component } from "react";
+import {Component} from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import HcaptchaComponent from "./HcaptchaComponent.tsx";
 
 import AuthService from "../services/auth.service";
 
-type Props = object; //{};
+interface Props {
+    // Define the props that your component expects
+}
 
 type State = {
     username: string,
@@ -22,6 +24,7 @@ type State = {
 };
 
 export default class Register extends Component<Props, State> {
+
     constructor(props: Props) {
         super(props);
         this.handleRegister = this.handleRegister.bind(this);
@@ -31,9 +34,12 @@ export default class Register extends Component<Props, State> {
             email: "",
             password: "",
             successful: false,
-            message: ""
+            message: "",
         };
     }
+
+
+    private siteKey = import.meta.env.VITE_SITE_KEY;
 
     validationSchema() {
         return Yup.object().shape({
@@ -163,7 +169,7 @@ export default class Register extends Component<Props, State> {
                                     </div>
                                     <div>
                                         {/* Your page content */}
-                                        <HcaptchaComponent sitekey="a479d0e0-7eda-41cf-9842-c69d35fb1f15" />
+                                        <HcaptchaComponent sitekey={this.siteKey} />
                                     </div>
                                 </div>
                             )}

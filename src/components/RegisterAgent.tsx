@@ -20,6 +20,9 @@ const RegisterAgent = () => {
     const [successful, setSuccessful] = useState(false);
     const [message, setMessage] = useState("");
     const [decision, setDecision] = useState<boolean | null>(null);
+    const [siteKey, setSiteKey] = useState<string>("");
+
+    setSiteKey(import.meta.env.VITE_SITE_KEY);
 
     useEffect(() => {
         keysMatchForAgent(parseInt(altId || "0"), dkey || "").then(setDecision);
@@ -155,7 +158,7 @@ const RegisterAgent = () => {
                                     </div>
                                     <div>
                                         {/* Your page content */}
-                                        <HcaptchaComponent sitekey="a479d0e0-7eda-41cf-9842-c69d35fb1f15" />
+                                        <HcaptchaComponent sitekey={siteKey} />
                                     </div>
                                 </div>
                             )}

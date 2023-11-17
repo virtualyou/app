@@ -24,7 +24,6 @@ import EventBus from "./common/EventBus";
 import RegisterAgent from "./components/RegisterAgent.tsx";
 import RegisterMonitor from "./components/RegisterMonitor.tsx";
 
-//type Props = {};
 interface Props {
     // Define the props that your component expects
 }

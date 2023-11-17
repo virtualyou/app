@@ -12,7 +12,7 @@ import * as Yup from "yup";
 import AuthService from "../services/auth.service";
 
 interface Props {
-    //name: NonNullable<object>;
+    // props would be here
 }
 
 type State = {
