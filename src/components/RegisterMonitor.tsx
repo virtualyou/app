@@ -5,20 +5,28 @@
  */
 
 import { useLocation } from 'react-router-dom';
-import {keysMatch} from "../utility/KeyValidator.ts";
+import {keysMatchForMonitor} from "../utility/KeyValidator.ts";
 import {ErrorMessage, Field, Form, Formik} from "formik";
 import AuthService from "../services/auth.service.ts";
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import * as Yup from "yup";
 
 const RegisterMonitor = () => {
     const query = new URLSearchParams(useLocation().search);
     const dkey = query.get('dkey');
+    const altId = query.get('ownerid');
     const [ownerId, setOwnerId] = useState(new URLSearchParams(useLocation().search).get('ownerid'));
-    //const id = ownerid;
     const [successful, setSuccessful] = useState(false);
     const [message, setMessage] = useState("");
+    const [decision, setDecision] = useState<boolean | null>(null);
 
+    useEffect(() => {
+        keysMatchForMonitor(parseInt(altId || "0"), dkey || "").then(setDecision);
+    }, []);
+
+    if (!ownerId) {
+        setOwnerId("0");
+    }
 
     const initialValues = {
         username: "",
@@ -59,7 +67,6 @@ const RegisterMonitor = () => {
         const { username, email, password, idOwner } = formValue;
         setMessage("");
         setSuccessful(false);
-        console.log("idOwner is " + idOwner);
         AuthService.registerHelper(
             username,
             email,
@@ -84,9 +91,11 @@ const RegisterMonitor = () => {
         );
     };
 
-    //if (keysMatch("123",dkey || "")) {
-    if (keysMatch("123","123")) {
+    if (decision === null) {
+        return <div>Loading ...</div>
+    }
 
+    if (decision) {
         return (
             <div className="col-md-12">
                 <div className="card card-container">
@@ -172,7 +181,7 @@ const RegisterMonitor = () => {
                         className="profile-img-card"
                     />
                     <div className="alert alert-warning" role="alert">
-                        You are not authorized to register as an Monitor.
+                        You are not authorized to register as a Monitor.
                     </div>
                 </div>
             </div>

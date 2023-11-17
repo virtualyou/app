@@ -18,7 +18,6 @@ const Home = () => {
             name: formData.get('name') as string,
             email: formData.get('email') as string,
         };
-        console.log(formAgentValues);
         MailService.emailAgent(formAgentValues);
         handleAgentClose();
     };
@@ -43,7 +42,6 @@ const Home = () => {
             name: formData.get('name') as string,
             email: formData.get('email') as string,
         };
-        console.log(formMonitorValues);
         MailService.emailMonitor(formMonitorValues);
         handleMonitorClose();
     };
