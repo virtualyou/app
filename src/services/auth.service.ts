@@ -34,13 +34,15 @@ class AuthService {
         }, { headers: authHeader() });
     }
 
-    registerHelper(username: string, email: string, password: string, ownerId: number) {
+    registerHelper(username: string, email: string, password: string, ownerId: number, role: string) {
         // must generate deterministic key from owner mnemonic and verify against the registrant's query parameter dkey
+            const roles: string[] = [role];
             return axios.post(API_URL + "signup", {
                 username,
                 email,
                 password,
-                ownerId
+                ownerId,
+                roles
             }, { headers: authHeader() });
     }
 

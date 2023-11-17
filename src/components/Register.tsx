@@ -1,6 +1,7 @@
 import { Component } from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import HcaptchaComponent from "./HcaptchaComponent.tsx";
 
 import AuthService from "../services/auth.service";
 
@@ -153,6 +154,10 @@ export default class Register extends Component<Props, State> {
 
                                     <div className="form-group">
                                         <button type="submit" className="btn btn-primary btn-block">Sign Up</button>
+                                    </div>
+                                    <div>
+                                        {/* Your page content */}
+                                        <HcaptchaComponent sitekey="a479d0e0-7eda-41cf-9842-c69d35fb1f15" />
                                     </div>
                                 </div>
                             )}
