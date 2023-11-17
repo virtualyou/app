@@ -1,3 +1,9 @@
+/**
+ * VirtualYou
+ * @license Apache-2.0
+ * @author David L Whitehurst
+ */
+
 import { SES } from "@aws-sdk/client-ses";
 import { getParams } from "../utility/EmailParams.ts";
 import { getAgentBody, getMonitorBody } from "../utility/EmailBody.ts"

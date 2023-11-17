@@ -1,3 +1,9 @@
+/**
+ * VirtualYou
+ * @license Apache-2.0
+ * @author David L Whitehurst
+ */
+
 import React from 'react';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
 
@@ -14,6 +20,7 @@ const HcaptchaComponent: React.FC<Props> = (props) => {
     };
 
     const handleVerificationSuccess = (token: string, ekey: string) => {
+        console.log(ekey);
         console.log(`hCaptcha Token: ${token}`);
     };
 

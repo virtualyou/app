@@ -1,3 +1,9 @@
+/**
+ * VirtualYou
+ * @license Apache-2.0
+ * @author David L Whitehurst
+ */
+
 const eventBus = {
     on(event: string, callback: EventListener) {
         document.addEventListener(event, (e) => callback(e));

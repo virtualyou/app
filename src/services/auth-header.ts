@@ -1,3 +1,9 @@
+/**
+ * VirtualYou
+ * @license Apache-2.0
+ * @author David L Whitehurst
+ */
+
 export default function authHeader() {
     const userStr = localStorage.getItem("user");
     let user = null;

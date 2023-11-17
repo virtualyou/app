@@ -1,3 +1,9 @@
+/**
+ * VirtualYou
+ * @license Apache-2.0
+ * @author David L Whitehurst
+ */
+
 import { Component } from "react";
 import { Routes, Route, Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -18,7 +24,10 @@ import EventBus from "./common/EventBus";
 import RegisterAgent from "./components/RegisterAgent.tsx";
 import RegisterMonitor from "./components/RegisterMonitor.tsx";
 
-type Props = {};
+//type Props = {};
+interface Props {
+    // Define the props that your component expects
+}
 
 type State = {
     showOwnerBoard: boolean,

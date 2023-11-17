@@ -1,3 +1,9 @@
+/**
+ * VirtualYou
+ * @license Apache-2.0
+ * @author David L Whitehurst
+ */
+
 import MailService from "../services/mail.service.ts"
 import { useState } from "react";
 import { Button, Form, Modal } from 'react-bootstrap';
