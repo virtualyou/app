@@ -16,7 +16,9 @@ const HcaptchaComponent: React.FC<Props> = (props) => {
     const captchaRef = React.useRef<HCaptcha>(null);
 
     const onLoad = () => {
-        captchaRef.current.execute();
+        if (captchaRef.current) {
+            captchaRef.current.execute();
+        }
     };
 
     const handleVerificationSuccess = (token: string, ekey: string) => {

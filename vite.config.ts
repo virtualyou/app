@@ -14,9 +14,10 @@ export default defineConfig({
         ],
         server: {
             port: parseInt(process.env.SERVER_PORT),
+//            cors: true
             proxy: {
-                '/api': process.env.PROXY_API, // https://userauth.virtualyou.info (localhost:3004)
-                '/test': process.env.PROXY_TEST // https://test.virtualyou.info (localhost:3005)
+                '/userauth': process.env.PROXY_API,
+                '/personal': process.env.PROXY_PERSONAL,
             }
-        },
+        }
 })

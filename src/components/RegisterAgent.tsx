@@ -32,7 +32,14 @@ const RegisterAgent = () => {
         setOwnerId("0");
     }
 
-    const initialValues = {
+    interface Values {
+        username: string,
+        email: string,
+        password: string,
+        idOwner: any
+    }
+
+    const initialValues: Values = {
         username: "",
         email: "",
         password: "",

@@ -8,11 +8,11 @@ import axios from "axios";
 import authHeader from './auth-header';
 
 const APP_BASEPATH = import.meta.env.VITE_APP_BASEPATH; // http://localhost:3000
-const API_URL = APP_BASEPATH + "/api/v1/auth/";
+const AUTH_URL = APP_BASEPATH + "/userauth/v1/auth/";
 class AuthService {
     login(username: string, password: string) {
         return axios
-            .post(API_URL + "signin", {
+            .post(AUTH_URL + "signin", {
                 username,
                 password
             }, { headers: authHeader() })
@@ -31,7 +31,7 @@ class AuthService {
 
     register(username: string, email: string, password: string) {
         const ownerId = 0;
-        return axios.post(API_URL + "signup", {
+        return axios.post(AUTH_URL + "signup", {
             username,
             email,
             password,
@@ -42,7 +42,7 @@ class AuthService {
     registerHelper(username: string, email: string, password: string, ownerId: number, role: string) {
         // must generate deterministic key from owner mnemonic and verify against the registrant's query parameter dkey
             const roles: string[] = [role];
-            return axios.post(API_URL + "signup", {
+            return axios.post(AUTH_URL + "signup", {
                 username,
                 email,
                 password,
