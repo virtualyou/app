@@ -12,6 +12,7 @@ type Data = {
     id: number;
     name: string;
     phone1: string;
+    email: string;
     item: object;
     index: number;
 }
@@ -28,6 +29,7 @@ const PeepDisplay: React.FC<Props> = ({ data }) => {
             <tr>
                 <th>Id</th>
                 <th>Name</th>
+                <th>Email</th>
                 <th>Phone</th>
             </tr>
             </thead>
@@ -36,6 +38,7 @@ const PeepDisplay: React.FC<Props> = ({ data }) => {
                 <tr key={index}>
                     <td>{item.id}</td>
                     <td>{item.name}</td>
+                    <td>{item.email}</td>
                     <td>{item.phone1}</td>
                 </tr>
             ))}

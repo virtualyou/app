@@ -19,7 +19,7 @@ type Data = {
 type Props = {
     data: Data[];
 }
-const NameDisplay: React.FC<Props> = ({ data }) => {
+const PeepDisplay: React.FC<Props> = ({ data }) => {
     return (
         <Table striped bordered hover>
             <thead>
@@ -40,4 +40,4 @@ const NameDisplay: React.FC<Props> = ({ data }) => {
     );
 };
 
-export default NameDisplay;
+export default PeepDisplay;

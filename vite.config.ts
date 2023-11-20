@@ -18,6 +18,7 @@ export default defineConfig({
             proxy: {
                 '/userauth': process.env.PROXY_API,
                 '/personal': process.env.PROXY_PERSONAL,
+                '/medical': process.env.PROXY_MEDICAL
             }
         }
 })

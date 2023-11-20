@@ -9,8 +9,8 @@ import { useState, useEffect } from "react";
 import UserService from "../services/user.service";
 import EventBus from "../common/EventBus";
 import AuthService from "../services/auth.service";
-import NameDisplay from "./display/NameDisplay.tsx";
-import NameService from '../services/name.service';
+import PeepDisplay from "./display/PeepDisplay.tsx";
+import PersonalService from '../services/personal.service.ts';
 
 const user = AuthService.getCurrentUser();
 
@@ -25,12 +25,12 @@ interface Owner {
 const BoardAgent = () => {
     const [content, setContent] = useState("");
     const [owner, setOwner] = useState<Owner | null>(null);
-    const [names, setNames] = useState([]);
+    const [peeps, setPeeps] = useState([]);
 
     useEffect(() => {
-        NameService.getNames()
+        PersonalService.getPeeps()
             .then((response) => {
-                setNames(response.data);
+                setPeeps(response.data);
             })
     }, [])
 
@@ -89,7 +89,7 @@ const BoardAgent = () => {
                 <p>{content} <b>{user.username}</b> is agent for:</p>
                 <p>Owner: {owner.username} ({owner.id})</p>
                 <h3 className="font-weight-light">Owner Contacts</h3>
-                <NameDisplay data={names} />
+                <PeepDisplay data={peeps} />
             </header>
         </div>
     );

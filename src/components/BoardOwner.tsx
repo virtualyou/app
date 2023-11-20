@@ -9,20 +9,30 @@ import { useState, useEffect } from "react";
 import UserService from "../services/user.service";
 import EventBus from "../common/EventBus";
 import InfoAlert from "./notification/InfoAlert.tsx";
-import NameDisplay from "./display/NameDisplay.tsx";
-import NameService from '../services/name.service';
+import PeepDisplay from "./display/PeepDisplay.tsx";
+import PersonalService from '../services/personal.service.ts';
+import MedicalService from "../services/medical.service.ts";
 import AuthService from "../services/auth.service";
+import PrescriptionDisplay from "./display/PrescriptionDisplay.tsx";
 
 const user = AuthService.getCurrentUser();
 
 const BoardOwner = () => {
     const [content, setContent] = useState("");
-    const [names, setNames] = useState([]);
+    const [peeps, setPeeps] = useState([]);
+    const [prescriptions, setPrescriptions] = useState([]);
 
     useEffect(() => {
-        NameService.getNames()
+        PersonalService.getPeeps()
             .then((response) => {
-                setNames(response.data);
+                setPeeps(response.data);
+            })
+    }, [])
+
+    useEffect(() => {
+        MedicalService.getPrescriptions()
+            .then((response) => {
+                setPrescriptions(response.data);
             })
     }, [])
 
@@ -56,7 +66,9 @@ const BoardOwner = () => {
                 <p className="lead">This dashboard provides notifications and key data on a single landing page.</p>
                 <InfoAlert note={"Hello Mom, from your favorite Agent, David L Whitehurst"} />
                 <h3 className="font-weight-light">Key Contacts</h3>
-                <NameDisplay data={names} />
+                <PeepDisplay data={peeps} />
+                <h3 className="font-weight-light">Prescriptions</h3>
+                <PrescriptionDisplay data={prescriptions} />
             </header>
         </div>
     );
