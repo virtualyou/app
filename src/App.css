@@ -82,3 +82,7 @@ label {
 .vy-p-top-margin {
   margin-top: 30px;
 }
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: yellow;
+}

@@ -14,11 +14,12 @@ export default defineConfig({
         ],
         server: {
             port: parseInt(process.env.SERVER_PORT),
-//            cors: true
             proxy: {
-                '/userauth': process.env.PROXY_API,
+                '/userauth': process.env.PROXY_AUTH,
                 '/personal': process.env.PROXY_PERSONAL,
-                '/medical': process.env.PROXY_MEDICAL
+                '/medical': process.env.PROXY_MEDICAL,
+                '/financial': process.env.PROXY_FINANCIAL,
+                '/administration': process.env.PROXY_ADMINISTRATION
             }
         }
 })

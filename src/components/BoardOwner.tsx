@@ -13,7 +13,12 @@ import PeepDisplay from "./display/PeepDisplay.tsx";
 import PersonalService from '../services/personal.service.ts';
 import MedicalService from "../services/medical.service.ts";
 import AuthService from "../services/auth.service";
+import FinancialService from "../services/financial.service.ts";
+import AdministrationService from "../services/administration.service.ts";
 import PrescriptionDisplay from "./display/PrescriptionDisplay.tsx";
+import AssetDisplay from "./display/AssetDisplay.tsx";
+import DebtDisplay from "./display/DebtDisplay.tsx";
+import TaskDisplay from "./display/TaskDisplay.tsx";
 
 const user = AuthService.getCurrentUser();
 
@@ -21,6 +26,30 @@ const BoardOwner = () => {
     const [content, setContent] = useState("");
     const [peeps, setPeeps] = useState([]);
     const [prescriptions, setPrescriptions] = useState([]);
+    const [assets, setAssets] = useState([]);
+    const [debts, setDebts] = useState([]);
+    const [tasks, setTasks] = useState([]);
+
+    useEffect(() => {
+        AdministrationService.getTasks()
+            .then((response) => {
+                setTasks(response.data);
+            })
+    }, [])
+
+    useEffect(() => {
+        FinancialService.getAssets()
+            .then((response) => {
+                setAssets(response.data);
+            })
+    }, [])
+
+    useEffect(() => {
+        FinancialService.getDebts()
+            .then((response) => {
+                setDebts(response.data);
+            })
+    }, [])
 
     useEffect(() => {
         PersonalService.getPeeps()
@@ -65,10 +94,17 @@ const BoardOwner = () => {
                 <p>{content} <b>{user.username}</b></p>
                 <p className="lead">This dashboard provides notifications and key data on a single landing page.</p>
                 <InfoAlert note={"Hello Mom, from your favorite Agent, David L Whitehurst"} />
+                <h3 className="font-weight-light">Tasks</h3>
+                <TaskDisplay data={tasks} />
                 <h3 className="font-weight-light">Key Contacts</h3>
                 <PeepDisplay data={peeps} />
                 <h3 className="font-weight-light">Prescriptions</h3>
                 <PrescriptionDisplay data={prescriptions} />
+                <h3 className="font-weight-light">Assets</h3>
+                <AssetDisplay data={assets} />
+                <h3 className="font-weight-light">Debts</h3>
+                <DebtDisplay data={debts} />
+
             </header>
         </div>
     );

@@ -6,12 +6,15 @@
 
 import type React from 'react';
 import { Table } from 'reactstrap';
+import './custom.css';
 
 // Define the type for the Javascript data input into the component
 type Data = {
     id: number;
     name: string;
-    payment: string;
+    type: string;
+    due: string;
+    note: string;
     item: object;
     index: number;
 }
@@ -22,12 +25,14 @@ type Props = {
 }
 const DebtDisplay: React.FC<Props> = ({ data }) => {
     return (
-        <Table striped bordered hover>
+        <Table striped bordered hover size="sm">
             <thead>
             <tr>
                 <th>Id</th>
                 <th>Name</th>
-                <th>Payment</th>
+                <th>Type</th>
+                <th>Due</th>
+                <th>Note</th>
             </tr>
             </thead>
             <tbody>
@@ -35,7 +40,9 @@ const DebtDisplay: React.FC<Props> = ({ data }) => {
                 <tr key={index}>
                     <td>{item.id}</td>
                     <td>{item.name}</td>
-                    <td>{item.payment}</td>
+                    <td>{item.type}</td>
+                    <td>{item.due}</td>
+                    <td>{item.note}</td>
                 </tr>
             ))}
             </tbody>
