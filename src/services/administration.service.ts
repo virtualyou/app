@@ -7,10 +7,14 @@
 import axios from "axios";
 
 //const APP_BASEPATH = import.meta.env.VITE_ADMINISTRATION_BASEPATH; // http://localhost:3000
-const ADMIN_URL = "https://app.virtualyou.info/administration/v1/owner/";
+const ADMIN_URL = "http://localhost:3000/administration/v1/owner/";
 class AdministrationService {
     getTasks() {
         return axios.get(ADMIN_URL + 'tasks');
+    }
+
+    getTask(id: number) {
+        return axios.get(ADMIN_URL + 'tasks/' + id);
     }
 }
 

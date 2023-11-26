@@ -6,6 +6,7 @@
 
 import type React from 'react';
 import { Table } from 'reactstrap';
+import { Link } from 'react-router-dom';
 
 // Define the type for the Javascript data input into the component
 type Data = {
@@ -23,7 +24,7 @@ type Props = {
 
 const AssetDisplay: React.FC<Props> = ({ data }) => {
     return (
-        <Table striped bordered hover>
+        <Table striped bordered hover size="sm">
             <thead>
             <tr>
                 <th>Id</th>
@@ -34,7 +35,7 @@ const AssetDisplay: React.FC<Props> = ({ data }) => {
             <tbody>
             {data.map((item, index) => (
                 <tr key={index}>
-                    <td>{item.id}</td>
+                    <td><Link to={`/assets?id=${item.id}`}>{item.id}</Link></td>
                     <td>{item.name}</td>
                     <td>{item.balance}</td>
                 </tr>

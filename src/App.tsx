@@ -23,6 +23,11 @@ import BoardAdmin from "./components/BoardAdmin.tsx";
 import EventBus from "./common/EventBus";
 import RegisterAgent from "./components/RegisterAgent.tsx";
 import RegisterMonitor from "./components/RegisterMonitor.tsx";
+import TaskDetails from "./components/details/Task.tsx";
+import PrescriptionDetails from "./components/details/Prescription.tsx";
+import PeepDetails from "./components/details/Peep.tsx";
+import AssetDetails from "./components/details/Asset.tsx";
+import DebtDetails from "./components/details/Debt.tsx";
 
 interface Props {
     // Define the props that your component expects
@@ -183,6 +188,13 @@ class App extends Component<Props, State> {
                         <Route path="/admin" element={<BoardAdmin />} />
                         <Route path="/register-agent" element={<RegisterAgent />} />
                         <Route path="/register-monitor" element={<RegisterMonitor />} />
+                        <Route path="/tasks" element={<TaskDetails />} />
+                        <Route path="/prescriptions" element={<PrescriptionDetails />} />
+                        <Route path="/peeps" element={<PeepDetails />} />
+                        <Route path="/assets" element={<AssetDetails />} />
+                        <Route path="/debts" element={<DebtDetails />} />
+
+
                     </Routes>
                 </div>
 

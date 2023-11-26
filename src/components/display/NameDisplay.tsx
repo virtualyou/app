@@ -6,6 +6,7 @@
 
 import type React from 'react';
 import { Table } from 'reactstrap';
+import { Link } from 'react-router-dom';
 
 // Define the type for the Javascript data input into the component
 type Data = {
@@ -21,7 +22,7 @@ type Props = {
 }
 const PeepDisplay: React.FC<Props> = ({ data }) => {
     return (
-        <Table striped bordered hover>
+        <Table striped bordered hover size="sm">
             <thead>
             <tr>
                 <th>Id</th>
@@ -31,7 +32,7 @@ const PeepDisplay: React.FC<Props> = ({ data }) => {
             <tbody>
             {data.map((item, index) => (
                 <tr key={index}>
-                    <td>{item.id}</td>
+                    <td><Link to={`/names/${item.id}`}>{item.id}</Link></td>
                     <td>{item.name}</td>
                 </tr>
             ))}

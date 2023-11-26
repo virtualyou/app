@@ -87,6 +87,10 @@ const BoardOwner = () => {
         );
     }, []);
 
+    if (!content || !tasks || !peeps || !prescriptions || !assets || !debts) {
+        return <div>Loading...</div>;
+    }
+
     return (
         <div className="container">
             <header className="jumbotron">

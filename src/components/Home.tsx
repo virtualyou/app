@@ -96,6 +96,8 @@ const Home = () => {
                                 even have a discussion on the phone using the application and be thousands of
                                 miles away.</p>
                             <p>
+                                <br/>
+                                <br/>
                                 <button className="btn btn-secondary" onClick={sendMonitorInvite}>Invite Monitor &raquo;</button>
                                 <Modal show={showMonitorModal} onHide={handleMonitorClose}>
                                     <Modal.Header closeButton>
