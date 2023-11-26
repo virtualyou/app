@@ -68,28 +68,33 @@ const Home = () => {
             <div className="jumbotron-fluid">
                 <div className="container">
                     <h1 className="display-3">Welcome!</h1>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                        incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-                        nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
-                        eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt
-                        in culpa qui officia deserunt mollit anim id est laborum.</p>
+                    <p>
+                        We host a productive application to serve every person with an internet-connected
+                        device and a strong desire to organize their life. We aim to provide great value
+                        for your time invested in your account at VirtualYou. And, this time should provide
+                        you a return on your efforts. Remember, the view comes after the climb. As we
+                        grow our feature base we expect that you will build yourself a living dataset
+                        and a healthy VirtualYou.
+                    </p>
                     <p><a className="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p>
                 </div>
                 <div className="container">
                     <div className="row">
                         <div className="col-md-4">
                             <h2>You</h2>
-                            <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus
-                                commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam
-                                porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+                            <p>VirtualYou.info will define you virtually in one easily accessible and convenient
+                                application online. And, like every other application out there, we&rsquo;re
+                                trying to win your loyalty and attention too. We do differ from the others
+                                because we are going to allow all registered users (Owners) to assign one Agent
+                                and one Monitor to their account.</p>
                             <p><a className="btn btn-secondary" href="#" role="button">Get Started &raquo;</a></p>
                         </div>
                         <div className="col-md-4">
                             <h2>Monitor</h2>
-                            <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus
-                                commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam
-                                porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+                            <p>The Monitor can login and see the Owner&rsquo;s data, however they are not
+                                authorized to make any changes. A friend could check on a VirtualYou user or
+                                even have a discussion on the phone using the application and be thousands of
+                                miles away.</p>
                             <p>
                                 <button className="btn btn-secondary" onClick={sendMonitorInvite}>Invite Monitor &raquo;</button>
                                 <Modal show={showMonitorModal} onHide={handleMonitorClose}>
@@ -119,9 +124,11 @@ const Home = () => {
                         </div>
                         <div className="col-md-4">
                             <h2>Agent</h2>
-                            <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus
-                                commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam
-                                porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+                            <p>The Agent will have rights to help edit the definition of their Owner&rsquo;s
+                                account. The Agent is essentially an assistant to the Owner, e.g. an adult child
+                                can help a parent with their monthly bills. A lawyer Agent might help a paying
+                                client with their end-of-life affairs. A family care provider can help a
+                                mentally ill parent with day to day activities or appointments.</p>
                             <p>
                                 <button className="btn btn-secondary" onClick={sendAgentInvite}>Invite Agent &raquo;</button>
                                 <Modal show={showAgentModal} onHide={handleAgentClose}>

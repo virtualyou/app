@@ -8,18 +8,18 @@ import replace from '@rollup/plugin-replace'
 export default defineConfig({
         plugins: [
             react(),
-            replace({
-                'process.env': JSON.stringify(process.env),
-            }),
+//            replace({
+//                'process.env': JSON.stringify(process.env),
+//            }),
         ],
         server: {
-            port: parseInt(process.env.SERVER_PORT),
+            port: 3000, // parseInt(process.env.SERVER_PORT),
             proxy: {
-                '/userauth': process.env.PROXY_AUTH,
-                '/personal': process.env.PROXY_PERSONAL,
-                '/medical': process.env.PROXY_MEDICAL,
-                '/financial': process.env.PROXY_FINANCIAL,
-                '/administration': process.env.PROXY_ADMINISTRATION
+                '/userauth': 'https://userauth.virtualyou.info', //process.env.PROXY_AUTH,
+                '/personal': 'https://personal.virtualyou.info', //process.env.PROXY_PERSONAL,
+                '/medical': 'https://medical.virtualyou.info', //process.env.PROXY_MEDICAL,
+                '/financial': 'https://financial.virtualyou.info', //process.env.PROXY_FINANCIAL,
+                '/administration': 'https://administration.virtualyou.info' //process.env.PROXY_ADMINISTRATION
             }
         }
 })

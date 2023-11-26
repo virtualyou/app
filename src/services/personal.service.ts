@@ -6,11 +6,11 @@
 
 import axios from "axios";
 
-const APP_BASEPATH = import.meta.env.VITE_APP_BASEPATH; // http://localhost:3000
-const API_URL = APP_BASEPATH + "/personal/v1/owner/";
+//const APP_BASEPATH = import.meta.env.VITE_PERSONAL_BASEPATH; // http://localhost:3000
+const PERSONAL_URL = "https://app.virtualyou.info/personal/v1/owner/";
 class PersonalService {
     getPeeps() {
-        return axios.get(API_URL + 'peeps');
+        return axios.get(PERSONAL_URL + 'peeps');
     }
 }
 

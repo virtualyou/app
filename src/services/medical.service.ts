@@ -6,11 +6,11 @@
 
 import axios from "axios";
 
-const APP_BASEPATH = import.meta.env.VITE_APP_BASEPATH; // http://localhost:3000
-const API_URL = APP_BASEPATH + "/medical/v1/owner/";
+//const APP_BASEPATH = import.meta.env.VITE_MEDICAL_BASEPATH; // http://localhost:3000
+const MED_URL = "https://app.virtualyou.info/medical/v1/owner/";
 class MedicalService {
     getPrescriptions() {
-        return axios.get(API_URL + 'prescriptions');
+        return axios.get(MED_URL + 'prescriptions');
     }
 }
 
