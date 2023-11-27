@@ -9,7 +9,7 @@ import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import FinancialService from "../../services/financial.service.ts";
 import Asset from "../../types/asset.type.ts";
-import { Button, Modal } from 'react-bootstrap';
+import {Button, Form, Modal} from 'react-bootstrap';
 import { useNavigate } from "react-router-dom";
 
 const AssetDetails: React.FC = () => {
@@ -18,6 +18,7 @@ const AssetDetails: React.FC = () => {
     const [param, setParam] = useState("");
     const [asset, setAsset] = useState<Asset>();
     const [showModal, setShowModal] = useState(false);
+    const [showEdit, setShowEdit] = useState(false);
 
     const navigate = useNavigate();
 
@@ -44,6 +45,41 @@ const AssetDetails: React.FC = () => {
         return showPop();
     }
 
+    // editor popup modal
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const formData = new FormData(event.currentTarget);
+        const formAssetValues: Asset = {
+            id: parseInt(param),
+            name: formData.get('name') as string,
+            assetType: formData.get('assetType') as string,
+            accountNo: formData.get('accountNo') as string,
+            website: formData.get('website') as string,
+            websiteUser: formData.get('websiteUser') as string,
+            websitePassword: formData.get('websitePassword') as string,
+            holdingCompany: formData.get('holdingCompany') as string,
+            holdingCompanyAddress: formData.get('holdingCompanyAddress') as string,
+            holdingCompanyPhone: formData.get('holdingCompanyPhone') as string,
+            balance: formData.get('balance') as string,
+            userKey: userkey
+        };
+        FinancialService.updateAsset(parseInt(param), formAssetValues);
+        handleEditorClose();
+        goBack();
+    };
+
+    const handleEditorClose = () => {
+        return setShowEdit(false);
+    }
+
+    const showEditPop = () => {
+        return setShowEdit(true);
+    }
+
+    const openEdit = () => {
+        return showEditPop();
+    }
+
     useEffect(() => {
 
         const queryParams = new URLSearchParams(location.search);
@@ -62,14 +98,70 @@ const AssetDetails: React.FC = () => {
         return <div>Loading...</div>;
     }
 
+    const userkey = asset.userKey;
+
     return (
         <div className="container">
             <header className="jumbotron">
                 <h1 className="display-4">Asset Details</h1>
                 <p>This is where we show the entire Asset Object</p>
-                <a className="btn btn-primary" href="#" role="button">
-                    Edit
-                </a>
+                <Button className="spacial-button" variant="primary" onClick={openEdit}>Edit</Button>
+                <Button className="spacial-button" variant="secondary" onClick={goBack}>Back</Button>
+                <Modal show={showEdit} onHide={handleEditorClose}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Asset Edit</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Form onSubmit={handleSubmit}>
+                            <Form.Group controlId="formBasicText">
+                                <Form.Label><b>Name</b></Form.Label>
+                                <Form.Control type="text" defaultValue={asset.name} name="name"/>
+                            </Form.Group>
+                            <Form.Group controlId="formBasicText">
+                                <Form.Label><b>Asset Type</b></Form.Label>
+                                <Form.Control type="text" defaultValue={asset.assetType} name="assetType"/>
+                            </Form.Group>
+                            <Form.Group controlId="formBasicText">
+                                <Form.Label><b>Account Number</b></Form.Label>
+                                <Form.Control type="text" defaultValue={asset.accountNo} name="accountNo"/>
+                            </Form.Group>
+                            <Form.Group controlId="formBasicText">
+                                <Form.Label><b>Website</b></Form.Label>
+                                <Form.Control type="text" defaultValue={asset.website} name="website"/>
+                            </Form.Group>
+                            <Form.Group controlId="formBasicText">
+                                <Form.Label><b>Web Site User</b></Form.Label>
+                                <Form.Control type="text" defaultValue={asset.websiteUser} name="websiteUser"/>
+                            </Form.Group>
+                            <Form.Group controlId="formBasicPassword">
+                                <Form.Label><b>Web Site Password</b></Form.Label>
+                                <Form.Control type="password" defaultValue={asset.websitePassword} name="websitePassword"/>
+                            </Form.Group>
+                            <Form.Group controlId="formBasicText">
+                                <Form.Label><b>Holding Company</b></Form.Label>
+                                <Form.Control type="text" defaultValue={asset.holdingCompany} name="holdingCompany"/>
+                            </Form.Group>
+                            <Form.Group controlId="formBasicText">
+                                <Form.Label><b>Holding Company Address</b></Form.Label>
+                                <Form.Control type="text" defaultValue={asset.holdingCompanyAddress} name="holdingCompanyAddress"/>
+                            </Form.Group>
+                            <Form.Group controlId="formBasicText">
+                                <Form.Label><b>Holding Company Phone</b></Form.Label>
+                                <Form.Control type="text" defaultValue={asset.holdingCompanyPhone} name="holdingCompanyPhone"/>
+                            </Form.Group>
+                            <Form.Group controlId="formBasicText">
+                                <Form.Label><b>Balance</b></Form.Label>
+                                <Form.Control type="text" defaultValue={asset.balance} name="balance"/>
+                            </Form.Group>
+                            <Button variant="primary" type="submit">
+                                Submit
+                            </Button>&nbsp;
+                            <Button variant="secondary" onClick={handleEditorClose}>
+                                Cancel
+                            </Button>
+                        </Form>
+                    </Modal.Body>
+                </Modal>
                 <div className="detail-div">
                     <div><strong>id: </strong> {param}</div>
                     <div><strong>name:</strong> {asset.name}</div>

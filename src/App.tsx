@@ -28,6 +28,11 @@ import PrescriptionDetails from "./components/details/Prescription.tsx";
 import PeepDetails from "./components/details/Peep.tsx";
 import AssetDetails from "./components/details/Asset.tsx";
 import DebtDetails from "./components/details/Debt.tsx";
+import TopFinancial from "./components/TopFinancial.tsx";
+import TopMedical from "./components/TopMedical.tsx";
+import TopLegal from "./components/TopLegal.tsx";
+import TopAdministration from "./components/TopAdministration.tsx";
+import TopPersonal from "./components/TopPersonal.tsx";
 
 interface Props {
     // Define the props that your component expects
@@ -194,6 +199,11 @@ class App extends Component<Props, State> {
                         <Route path="/assets" element={<AssetDetails />} />
                         <Route path="/debts" element={<DebtDetails />} />
 
+                        <Route path="/financial" element={<TopFinancial />} />
+                        <Route path="/medical" element={<TopMedical />} />
+                        <Route path="/legal" element={<TopLegal />} />
+                        <Route path="/administration" element={<TopAdministration />} />
+                        <Route path="/personal" element={<TopPersonal />} />
 
                     </Routes>
                 </div>

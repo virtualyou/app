@@ -5,6 +5,8 @@
  */
 
 import AuthService from "../services/auth.service";
+import './custom.css';
+import {Link} from "react-router-dom";
 
 const Profile = () => {
     const currentUser = AuthService.getCurrentUser();
@@ -15,6 +17,7 @@ const Profile = () => {
                 <h3>
                     <strong>{currentUser.username}</strong> Profile
                 </h3>
+                <div className="comp-div">
                 <p>
                     <strong>Id:</strong> {currentUser.id}
                 </p>
@@ -26,6 +29,7 @@ const Profile = () => {
                     {currentUser.roles &&
                         currentUser.roles.map((role: string, index: number) => <li key={index}>{role}</li>)}
                 </ul>
+                </div>
                 {/* eslint-disable-next-line react/no-unescaped-entities */}
                 <h5>Let's Get Started</h5>
                 <p>
@@ -34,11 +38,11 @@ const Profile = () => {
                     and also reminders for things that need attention.
                 </p>
                 <ul>
-                    <li>Financial</li>
-                    <li>Medical</li>
-                    <li>Legal</li>
-                    <li>Administrative</li>
-                    <li>Personal</li>
+                    <li><Link to={`/financial`}>Financial</Link></li>
+                    <li><Link to={`/medical`}>Medical</Link></li>
+                    <li><Link to={`/legal`}>Legal</Link></li>
+                    <li><Link to={`/administration`}>Administration</Link></li>
+                    <li><Link to={`/personal`}>Personal</Link></li>
                 </ul>
             </header>
         </div>
@@ -46,4 +50,3 @@ const Profile = () => {
 };
 
 export default Profile;
-
