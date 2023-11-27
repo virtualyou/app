@@ -1,5 +1,7 @@
-# vite-mvp
+# app
 ![image info](./landing.png)
+
+This is a Create React App (CRA) that was converted to Typescript and Vite.
 
 ## Project Setup
 Start with the `vymain` repository and its `README.md`.
