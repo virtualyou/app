@@ -9,19 +9,8 @@ import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import AdministrationService from "../../services/administration.service.ts";
 import { Button, Modal } from 'react-bootstrap';
-//import AdministrationService from "../../services/administration.service.ts";
+import Task from '../../types/task.type.ts';
 
-type Task = {
-    id: number,
-    name: string,
-    type: string,
-    priority: string,
-    due: string,
-    completed: string,
-    trigger: string,
-    note: string,
-    userKey: number
-}
 const TaskDetails: React.FC = () => {
 
     const location = useLocation();

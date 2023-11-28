@@ -7,6 +7,8 @@
 import axios from "axios";
 import Peep from "../types/peep.type.ts";
 
+const PERSONAL_URL = "http://localhost:3000/personal/v1/owner/";
+
 /**
  * Class: PersonalService
  *
@@ -20,8 +22,6 @@ import Peep from "../types/peep.type.ts";
  * const myPromise = perService.getPeeps();
  * ```
  */
-const PERSONAL_URL = "http://localhost:3000/personal/v1/owner/";
-
 class PersonalService {
 
     /**
@@ -63,7 +63,7 @@ class PersonalService {
      * This is a method to update a peep by id (for a configured owner)
      *
      * @param id - the primary key for peep needed.
-     * @param Peep - object type
+     * @param obj - Peep type
      * @remarks
      * using Axios
      * @returns Promise.
@@ -75,13 +75,13 @@ class PersonalService {
     /**
      * This is a method to create a new peep (for a configured owner)
      *
-     * @param Peep - object type
+     * @param obj - Peep type
      * @remarks
      * using Axios
      * @returns Promise.
      */
     createPeep(obj: Peep) {
-        return axios.post(PERSONAL_URL + 'peeps/' + id, obj);
+        return axios.post(PERSONAL_URL + 'peeps', obj);
     }
 
 }

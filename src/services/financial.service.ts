@@ -63,7 +63,7 @@ class FinancialService {
      * This is a method to update an asset by id (for a configured owner)
      *
      * @param id - the primary key for asset needed.
-     * @param Asset - object type
+     * @param obj - Asset type
      * @remarks
      * using Axios
      * @returns Promise.
@@ -75,13 +75,13 @@ class FinancialService {
     /**
      * This is a method to create a new asset (for a configured owner)
      *
-     * @param Asset - object type
+     * @param obj - Asset type
      * @remarks
      * using Axios
      * @returns Promise.
      */
     createAsset(obj: Asset) {
-        return axios.post(FIN_URL + 'assets/' + id, obj);
+        return axios.post(FIN_URL + 'assets', obj);
     }
 
     /**
@@ -123,7 +123,7 @@ class FinancialService {
      * This is a method to update a debt by id (for a configured owner)
      *
      * @param id - the primary key for debt needed.
-     * @param Debt - object type
+     * @param obj - Debt type
      * @remarks
      * using Axios
      * @returns Promise.
@@ -135,13 +135,13 @@ class FinancialService {
     /**
      * This is a method to create a new debt (for a configured owner)
      *
-     * @param Debt - object type
+     * @param obj - Debt type
      * @remarks
      * using Axios
      * @returns Promise.
      */
     createDebt(obj: Debt) {
-        return axios.post(FIN_URL + 'debts/' + id, obj);
+        return axios.post(FIN_URL + 'debts', obj);
     }
 
 }
