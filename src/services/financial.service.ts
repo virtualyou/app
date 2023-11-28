@@ -82,7 +82,7 @@ class FinancialService {
      * @returns Promise.
      */
     createAsset(obj: CreateAsset) {
-        return axios.post(FIN_URL + 'assets/', obj);
+        return axios.post(FIN_URL + 'assets', obj);
     }
 
     /**

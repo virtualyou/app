@@ -35,7 +35,7 @@ const TopFinancial = () => {
             holdingCompanyAddress: formData.get('holdingCompanyAddress') as string,
             holdingCompanyPhone: formData.get('holdingCompanyPhone') as string,
             balance: formData.get('balance') as string,
-            userKey: 7
+            userKey: parseInt(localStorage.getItem("ownerid") || "0")
         };
         FinancialService.createAsset(formAssetValues);
         handleCreateClose();
