@@ -6,6 +6,7 @@
 
 import axios from "axios";
 import Prescription from "../types/prescription.type.ts";
+import CreatePrescription from "../types/createprescription.type.ts";
 
 const MED_URL = "http://localhost:3000/medical/v1/owner/";
 
@@ -80,7 +81,7 @@ class MedicalService {
      * using Axios
      * @returns Promise.
      */
-    createPrescription(obj: Prescription) {
+    createPrescription(obj: CreatePrescription) {
         return axios.post(MED_URL + 'prescriptions', obj);
     }
 
