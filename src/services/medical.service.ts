@@ -68,7 +68,7 @@ class MedicalService {
      * using Axios
      * @returns Promise.
      */
-    updateAsset(id: number, obj: Prescription) {
+    updatePrescription(id: number, obj: Prescription) {
         return axios.put(MED_URL + 'prescriptions/' + id, obj);
     }
 
@@ -80,7 +80,7 @@ class MedicalService {
      * using Axios
      * @returns Promise.
      */
-    createAsset(obj: Prescription) {
+    createPrescription(obj: Prescription) {
         return axios.post(MED_URL + 'prescriptions', obj);
     }
 

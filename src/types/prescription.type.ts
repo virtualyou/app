@@ -4,6 +4,7 @@
  * @author David L Whitehurst
  */
 export default interface Prescription {
+    id: number,
     name: string,
     identNo: string,
     size: string,

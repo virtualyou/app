@@ -6,6 +6,7 @@
 
 import axios from "axios";
 import Task from "../types/task.type.ts";
+import CreateTask from "../types/createtask.type.ts";
 
 const ADMIN_URL = "http://localhost:3000/administration/v1/owner/";
 
@@ -80,7 +81,7 @@ class AdministrationService {
      * using Axios
      * @returns Promise.
      */
-    createTask(obj: Task) {
+    createTask(obj: CreateTask) {
         return axios.post(ADMIN_URL + 'tasks', obj);
     }
 

@@ -8,6 +8,7 @@ import axios from "axios";
 import Asset from "../types/asset.type.ts";
 import Debt from "../types/debt.type.ts";
 import CreateAsset from "../types/createasset.type.ts";
+import CreateDebt from "../types/createdebt.type.ts";
 
 const FIN_URL = "http://localhost:3000/financial/v1/owner/";
 
@@ -141,7 +142,7 @@ class FinancialService {
      * using Axios
      * @returns Promise.
      */
-    createDebt(obj: Debt) {
+    createDebt(obj: CreateDebt) {
         return axios.post(FIN_URL + 'debts', obj);
     }
 
