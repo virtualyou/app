@@ -8,7 +8,7 @@ import axios from "axios";
 import Prescription from "../types/prescription.type.ts";
 import CreatePrescription from "../types/createprescription.type.ts";
 
-const MED_URL = "http://localhost:3000/medical/v1/owner/";
+const MED_URL = "https://app.virtualyou.info/medical/v1/owner/";
 
 /**
  * Class: MedicalService

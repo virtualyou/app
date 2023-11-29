@@ -7,7 +7,7 @@
 import axios from "axios";
 import Peep from "../types/peep.type.ts";
 import CreatePeep from "../types/createpeep.type.ts";
-const PERSONAL_URL = "http://localhost:3000/personal/v1/owner/";
+const PERSONAL_URL = "https://app.virtualyou.info/personal/v1/owner/";
 
 /**
  * Class: PersonalService
