@@ -6,8 +6,8 @@
 
 import axios from "axios";
 import Peep from "../types/peep.type.ts";
-
-const PERSONAL_URL = "http://localhost:3000/personal/v1/owner/";
+import CreatePeep from "../types/createpeep.type.ts";
+const PERSONAL_URL = "https://app.virtualyou.info/personal/v1/owner/";
 
 /**
  * Class: PersonalService
@@ -80,7 +80,7 @@ class PersonalService {
      * using Axios
      * @returns Promise.
      */
-    createPeep(obj: Peep) {
+    createPeep(obj: CreatePeep) {
         return axios.post(PERSONAL_URL + 'peeps', obj);
     }
 

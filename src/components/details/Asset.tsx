@@ -113,43 +113,43 @@ const AssetDetails: React.FC = () => {
                     </Modal.Header>
                     <Modal.Body>
                         <Form onSubmit={handleSubmit}>
-                            <Form.Group controlId="formBasicText">
+                            <Form.Group controlId="form1">
                                 <Form.Label><b>Name</b></Form.Label>
                                 <Form.Control type="text" defaultValue={asset.name} name="name"/>
                             </Form.Group>
-                            <Form.Group controlId="formBasicText">
+                            <Form.Group controlId="form2">
                                 <Form.Label><b>Asset Type</b></Form.Label>
                                 <Form.Control type="text" defaultValue={asset.assetType} name="assetType"/>
                             </Form.Group>
-                            <Form.Group controlId="formBasicText">
+                            <Form.Group controlId="form3">
                                 <Form.Label><b>Account Number</b></Form.Label>
                                 <Form.Control type="text" defaultValue={asset.accountNo} name="accountNo"/>
                             </Form.Group>
-                            <Form.Group controlId="formBasicText">
+                            <Form.Group controlId="form4">
                                 <Form.Label><b>Website</b></Form.Label>
                                 <Form.Control type="text" defaultValue={asset.website} name="website"/>
                             </Form.Group>
-                            <Form.Group controlId="formBasicText">
+                            <Form.Group controlId="form5">
                                 <Form.Label><b>Web Site User</b></Form.Label>
                                 <Form.Control type="text" defaultValue={asset.websiteUser} name="websiteUser"/>
                             </Form.Group>
-                            <Form.Group controlId="formBasicPassword">
+                            <Form.Group controlId="form6">
                                 <Form.Label><b>Web Site Password</b></Form.Label>
                                 <Form.Control type="password" defaultValue={asset.websitePassword} name="websitePassword"/>
                             </Form.Group>
-                            <Form.Group controlId="formBasicText">
+                            <Form.Group controlId="form7">
                                 <Form.Label><b>Holding Company</b></Form.Label>
                                 <Form.Control type="text" defaultValue={asset.holdingCompany} name="holdingCompany"/>
                             </Form.Group>
-                            <Form.Group controlId="formBasicText">
+                            <Form.Group controlId="form8">
                                 <Form.Label><b>Holding Company Address</b></Form.Label>
                                 <Form.Control type="text" defaultValue={asset.holdingCompanyAddress} name="holdingCompanyAddress"/>
                             </Form.Group>
-                            <Form.Group controlId="formBasicText">
+                            <Form.Group controlId="form9">
                                 <Form.Label><b>Holding Company Phone</b></Form.Label>
                                 <Form.Control type="text" defaultValue={asset.holdingCompanyPhone} name="holdingCompanyPhone"/>
                             </Form.Group>
-                            <Form.Group controlId="formBasicText">
+                            <Form.Group controlId="form10">
                                 <Form.Label><b>Balance</b></Form.Label>
                                 <Form.Control type="text" defaultValue={asset.balance} name="balance"/>
                             </Form.Group>

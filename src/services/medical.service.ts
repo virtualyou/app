@@ -6,8 +6,9 @@
 
 import axios from "axios";
 import Prescription from "../types/prescription.type.ts";
+import CreatePrescription from "../types/createprescription.type.ts";
 
-const MED_URL = "http://localhost:3000/medical/v1/owner/";
+const MED_URL = "https://app.virtualyou.info/medical/v1/owner/";
 
 /**
  * Class: MedicalService
@@ -68,7 +69,7 @@ class MedicalService {
      * using Axios
      * @returns Promise.
      */
-    updateAsset(id: number, obj: Prescription) {
+    updatePrescription(id: number, obj: Prescription) {
         return axios.put(MED_URL + 'prescriptions/' + id, obj);
     }
 
@@ -80,7 +81,7 @@ class MedicalService {
      * using Axios
      * @returns Promise.
      */
-    createAsset(obj: Prescription) {
+    createPrescription(obj: CreatePrescription) {
         return axios.post(MED_URL + 'prescriptions', obj);
     }
 

@@ -8,7 +8,7 @@ import axios from 'axios';
 import authHeader from './auth-header';
 
 //const APP_BASEPATH = import.meta.env.VITE_USERAUTH_BASEPATH; // http://localhost:3000
-const USER_URL = "http://localhost:3000/userauth/v1/"
+const USER_URL = "https://app.virtualyou.info/userauth/v1/"
 
 class UserService {
   getPublicContent() {

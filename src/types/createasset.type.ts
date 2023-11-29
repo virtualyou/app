@@ -3,8 +3,7 @@
  * @license Apache-2.0
  * @author David L Whitehurst
  */
-export default interface Asset {
-    id: number,
+export default interface CreateAsset {
     name: string,
     assetType: string,
     accountNo: string,
@@ -17,5 +16,3 @@ export default interface Asset {
     balance: string,
     userKey: number
 }
-
-

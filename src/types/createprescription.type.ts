@@ -3,8 +3,7 @@
  * @license Apache-2.0
  * @author David L Whitehurst
  */
-export default interface Prescription {
-    id: number,
+export default interface CreatePrescription {
     name: string,
     identNo: string,
     size: string,
