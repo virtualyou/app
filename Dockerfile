@@ -1,13 +1,17 @@
-FROM node:18-alpine
+# Use the official nginx image as the base image
+FROM nginx
 
-WORKDIR /app
+# Copy the default nginx.conf file to the container
+COPY nginx.conf /etc/nginx/nginx.conf
 
-COPY package*.json ./
+# Remove the default nginx website
+RUN rm -rf /usr/share/nginx/html/*
 
-RUN npm install
+# Copy the Vite /dist folder to the container
+COPY dist /usr/share/nginx/html
 
-COPY . .
+# Expose port 80
+EXPOSE 80
 
-EXPOSE 3000
-
-CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
+# Start nginx and keep it running in the foreground
+CMD ["nginx", "-g", "daemon off;"]
