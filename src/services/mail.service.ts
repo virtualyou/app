@@ -13,7 +13,7 @@ class MailService {
 
     // AWS SES Client
     private ses = new SES({
-        region: import.meta.env.VITE_AWS_REGION,
+        region: "us-east-1", //import.meta.env.VITE_AWS_REGION,
         credentials: {
             accessKeyId: import.meta.env.VITE_AWS_ACCESS_KEY,
             secretAccessKey: import.meta.env.VITE_AWS_SECRET_ACCESS_KEY,
