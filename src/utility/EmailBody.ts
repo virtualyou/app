@@ -21,8 +21,7 @@ export function getAgentBody(name: string) {
     const md = forge.md.sha256.create();
     md.update(agentMne);
     const dkey = md.digest().toHex();
-    const APP_BASEPATH = import.meta.env.VITE_APP_BASEPATH;
-    const retLink = APP_BASEPATH + "/register-agent?ownerid=" + id + "&dkey=" + dkey;
+    const retLink = "https://app.virtualyou.info" + "/register-agent?ownerid=" + id + "&dkey=" + dkey;
 
     return name + ",\n\nYou have been invited to be an Agent for " + myName + ". Use this link to register and begin helping " + myName + ".\n\n" + retLink;
 }
@@ -41,8 +40,7 @@ export function getMonitorBody(name: string) {
     const md = forge.md.sha256.create();
     md.update(monitorMne);
     const dkey = md.digest().toHex();
-    const APP_BASEPATH = import.meta.env.VITA_APP_BASEPATH;
-    const retLink = APP_BASEPATH + "/register-monitor?ownerid=" + id + "&dkey=" + dkey;
+    const retLink = "https://app.virtualyou.info" + "/register-monitor?ownerid=" + id + "&dkey=" + dkey;
 
     return name + ",\n\nYou have been invited to be a Monitor for " + myName + ". Use this link to register and begin helping " + myName + ".\n\n" + retLink;
 }

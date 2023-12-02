@@ -1,7 +1,7 @@
 {
   "name": "app",
   "private": true,
-  "version": "0.1.1-beast",
+  "version": "0.1.2-beast",
   "type": "module",
   "scripts": {
     "dev": "vite",
