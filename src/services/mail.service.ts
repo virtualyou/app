@@ -9,19 +9,13 @@
 import { getParams } from "../utility/EmailParams.ts";
 import { getAgentBody, getMonitorBody } from "../utility/EmailBody.ts"
 import FormValues from "../types/formvalues.type.ts";
+// @ts-ignore
+import { AWS } from 'aws-sdk/dist/aws-sdk-react-native';
 
-const AWS = require('aws-sdk');
-
-
+// @ts-ignore
 class MailService {
 
-    private ses = new AWS.SES({
-        region: import.meta.env.VITE_AWS_REGION,
-        credentials: new AWS.Credentials({
-            accessKeyId: import.meta.env.VITE_AWS_ACCESS_KEY,
-            secretAccessKey: import.meta.env.VITE_AWS_SECRET_ACCESS_KEY,
-        }),
-    });
+    //private AWS = require('aws-sdk/dist/aws-sdk-react-native');
 
     // AWS SES Client
     /*
@@ -34,6 +28,13 @@ class MailService {
     });
     */
 
+    private ses = new AWS.SES({
+        region: import.meta.env.VITE_AWS_REGION,
+        credentials: new AWS.Credentials({
+            accessKeyId: import.meta.env.VITE_AWS_ACCESS_KEY,
+            secretAccessKey: import.meta.env.VITE_AWS_SECRET_ACCESS_KEY,
+        }),
+    });
     // Send Agent Invitation Email
     emailAgent(formData: FormValues) {
         console.log(formData.email);
@@ -60,4 +61,4 @@ class MailService {
         });
     }
 }
-export default new MailService();
+//export default new MailService();
