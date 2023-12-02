@@ -5,20 +5,34 @@
  */
 
 import { SES } from "@aws-sdk/client-ses";
+
 import { getParams } from "../utility/EmailParams.ts";
 import { getAgentBody, getMonitorBody } from "../utility/EmailBody.ts"
 import FormValues from "../types/formvalues.type.ts";
 
+const AWS = require('aws-sdk');
+
+
 class MailService {
 
+    private ses = new AWS.SES({
+        region: import.meta.env.VITE_AWS_REGION,
+        credentials: new AWS.Credentials({
+            accessKeyId: import.meta.env.VITE_AWS_ACCESS_KEY,
+            secretAccessKey: import.meta.env.VITE_AWS_SECRET_ACCESS_KEY,
+        }),
+    });
+
     // AWS SES Client
+    /*
     private ses = new SES({
-        region: "us-east-1", //import.meta.env.VITE_AWS_REGION,
+        region: import.meta.env.VITE_AWS_REGION,
         credentials: {
             accessKeyId: import.meta.env.VITE_AWS_ACCESS_KEY,
             secretAccessKey: import.meta.env.VITE_AWS_SECRET_ACCESS_KEY,
         }
     });
+    */
 
     // Send Agent Invitation Email
     emailAgent(formData: FormValues) {
