@@ -4,7 +4,7 @@
  * @author David L Whitehurst
  */
 
-import MailService from "../services/mail.service.ts"
+//import MailService from "../services/mail.service.ts"
 import { useState } from "react";
 import { Button, Form, Modal } from 'react-bootstrap';
 
@@ -24,7 +24,9 @@ const Home = () => {
             name: formData.get('name') as string,
             email: formData.get('email') as string,
         };
-        MailService.emailAgent(formAgentValues);
+        // refactor mail service
+        console.log(formAgentValues);
+        //MailService.emailAgent(formAgentValues);
         handleAgentClose();
     };
 
@@ -48,7 +50,9 @@ const Home = () => {
             name: formData.get('name') as string,
             email: formData.get('email') as string,
         };
-        MailService.emailMonitor(formMonitorValues);
+        // refactor mail service
+        console.log(formMonitorValues);
+        //MailService.emailMonitor(formMonitorValues);
         handleMonitorClose();
     };
 

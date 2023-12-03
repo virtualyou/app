@@ -7,8 +7,7 @@
 import axios from "axios";
 import authHeader from './auth-header';
 
-//const APP_BASEPATH = process.env.VITE_USERAUTH_BASEPATH; // http://localhost:3000
-const AUTH_URL = "https://app.virtualyou.info/userauth/v1/auth/" // process.env.VITE_USERAUTH_BASEPATH + "/userauth/v1/auth/";
+const AUTH_URL = "https://app.virtualyou.info/userauth/v1/auth/";
 class AuthService {
 
     /**

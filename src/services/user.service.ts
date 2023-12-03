@@ -7,17 +7,15 @@
 import axios from 'axios';
 import authHeader from './auth-header';
 
-//const APP_BASEPATH = import.meta.env.VITE_USERAUTH_BASEPATH; // http://localhost:3000
 const USER_URL = "https://app.virtualyou.info/userauth/v1/"
 
 class UserService {
   getPublicContent() {
-    return axios.get(USER_URL + 'all');
+    return axios.get(USER_URL + 'all', { headers: authHeader() });
   }
 
   getOwnerBoard() {
-    //alert(API_URL + 'owner');
-    return axios.get(USER_URL + 'owner');
+    return axios.get(USER_URL + 'owner', { headers: authHeader() });
   }
 
   getAgentBoard() {
