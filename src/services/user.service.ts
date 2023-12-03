@@ -7,15 +7,15 @@
 import axios from 'axios';
 import authHeader from './auth-header';
 
-const USER_URL = "https://userauth.virtualyou.info/userauth/v1/"
+const USER_URL = "https://app.virtualyou.info/userauth/v1/"
 
 class UserService {
   getPublicContent() {
-    return axios.get(USER_URL + 'all');
+    return axios.get(USER_URL + 'all', { headers: authHeader() });
   }
 
   getOwnerBoard() {
-    return axios.get(USER_URL + 'owner');
+    return axios.get(USER_URL + 'owner', { headers: authHeader() });
   }
 
   getAgentBoard() {

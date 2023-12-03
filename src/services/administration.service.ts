@@ -8,7 +8,7 @@ import axios from "axios";
 import Task from "../types/task.type.ts";
 import CreateTask from "../types/createtask.type.ts";
 
-const ADMIN_URL = "https://administration.virtualyou.info/administration/v1/owner/";
+const ADMIN_URL = "https://app.virtualyou.info/administration/v1/owner/";
 
 /**
  * Class: AdministrationService
