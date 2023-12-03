@@ -5,37 +5,32 @@
  */
 
 import { useState, useEffect } from "react";
-
 import UserService from "../services/user.service";
 import EventBus from "../common/EventBus";
-import AuthService from "../services/auth.service";
 import PeepDisplay from "./display/PeepDisplay.tsx";
 import PersonalService from '../services/personal.service.ts';
-
-const user = AuthService.getCurrentUser();
-
-interface Owner {
-    id: number;
-    username: string;
-    email: string,
-    password: string,
-    ownerId: string
-}
+import AdministrationService from "../services/administration.service.ts";
+import FinancialService from "../services/financial.service.ts";
+import MedicalService from "../services/medical.service.ts";
+import InfoAlert from "./notification/InfoAlert.tsx";
+import TaskDisplay from "./display/TaskDisplay.tsx";
+import PrescriptionDisplay from "./display/PrescriptionDisplay.tsx";
+import AssetDisplay from "./display/AssetDisplay.tsx";
+import DebtDisplay from "./display/DebtDisplay.tsx";
+import User from "../types/user.type.ts";
 
 const BoardAgent = () => {
     const [content, setContent] = useState("");
-    const [owner, setOwner] = useState<Owner | null>(null);
     const [peeps, setPeeps] = useState([]);
+    const [prescriptions, setPrescriptions] = useState([]);
+    const [assets, setAssets] = useState([]);
+    const [debts, setDebts] = useState([]);
+    const [tasks, setTasks] = useState([]);
+    const [owner, setOwner] = useState<User>();
 
     useEffect(() => {
-        PersonalService.getPeeps()
-            .then((response) => {
-                setPeeps(response.data);
-            })
-    }, [])
-
-    useEffect(() => {
-        UserService.getOwner(1).then(
+        const ownerid = localStorage.getItem("ownerid") || "0";
+        UserService.getOwner(parseInt(ownerid)).then(
             (response) => {
                 setOwner(response.data);
             },
@@ -55,6 +50,41 @@ const BoardAgent = () => {
             }
         );
     }, []);
+
+    useEffect(() => {
+        AdministrationService.getTasks()
+            .then((response) => {
+                setTasks(response.data);
+            })
+    }, [])
+
+    useEffect(() => {
+        FinancialService.getAssets()
+            .then((response) => {
+                setAssets(response.data);
+            })
+    }, [])
+
+    useEffect(() => {
+        FinancialService.getDebts()
+            .then((response) => {
+                setDebts(response.data);
+            })
+    }, [])
+
+    useEffect(() => {
+        PersonalService.getPeeps()
+            .then((response) => {
+                setPeeps(response.data);
+            })
+    }, [])
+
+    useEffect(() => {
+        MedicalService.getPrescriptions()
+            .then((response) => {
+                setPrescriptions(response.data);
+            })
+    }, [])
 
     useEffect(() => {
         UserService.getAgentBoard().then(
@@ -78,7 +108,7 @@ const BoardAgent = () => {
         );
     }, []);
 
-    if (!owner) {
+    if (!content || !tasks || !peeps || !prescriptions || !assets || !debts || !owner) {
         return <div>Loading...</div>;
     }
 
@@ -86,10 +116,19 @@ const BoardAgent = () => {
         <div className="container">
             <header className="jumbotron">
                 <h1 className="display-4">Agent Dashboard</h1>
-                <p>{content} <b>{user.username}</b> is agent for:</p>
-                <p>Owner: {owner.username} ({owner.id})</p>
-                <h3 className="font-weight-light">Owner Contacts</h3>
+                <p className="red-bold">WARNING: This data is owned by {owner.username}. You are responsible for the
+                    integrity of someone else's data.</p>
+                <InfoAlert note={"Don't forget to validate medications."} />
+                <h3 className="font-weight-light">Tasks</h3>
+                <TaskDisplay data={tasks} />
+                <h3 className="font-weight-light">Key Contacts</h3>
                 <PeepDisplay data={peeps} />
+                <h3 className="font-weight-light">Prescriptions</h3>
+                <PrescriptionDisplay data={prescriptions} />
+                <h3 className="font-weight-light">Assets</h3>
+                <AssetDisplay data={assets} />
+                <h3 className="font-weight-light">Debts</h3>
+                <DebtDisplay data={debts} />
             </header>
         </div>
     );

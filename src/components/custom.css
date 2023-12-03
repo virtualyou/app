@@ -5,3 +5,8 @@
     padding-bottom: 20px;
     margin: 10px;
 }
+
+.red-bold {
+    color: red;
+    font-weight: bold;
+}

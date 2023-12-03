@@ -10,7 +10,6 @@ import {ErrorMessage, Field, Form, Formik} from "formik";
 import AuthService from "../services/auth.service.ts";
 import {useEffect, useState} from "react";
 import * as Yup from "yup";
-import HcaptchaComponent from "./HcaptchaComponent.tsx";
 
 const RegisterMonitor = () => {
     const query = new URLSearchParams(useLocation().search);
@@ -20,9 +19,6 @@ const RegisterMonitor = () => {
     const [successful, setSuccessful] = useState(false);
     const [message, setMessage] = useState("");
     const [decision, setDecision] = useState<boolean | null>(null);
-    const [siteKey, setSiteKey] = useState<string>("");
-
-    setSiteKey(import.meta.env.VITE_SITE_KEY);
 
     useEffect(() => {
         keysMatchForMonitor(parseInt(altId || "0"), dkey || "").then(setDecision);
@@ -162,10 +158,6 @@ const RegisterMonitor = () => {
 
                                     <div className="form-group">
                                         <button type="submit" className="btn btn-primary btn-block">Sign Up</button>
-                                    </div>
-                                    <div>
-                                        {/* Your page content */}
-                                        <HcaptchaComponent sitekey={siteKey} />
                                     </div>
                                 </div>
                             )}

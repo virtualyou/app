@@ -11,6 +11,7 @@ import PersonalService from "../../services/personal.service.ts";
 import Peep from "../../types/peep.type.ts";
 import {Button, Form, Modal} from 'react-bootstrap';
 import { useNavigate } from "react-router-dom";
+import AuthService from "../../services/auth.service.ts";
 
 const PeepDetails: React.FC = () => {
 
@@ -95,13 +96,15 @@ const PeepDetails: React.FC = () => {
     }
 
     const userkey = peep.userKey;
+    const user = AuthService.getCurrentUser();
 
     return (
         <div className="container">
             <header className="jumbotron">
                 <h1 className="display-4">Contact Details</h1>
                 <p>This is where we show the entire Contact Object</p>
-                <Button className="spacial-button" variant="primary" onClick={openEdit}>Edit</Button>
+                {user.roles.includes(("ROLE_MONITOR")) ? <meta/> :
+                    <Button className="spacial-button" variant="primary" onClick={openEdit}>Edit</Button>}
                 <Button className="spacial-button" variant="secondary" onClick={goBack}>Back</Button>
                 <Modal show={showEdit} onHide={handleEditorClose}>
                     <Modal.Header closeButton>
@@ -152,7 +155,8 @@ const PeepDetails: React.FC = () => {
                     <div><strong>note:</strong> {peep.note}</div>
                     <div><strong>userKey:</strong> {peep.userKey}</div>
                 </div>
-                <Button variant="danger" onClick={openModal}>Delete</Button>
+                {user.roles.includes(("ROLE_MONITOR")) ? <meta/> :
+                    <Button variant="danger" onClick={openModal}>Delete</Button>}
                 <Modal show={showModal} onHide={handleClose}>
                     <Modal.Header closeButton>
                         <Modal.Title>Warning</Modal.Title>

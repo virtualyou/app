@@ -11,6 +11,7 @@ import FinancialService from "../../services/financial.service.ts";
 import Debt from "../../types/debt.type.ts";
 import {Button, Form, Modal} from 'react-bootstrap';
 import { useNavigate } from "react-router-dom";
+import AuthService from "../../services/auth.service.ts";
 
 const DebtDetails: React.FC = () => {
 
@@ -102,13 +103,15 @@ const DebtDetails: React.FC = () => {
     }
 
     const userkey = debt.userKey;
+    const user = AuthService.getCurrentUser();
 
     return (
         <div className="container">
             <header className="jumbotron">
                 <h1 className="display-4">Debt Details</h1>
                 <p>This is where we show the entire Debt Object</p>
-                <Button className="spacial-button" variant="primary" onClick={openEdit}>Edit</Button>
+                {user.roles.includes(("ROLE_MONITOR")) ? <meta/> :
+                    <Button className="spacial-button" variant="primary" onClick={openEdit}>Edit</Button>}
                 <Button className="spacial-button" variant="secondary" onClick={goBack}>Back</Button>
                 <Modal show={showEdit} onHide={handleEditorClose}>
                     <Modal.Header closeButton>
@@ -194,7 +197,8 @@ const DebtDetails: React.FC = () => {
                     <div><strong>payment:</strong> {debt.payment}</div>
                     <div><strong>userKey:</strong> {debt.userKey}</div>
                 </div>
-                <Button variant="danger" onClick={openModal}>Delete</Button>
+                {user.roles.includes(("ROLE_MONITOR")) ? <meta/> :
+                    <Button variant="danger" onClick={openModal}>Delete</Button>}
                 <Modal show={showModal} onHide={handleClose}>
                     <Modal.Header closeButton>
                         <Modal.Title>Warning</Modal.Title>

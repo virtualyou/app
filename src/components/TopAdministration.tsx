@@ -8,6 +8,7 @@ import {Button, Form, Modal} from "react-bootstrap";
 import AdministrationService from "../services/administration.service.ts";
 import CreateTask from "../types/createtask.type.ts";
 import TaskDisplay from "./display/TaskDisplay.tsx";
+import AuthService from "../services/auth.service.ts";
 
 const TopAdministration = () => {
     const [tasks, setTasks] = useState([]);
@@ -61,13 +62,16 @@ const TopAdministration = () => {
         return <div>Loading...</div>;
     }
 
+    const user = AuthService.getCurrentUser();
+
     return (
         <div className="container">
             <header className="jumbotron">
                 <h1 className="display-4">Administration</h1>
                 <p>This is where we attempt to administrate ourselves.</p>
                 <h3 className="font-weight-light">Tasks
-                    <Button className="spacial-button" variant="primary" onClick={openCreate}>New</Button></h3>
+                    {user.roles.includes(("ROLE_MONITOR")) ? <meta/> :
+                        <Button className="spacial-button" variant="primary" onClick={openCreate}>New</Button>}</h3>
                 <Modal show={showCreate} onHide={handleCreateClose}>
                     <Modal.Header closeButton>
                         <Modal.Title>Task Create</Modal.Title>

@@ -11,5 +11,5 @@ export default interface Peep {
     email: string,
     address: string,
     note: string,
-    userKey: 7
+    userKey: number
 }

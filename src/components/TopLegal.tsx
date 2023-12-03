@@ -6,6 +6,7 @@
 
 const TopLegal = () => {
 
+
     return (
         <div className="container">
             <header className="jumbotron">

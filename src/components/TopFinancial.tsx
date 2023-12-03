@@ -10,6 +10,7 @@ import {Button, Form, Modal} from "react-bootstrap";
 import React, {useState,useEffect} from "react";
 import CreateAsset from "../types/createasset.type.ts";
 import CreateDebt from "../types/createdebt.type.ts";
+import AuthService from "../services/auth.service.ts";
 
 const TopFinancial = () => {
     const [assets, setAssets] = useState([]);
@@ -114,13 +115,16 @@ const TopFinancial = () => {
         return <div>Loading...</div>;
     }
 
+    const user = AuthService.getCurrentUser();
+
     return (
         <div className="container">
             <header className="jumbotron">
                 <h1 className="display-4">Financial</h1>
                 <p>This is where we work with the financials.</p>
                 <h3 className="font-weight-light">Assets
-                <Button className="spacial-button" variant="primary" onClick={openAssetCreate}>New</Button></h3>
+                    {user.roles.includes(("ROLE_MONITOR")) ? <meta/> :
+                        <Button className="spacial-button" variant="primary" onClick={openAssetCreate}>New</Button>}</h3>
                 <Modal show={showAssetCreate} onHide={handleAssetCreateClose}>
                     <Modal.Header closeButton>
                         <Modal.Title>Asset Create</Modal.Title>
@@ -179,7 +183,8 @@ const TopFinancial = () => {
                 <AssetDisplay data={assets} />
 
                 <h3 className="font-weight-light">Debts
-                <Button className="spacial-button" variant="primary" onClick={openDebtCreate}>New</Button></h3>
+                    {user.roles.includes(("ROLE_MONITOR")) ? <meta/> :
+                        <Button className="spacial-button" variant="primary" onClick={openDebtCreate}>New</Button>}</h3>
                 <Modal show={showDebtCreate} onHide={handleDebtCreateClose}>
                     <Modal.Header closeButton>
                         <Modal.Title>Debt Create</Modal.Title>

@@ -8,6 +8,7 @@ import CreatePeep from "../types/createpeep.type.ts";
 import PersonalService from "../services/personal.service.ts";
 import {Button, Form, Modal} from "react-bootstrap";
 import PeepDisplay from "./display/PeepDisplay.tsx";
+import AuthService from "../services/auth.service.ts";
 
 const TopPersonal = () => {
     const [peeps, setPeeps] = useState([]);
@@ -60,13 +61,16 @@ const TopPersonal = () => {
         return <div>Loading...</div>;
     }
 
+    const user = AuthService.getCurrentUser();
+
     return (
         <div className="container">
             <header className="jumbotron">
                 <h1 className="display-4">Personal</h1>
                 <p>This is where we keep things closest to us.</p>
                 <h3 className="font-weight-light">Contacts
-                    <Button className="spacial-button" variant="primary" onClick={openCreate}>New</Button></h3>
+                    {user.roles.includes(("ROLE_MONITOR")) ? <meta/> :
+                        <Button className="spacial-button" variant="primary" onClick={openCreate}>New</Button>}</h3>
                 <Modal show={showCreate} onHide={handleCreateClose}>
                     <Modal.Header closeButton>
                         <Modal.Title>Contact Create</Modal.Title>

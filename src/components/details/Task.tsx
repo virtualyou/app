@@ -5,12 +5,13 @@
  */
 import './custom.css';
 import type React from 'react';
-import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import {useState, useEffect} from 'react';
+import {useLocation} from 'react-router-dom';
 import AdministrationService from "../../services/administration.service.ts";
 import {Button, Form, Modal} from 'react-bootstrap';
 import Task from '../../types/task.type.ts';
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
+import AuthService from "../../services/auth.service.ts";
 
 const TaskDetails: React.FC = () => {
 
@@ -96,13 +97,15 @@ const TaskDetails: React.FC = () => {
     }
 
     const userkey = task.userKey;
+    const user = AuthService.getCurrentUser();
 
     return (
         <div className="container">
             <header className="jumbotron">
                 <h1 className="display-4">Task Details</h1>
                 <p>This is where we show the entire Task Object</p>
-                <Button className="spacial-button" variant="primary" onClick={openEdit}>Edit</Button>
+                {user.roles.includes(("ROLE_MONITOR")) ? <meta/> :
+                    <Button className="spacial-button" variant="primary" onClick={openEdit}>Edit</Button>}
                 <Button className="spacial-button" variant="secondary" onClick={goBack}>Back</Button>
                 <Modal show={showEdit} onHide={handleEditorClose}>
                     <Modal.Header closeButton>
@@ -158,7 +161,8 @@ const TaskDetails: React.FC = () => {
                     <div><strong>note:</strong> {task.note}</div>
                     <div><strong>userKey:</strong> {task.userKey}</div>
                 </div>
-                <Button variant="danger" onClick={openModal}>Delete</Button>
+                {user.roles.includes(("ROLE_MONITOR")) ? <meta/> :
+                    <Button variant="danger" onClick={openModal}>Delete</Button>}
                 <Modal show={showModal} onHide={handleClose}>
                     <Modal.Header closeButton>
                         <Modal.Title>Warning</Modal.Title>

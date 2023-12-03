@@ -8,6 +8,7 @@ import MedicalService from "../services/medical.service.ts";
 import CreatePrescription from "../types/createprescription.type.ts";
 import {Button, Form, Modal} from "react-bootstrap";
 import PrescriptionDisplay from "./display/PrescriptionDisplay.tsx";
+import AuthService from "../services/auth.service.ts";
 
 const TopMedical = () => {
     const [prescriptions, setPrescriptions] = useState([]);
@@ -69,13 +70,16 @@ const TopMedical = () => {
         return <div>Loading...</div>;
     }
 
+    const user = AuthService.getCurrentUser();
+
     return (
         <div className="container">
             <header className="jumbotron">
                 <h1 className="display-4">Medical</h1>
                 <p>This is where we work with our health and medical needs.</p>
                 <h3 className="font-weight-light">Prescriptions
-                    <Button className="spacial-button" variant="primary" onClick={openCreate}>New</Button></h3>
+                    {user.roles.includes(("ROLE_MONITOR")) ? <meta/> :
+                        <Button className="spacial-button" variant="primary" onClick={openCreate}>New</Button>}</h3>
                 <Modal show={showCreate} onHide={handleCreateClose}>
                     <Modal.Header closeButton>
                         <Modal.Title>Prescription Create</Modal.Title>
