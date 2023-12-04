@@ -10,3 +10,7 @@
     color: red;
     font-weight: bold;
 }
+
+#date-popup > div {
+    position: relative !important;
+}

@@ -4,7 +4,7 @@
  * @author David L Whitehurst
  */
 import './custom.css';
-import type React from 'react';
+import React from 'react';
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import FinancialService from "../../services/financial.service.ts";
@@ -12,6 +12,7 @@ import Debt from "../../types/debt.type.ts";
 import {Button, Form, Modal} from 'react-bootstrap';
 import { useNavigate } from "react-router-dom";
 import AuthService from "../../services/auth.service.ts";
+import {DateSelector} from "../DateSelector.tsx";
 
 const DebtDetails: React.FC = () => {
 
@@ -105,6 +106,14 @@ const DebtDetails: React.FC = () => {
     const userkey = debt.userKey;
     const user = AuthService.getCurrentUser();
 
+    const DateSelectorControl = React.forwardRef((props, ref) => {
+        return (
+            <Form.Control {...props} type="date-selector" name="due">
+                <DateSelector />
+            </Form.Control>
+        );
+    });
+
     return (
         <div className="container">
             <header className="jumbotron">
@@ -165,7 +174,7 @@ const DebtDetails: React.FC = () => {
                             </Form.Group>
                             <Form.Group controlId="form12">
                                 <Form.Label><b>Due</b></Form.Label>
-                                <Form.Control type="text" defaultValue={debt.due} name="due"/>
+                                <DateSelector />
                             </Form.Group>
                             <Form.Group controlId="form13">
                                 <Form.Label><b>Payment</b></Form.Label>
