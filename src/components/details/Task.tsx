@@ -12,6 +12,8 @@ import {Button, Form, Modal} from 'react-bootstrap';
 import Task from '../../types/task.type.ts';
 import {useNavigate} from "react-router-dom";
 import AuthService from "../../services/auth.service.ts";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const TaskDetails: React.FC = () => {
 
@@ -20,6 +22,8 @@ const TaskDetails: React.FC = () => {
     const [task, setTask] = useState<Task>();
     const [showModal, setShowModal] = useState(false);
     const [showEdit, setShowEdit] = useState(false);
+    const [dueDate, setDueDate] = useState<Date | null>(new Date());
+    const [completeDate, setCompleteDate] = useState<Date | null>(new Date());
 
     const navigate = useNavigate();
 
@@ -92,6 +96,27 @@ const TaskDetails: React.FC = () => {
 
     }, []);
 
+    // this is sweet !!!!
+    useEffect(() => {
+        if (!task) return;
+
+        if (!task.due) {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-expect-error
+            setDueDate("");
+        } else {
+            setDueDate(new Date(task.due));
+        }
+
+        if (!task.completed) {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-expect-error
+            setCompleteDate("");
+        } else {
+            setCompleteDate(new Date(task.completed));
+        }
+    }, [task]);
+
     if (!task) {
         return <div>Loading...</div>;
     }
@@ -127,11 +152,23 @@ const TaskDetails: React.FC = () => {
                             </Form.Group>
                             <Form.Group controlId="form4">
                                 <Form.Label><b>Due</b></Form.Label>
-                                <Form.Control type="text" defaultValue={task.due} name="due"/>
+                                <DatePicker
+                                    selected={dueDate}
+                                    onChange={(date) => setDueDate(date)}
+                                    name="due"
+                                    wrapperClassName="my-datepicker"
+                                    customInput={<Form.Control type="text" />}
+                                />
                             </Form.Group>
                             <Form.Group controlId="form5">
                                 <Form.Label><b>Completed</b></Form.Label>
-                                <Form.Control type="text" defaultValue={task.completed} name="completed"/>
+                                <DatePicker
+                                    selected={completeDate}
+                                    onChange={(date) => setCompleteDate(date)}
+                                    name="completed"
+                                    wrapperClassName="my-datepicker"
+                                    customInput={<Form.Control type="text" />}
+                                />
                             </Form.Group>
                             <Form.Group controlId="form6">
                                 <Form.Label><b>Trigger</b></Form.Label>

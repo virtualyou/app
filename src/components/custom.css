@@ -11,6 +11,6 @@
     font-weight: bold;
 }
 
-#date-popup > div {
-    position: relative !important;
+.my-datepicker {
+    width: 100%;
 }

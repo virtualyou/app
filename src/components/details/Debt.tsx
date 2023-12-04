@@ -4,7 +4,6 @@
  * @author David L Whitehurst
  */
 import './custom.css';
-import React from 'react';
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import FinancialService from "../../services/financial.service.ts";
@@ -12,7 +11,8 @@ import Debt from "../../types/debt.type.ts";
 import {Button, Form, Modal} from 'react-bootstrap';
 import { useNavigate } from "react-router-dom";
 import AuthService from "../../services/auth.service.ts";
-import {DateSelector} from "../DateSelector.tsx";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const DebtDetails: React.FC = () => {
 
@@ -21,6 +21,7 @@ const DebtDetails: React.FC = () => {
     const [debt, setDebt] = useState<Debt>();
     const [showModal, setShowModal] = useState(false);
     const [showEdit, setShowEdit] = useState(false);
+    const [dueDate, setDueDate] = useState(new Date());
 
     const navigate = useNavigate();
 
@@ -99,20 +100,18 @@ const DebtDetails: React.FC = () => {
 
     }, []);
 
+    // this is sweet !!!!
+    useEffect(() => {
+        if (!debt) return;
+        setDueDate(new Date(debt.due));
+    }, [debt]);
+
     if (!debt) {
         return <div>Loading...</div>;
     }
 
     const userkey = debt.userKey;
     const user = AuthService.getCurrentUser();
-
-    const DateSelectorControl = React.forwardRef((props, ref) => {
-        return (
-            <Form.Control {...props} type="date-selector" name="due">
-                <DateSelector />
-            </Form.Control>
-        );
-    });
 
     return (
         <div className="container">
@@ -174,7 +173,13 @@ const DebtDetails: React.FC = () => {
                             </Form.Group>
                             <Form.Group controlId="form12">
                                 <Form.Label><b>Due</b></Form.Label>
-                                <DateSelector />
+                                <DatePicker
+                                    selected={dueDate}
+                                    onChange={(date) => setDueDate(date)}
+                                    name="due"
+                                    wrapperClassName="my-datepicker"
+                                    customInput={<Form.Control type="text" />}
+                                />
                             </Form.Group>
                             <Form.Group controlId="form13">
                                 <Form.Label><b>Payment</b></Form.Label>

@@ -33,7 +33,6 @@ import TopMedical from "./components/TopMedical.tsx";
 import TopLegal from "./components/TopLegal.tsx";
 import TopAdministration from "./components/TopAdministration.tsx";
 import TopPersonal from "./components/TopPersonal.tsx";
-import DateModal from "./components/DateModal.tsx";
 
 interface Props {
     // Define the props that your component expects
@@ -199,16 +198,11 @@ class App extends Component<Props, State> {
                         <Route path="/peeps" element={<PeepDetails />} />
                         <Route path="/assets" element={<AssetDetails />} />
                         <Route path="/debts" element={<DebtDetails />} />
-
                         <Route path="/financial" element={<TopFinancial />} />
                         <Route path="/medical" element={<TopMedical />} />
                         <Route path="/legal" element={<TopLegal />} />
                         <Route path="/administration" element={<TopAdministration />} />
                         <Route path="/personal" element={<TopPersonal />} />
-
-                        <Route path="/datemodal" element={<DateModal />} />
-
-
                     </Routes>
                 </div>
 
