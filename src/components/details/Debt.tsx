@@ -21,7 +21,7 @@ const DebtDetails: React.FC = () => {
     const [debt, setDebt] = useState<Debt>();
     const [showModal, setShowModal] = useState(false);
     const [showEdit, setShowEdit] = useState(false);
-    const [dueDate, setDueDate] = useState(new Date());
+    const [dueDate, setDueDate] = useState<Date | null>(new Date());
 
     const navigate = useNavigate();
 
