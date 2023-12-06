@@ -9,13 +9,13 @@ export default defineConfig({
             react(),
         ],
         server: {
-            port: 3000, // parseInt(process.env.SERVER_PORT),
+            port: 3000,
             proxy: {
-                '/userauth': 'http://localhost:3001', //process.env.PROXY_AUTH,
-                '/personal': 'http://localhost:3002', //process.env.PROXY_PERSONAL,
-                '/medical': 'http://localhost:3003', //process.env.PROXY_MEDICAL,
-                '/financial': 'http://localhost:3004', //process.env.PROXY_FINANCIAL,
-                '/administration': 'http://localhost:3005' //process.env.PROXY_ADMINISTRATION
+                '/userauth': 'http://localhost:3001',
+                '/personal': 'http://localhost:3002',
+                '/medical': 'http://localhost:3003',
+                '/financial': 'http://localhost:3004',
+                '/administration': 'http://localhost:3005'
             }
         },
         build: {
