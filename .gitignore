@@ -2,7 +2,7 @@
 .env
 /dist
 .idea/
-#.rollup.cache
+.rollup.cache
 
 # dependencies
 /node_modules
