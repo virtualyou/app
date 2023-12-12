@@ -29,10 +29,13 @@ import MedicalService from "../services/medical.service.ts";
 import AuthService from "../services/auth.service";
 import FinancialService from "../services/financial.service.ts";
 import AdministrationService from "../services/administration.service.ts";
+import LegalService from "../services/legal.service.ts";
+
 import PrescriptionDisplay from "./display/PrescriptionDisplay.tsx";
 import AssetDisplay from "./display/AssetDisplay.tsx";
 import DebtDisplay from "./display/DebtDisplay.tsx";
 import TaskDisplay from "./display/TaskDisplay.tsx";
+import DocDisplay from "./display/DocDisplay.tsx";
 
 const user = AuthService.getCurrentUser();
 
@@ -43,6 +46,14 @@ const BoardOwner = () => {
     const [assets, setAssets] = useState([]);
     const [debts, setDebts] = useState([]);
     const [tasks, setTasks] = useState([]);
+    const [docs, setDocs] = useState([]);
+
+    useEffect(() => {
+        LegalService.getDocs()
+            .then((response) => {
+                setDocs(response.data);
+            })
+    }, [])
 
     useEffect(() => {
         AdministrationService.getTasks()
@@ -101,7 +112,7 @@ const BoardOwner = () => {
         );
     }, []);
 
-    if (!content || !tasks || !peeps || !prescriptions || !assets || !debts) {
+    if (!content || !tasks || !peeps || !prescriptions || !assets || !debts || !docs) {
         return <div>Loading...</div>;
     }
 
@@ -122,6 +133,8 @@ const BoardOwner = () => {
                 <AssetDisplay data={assets} />
                 <h3 className="font-weight-light">Debts</h3>
                 <DebtDisplay data={debts} />
+                <h3 className="font-weight-light">Docs</h3>
+                <DocDisplay data={docs} />
 
             </header>
         </div>
