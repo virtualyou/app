@@ -21,7 +21,7 @@ personal.service.ts - Personal service utilizing API
 import axios from "axios";
 import Peep from "../types/peep.type.ts";
 import CreatePeep from "../types/createpeep.type.ts";
-const PERSONAL_URL = "http://localhost:3000/personal/v1/owner/";
+const PERSONAL_URL = import.meta.env.VITE_APP_BASEPATH + "/personal/v1/owner/";
 
 /**
  * Class: PersonalService

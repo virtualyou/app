@@ -22,7 +22,7 @@ import axios from "axios";
 import Prescription from "../types/prescription.type.ts";
 import CreatePrescription from "../types/createprescription.type.ts";
 
-const MED_URL = "http://localhost:3000/medical/v1/owner/";
+const MED_URL = import.meta.env.VITE_APP_BASEPATH + "/medical/v1/owner/";
 
 /**
  * Class: MedicalService

@@ -21,7 +21,7 @@ legal.service.ts - Legal service utilizing API
 import axios from "axios";
 import Doc from "../types/doc.type.ts";
 import CreateDoc from "../types/createdoc.type.ts";
-const LEGAL_URL = "http://localhost:3000/legal/v1/owner/";
+const LEGAL_URL = import.meta.env.VITE_APP_BASEPATH + "/legal/v1/owner/";
 
 /**
  * Class: LegalService

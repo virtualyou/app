@@ -24,7 +24,7 @@ import Debt from "../types/debt.type.ts";
 import CreateAsset from "../types/createasset.type.ts";
 import CreateDebt from "../types/createdebt.type.ts";
 
-const FIN_URL = "http://localhost:3000/financial/v1/owner/";
+const FIN_URL = import.meta.env.VITE_APP_BASEPATH + "/financial/v1/owner/";
 
 /**
  * Class: FinancialService

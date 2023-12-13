@@ -21,7 +21,7 @@ auth.service.ts - Userauth service utilizing API
 import axios from "axios";
 import authHeader from './auth-header';
 
-const AUTH_URL = "http://localhost:3000/userauth/v1/auth/";
+const AUTH_URL = import.meta.env.VITE_APP_BASEPATH + "/userauth/v1/auth/";
 class AuthService {
 
     /**

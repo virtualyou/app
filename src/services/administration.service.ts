@@ -22,7 +22,7 @@ import axios from "axios";
 import Task from "../types/task.type.ts";
 import CreateTask from "../types/createtask.type.ts";
 
-const ADMIN_URL = "http://localhost:3000/administration/v1/owner/";
+const ADMIN_URL = import.meta.env.VITE_APP_BASEPATH + "/administration/v1/owner/";
 
 /**
  * Class: AdministrationService
