@@ -31,7 +31,7 @@ export default interface Prescription {
     written: string,
     writtenBy: string,
     filled: string,
-    expired: string,
+    expires: string,
     refillNote: string,
     manufacturedBy: string,
     note: string,

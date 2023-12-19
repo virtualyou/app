@@ -17,7 +17,6 @@ App.tsx - React App Component
 @author David L Whitehurst
 
 */
-
 import { Component } from "react";
 import { Routes, Route, Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";

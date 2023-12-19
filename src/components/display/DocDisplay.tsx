@@ -42,8 +42,8 @@ const DocDisplay: React.FC<Props> = ({ data }) => {
             <tr>
                 <th>Id</th>
                 <th>Name</th>
-                <th>Email</th>
-                <th>Phone</th>
+                <th>Type</th>
+                <th>Link</th>
             </tr>
             </thead>
             <tbody>

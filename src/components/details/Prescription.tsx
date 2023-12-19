@@ -27,6 +27,8 @@ import Prescription from "../../types/prescription.type.ts";
 import {Button, Form, Modal} from 'react-bootstrap';
 import { useNavigate } from "react-router-dom";
 import AuthService from "../../services/auth.service.ts";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const PrescriptionDetails: React.FC = () => {
 
@@ -35,6 +37,9 @@ const PrescriptionDetails: React.FC = () => {
     const [rx, setRx] = useState<Prescription>();
     const [showModal, setShowModal] = useState(false);
     const [showEdit, setShowEdit] = useState(false);
+    const [writtenDate, setWrittenDate] = useState<Date | null>(new Date());
+    const [filledDate, setFilledDate] = useState<Date | null>(new Date());
+    const [expiresDate, setExpiresDate] = useState<Date | null>(new Date());
 
     const navigate = useNavigate();
 
@@ -78,7 +83,7 @@ const PrescriptionDetails: React.FC = () => {
             written: formData.get('written') as string,
             writtenBy: formData.get('writtenBy') as string,
             filled: formData.get('filled') as string,
-            expired: formData.get('expired') as string,
+            expires: formData.get('expires') as string,
             refillNote: formData.get('refillNote') as string,
             manufacturedBy: formData.get('manufacturedBy') as string,
             note: formData.get('note') as string,
@@ -170,7 +175,13 @@ const PrescriptionDetails: React.FC = () => {
                             </Form.Group>
                             <Form.Group controlId="form9">
                                 <Form.Label><b>Written</b></Form.Label>
-                                <Form.Control type="text" defaultValue={rx.written} name="written"/>
+                                <DatePicker
+                                    selected={writtenDate}
+                                    onChange={(date) => setWrittenDate(date)}
+                                    name="due"
+                                    wrapperClassName="my-datepicker"
+                                    customInput={<Form.Control type="text" />}
+                                />
                             </Form.Group>
                             <Form.Group controlId="form10">
                                 <Form.Label><b>Written By</b></Form.Label>
@@ -178,11 +189,23 @@ const PrescriptionDetails: React.FC = () => {
                             </Form.Group>
                             <Form.Group controlId="form11">
                                 <Form.Label><b>Filled</b></Form.Label>
-                                <Form.Control type="text" defaultValue={rx.filled} name="filled"/>
+                                <DatePicker
+                                    selected={filledDate}
+                                    onChange={(date) => setFilledDate(date)}
+                                    name="due"
+                                    wrapperClassName="my-datepicker"
+                                    customInput={<Form.Control type="text" />}
+                                />
                             </Form.Group>
                             <Form.Group controlId="form12">
-                                <Form.Label><b>Expired</b></Form.Label>
-                                <Form.Control type="text" defaultValue={rx.expired} name="expired"/>
+                                <Form.Label><b>Expires</b></Form.Label>
+                                <DatePicker
+                                    selected={expiresDate}
+                                    onChange={(date) => setExpiresDate(date)}
+                                    name="due"
+                                    wrapperClassName="my-datepicker"
+                                    customInput={<Form.Control type="text" />}
+                                />
                             </Form.Group>
                             <Form.Group controlId="form13">
                                 <Form.Label><b>Refill Note</b></Form.Label>
@@ -217,7 +240,7 @@ const PrescriptionDetails: React.FC = () => {
                     <div><strong>written:</strong> {rx.written}</div>
                     <div><strong>writtenBy:</strong> {rx.writtenBy}</div>
                     <div><strong>filled:</strong> {rx.filled}</div>
-                    <div><strong>expired:</strong> {rx.expired}</div>
+                    <div><strong>expires:</strong> {rx.expires}</div>
                     <div><strong>refillNote:</strong> {rx.refillNote}</div>
                     <div><strong>manufacturedBy:</strong> {rx.manufacturedBy}</div>
                     <div><strong>note:</strong> {rx.note}</div>

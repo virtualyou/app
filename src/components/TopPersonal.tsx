@@ -18,20 +18,110 @@ TopPersonal.tsx - All Personal page (component)
 
 */
 
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import CreatePeep from "../types/createpeep.type.ts";
 import PersonalService from "../services/personal.service.ts";
 import {Button, Form, Modal} from "react-bootstrap";
 import PeepDisplay from "./display/PeepDisplay.tsx";
 import AuthService from "../services/auth.service.ts";
+import 'regenerator-runtime/runtime';
+import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
+import "./custom.css";
 
+const PEEP_TALK = import.meta.env.VITE_APP_BASEPATH + "/speech/v1/assist/create/contact"
 const TopPersonal = () => {
     const [peeps, setPeeps] = useState([]);
-    const [showCreate, setShowCreate] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+    const [refreshPeep, setRefreshPeep] = useState(0);
+    const [isListening, setIsListening] = useState(false);
+    const microphoneRef = useRef(null);
+    const [tmpName, setTmpName] = useState('');
+    const [tmpPhone1, setTmpPhone1] = useState('');
+    const [tmpPhone2, setTmpPhone2] = useState('');
+    const [tmpEmail, setTmpEmail] = useState('');
+    const [tmpAddress, setTmpAddress] = useState('');
+    const [tmpNote, setTmpNote] = useState('');
 
-    // crude refresh
-    function refreshPage() {
-        window.location.reload();
+// declare speech recognition
+    const commands = [
+        {
+            command: 'The name is *',
+            callback: (name: string) => setTmpName(name)
+        },
+        {
+            command: 'The phone number one is *',
+            callback: (phone1: string) => setTmpPhone1(phone1)
+        },
+        {
+            command: 'The phone number two is *',
+            callback: (phone2: string) => setTmpPhone2(phone2)
+        },
+        {
+            command: 'The email is *',
+            callback: (email: string) => setTmpEmail(email)
+        },
+        {
+            command: 'The address is *',
+            callback: (address: string) => setTmpAddress(address)
+        },
+        {
+            command: 'The note is *',
+            callback: (note: string) => setTmpNote(note)
+        },
+    ]
+
+    const { transcript, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition({commands});
+
+    if (!browserSupportsSpeechRecognition) {
+        return (
+            <div className="mircophone-container">
+                Browser does not Support Speech Recognition.
+            </div>
+        );
+    }
+
+    const playQuip = () => {
+        const audio = new Audio(PEEP_TALK);
+        audio.play(); // must be asynchronous
+        audio.onended = function() {
+            setShowModal(true);
+        };
+    }
+
+    const startListener = () => {
+        flushTmpState();
+        resetTranscript();
+        setIsListening(true);
+        // @ts-ignore
+        microphoneRef.current.classList.add("listening");
+        SpeechRecognition.startListening({
+            continuous: true,
+        });
+    };
+
+    const stopListener = () => {
+        setIsListening(false);
+        // @ts-ignore
+        microphoneRef.current.classList.remove("listening");
+        SpeechRecognition.stopListening();
+    };
+
+    const handleReset = () => {
+        stopListener();
+        resetTranscript();
+        flushTmpState();
+    };
+
+    const flushTmpState = () => {
+        setTmpName('');
+        setTmpPhone1('');
+        setTmpPhone2('');
+        setTmpEmail('');
+        setTmpAddress('');
+        setTmpNote('');
+    }
+    const closeModal = () => {
+        return setShowModal(false);
     }
 
     // create popup modal
@@ -48,29 +138,17 @@ const TopPersonal = () => {
             userKey: parseInt(localStorage.getItem("ownerid") || "0")
         };
         PersonalService.createPeep(formPeepValues);
-        handleCreateClose();
-        refreshPage();
-        //goBack();
+        handleReset();
+        closeModal();
+        setRefreshPeep(oldVal => oldVal +1);
     };
-
-    const handleCreateClose = () => {
-        return setShowCreate(false);
-    }
-
-    const showCreatePop = () => {
-        return setShowCreate(true);
-    }
-
-    const openCreate = () => {
-        return showCreatePop();
-    }
 
     useEffect(() => {
         PersonalService.getPeeps()
             .then((response) => {
                 setPeeps(response.data);
             })
-    }, [])
+    }, [refreshPeep])
 
     if (!peeps) {
         return <div>Loading...</div>;
@@ -83,43 +161,56 @@ const TopPersonal = () => {
             <header className="jumbotron">
                 <h1 className="display-4">Personal</h1>
                 <p>This is where we keep things closest to us.</p>
-                <h3 className="font-weight-light">Contacts
+                <h3 className="font-weight-light">Contacts</h3>
+
                     {user.roles.includes(("ROLE_MONITOR")) ? <meta/> :
-                        <Button className="spacial-button" variant="primary" onClick={openCreate}>New</Button>}</h3>
-                <Modal show={showCreate} onHide={handleCreateClose}>
+                        <Button className="spacial-button" variant="primary" onClick={playQuip}>New</Button>}
+
+                    <Modal show={showModal} onHide={closeModal} ref={microphoneRef} onShow={startListener}>
                     <Modal.Header closeButton>
-                        <Modal.Title>Contact Create</Modal.Title>
+                        <Modal.Title>New Contact</Modal.Title>
+                        {isListening ? (
+                            <div className="led-green" ref={microphoneRef} onClick={stopListener}>
+                            </div>
+                        ) : (
+                            <div className="led-red" ref={microphoneRef} onClick={startListener}>
+                            </div>
+                        )}
+                        <div>{transcript}</div>
                     </Modal.Header>
                     <Modal.Body>
                         <Form onSubmit={handleSubmit}>
                             <Form.Group controlId="form1">
                                 <Form.Label><b>Name</b></Form.Label>
-                                <Form.Control type="text" placeholder="Enter name" id="name" name="name"/>
+                                <Form.Control type="text" placeholder="Enter name" defaultValue={tmpName} id="name" name="name"/>
                             </Form.Group>
                             <Form.Group controlId="form2">
                                 <Form.Label><b>Phone1</b></Form.Label>
-                                <Form.Control type="text" placeholder="Enter phone1" id="phone1" name="phone1"/>
+                                <Form.Control type="text" placeholder="Enter phone1" defaultValue={tmpPhone1} id="phone1" name="phone1"/>
                             </Form.Group>
                             <Form.Group controlId="form3">
                                 <Form.Label><b>Phone2</b></Form.Label>
-                                <Form.Control type="text" placeholder="Enter phone2" id="phone2" name="phone2"/>
+                                <Form.Control type="text" placeholder="Enter phone2" defaultValue={tmpPhone2} id="phone2" name="phone2"/>
                             </Form.Group>
                             <Form.Group controlId="form4">
                                 <Form.Label><b>Email</b></Form.Label>
-                                <Form.Control type="text" placeholder="Enter email" id="email" name="email"/>
+                                <Form.Control type="text" placeholder="Enter email" defaultValue={tmpEmail} id="email" name="email"/>
                             </Form.Group>
                             <Form.Group controlId="form5">
                                 <Form.Label><b>Address</b></Form.Label>
-                                <Form.Control type="text" placeholder="Enter address" id="address" name="address"/>
+                                <Form.Control type="text" placeholder="Enter address" defaultValue={tmpAddress} id="address" name="address"/>
                             </Form.Group>
                             <Form.Group controlId="form6">
                                 <Form.Label><b>Note</b></Form.Label>
-                                <Form.Control type="text" placeholder="Enter note" id="note" name="note"/>
+                                <Form.Control type="text" placeholder="Enter note" defaultValue={tmpNote} id="note" name="note"/>
                             </Form.Group>
-                            <Button variant="primary" type="submit">
+                            <Button className="buttonMargin" variant="primary" type="submit">
                                 Submit
                             </Button>&nbsp;
-                            <Button variant="secondary" onClick={handleCreateClose}>
+                            <Button className="buttonMargin" variant="secondary" onClick={handleReset}>
+                                Reset
+                            </Button>&nbsp;
+                            <Button className="buttonMargin" variant="secondary" onClick={closeModal}>
                                 Cancel
                             </Button>
                         </Form>

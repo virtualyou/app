@@ -16,7 +16,8 @@ export default defineConfig({
                 '/medical': 'http://localhost:3003',
                 '/financial': 'http://localhost:3004',
                 '/administration': 'http://localhost:3005',
-                '/legal': 'http://localhost:3006'
+                '/legal': 'http://localhost:3006',
+                '/speech': 'http://localhost:5000'
             }
         },
         build: {
