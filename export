@@ -1,8 +1,0 @@
-# Cannot be run as script. Copy and paste in app terminal.
-
-export SERVER_PORT=3000
-export PROXY_AUTH=http://localhost:3001
-export PROXY_PERSONAL=http://localhost:3002
-export PROXY_MEDICAL=http://localhost:3003
-export PROXY_FINANCIAL=http://localhost:3004
-export PROXY_ADMINISTRATION=http://localhost:3005
