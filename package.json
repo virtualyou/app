@@ -1,7 +1,7 @@
 {
   "name": "app",
   "private": true,
-  "version": "0.2.8-beast",
+  "version": "0.2.9-beast",
   "license": "Apache-2.0",
   "scripts": {
     "dev": "vite",

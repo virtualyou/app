@@ -11,17 +11,16 @@ export default defineConfig({
         server: {
             port: 3000,
             proxy: {
-                '/userauth': 'https://userauth.virtualyou.info',
-                '/personal': 'https://personal.virtualyou.info',
-                '/medical': 'https://medical.virtualyou.info',
-                '/financial': 'https://financial.virtualyou.info',
-                '/administration': 'https://administration.virtualyou.info',
-                '/legal': 'https://legal.virtualyou.info',
-                '/speech': 'https://speech.virtualyou.info'
+                '/userauth': 'http://localhost:3001',
+                '/personal': 'http://localhost:3002',
+                '/medical': 'http://localhost:3003',
+                '/financial': 'http://localhost:3004',
+                '/administration': 'http://localhost:3005',
+                '/legal': 'http://localhost:3006',
+                '/speech': 'http://localhost:5000'
             }
         },
         build: {
-	    publicPath: 'https://app.virtualyou.com',
             chunkSizeWarningLimit: 2000,
             rollupOptions: {
                 output: {

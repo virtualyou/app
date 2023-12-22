@@ -18,7 +18,7 @@ formvalues.type.ts - Type for name, email for modal form prior to email invite
 
 */
 
-export default interface FormValues {
+export default interface InviteFormValues {
      name: string;
      email: string;
 }

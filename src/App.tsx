@@ -46,6 +46,7 @@ import TopMedical from "./components/TopMedical.tsx";
 import TopLegal from "./components/TopLegal.tsx";
 import TopAdministration from "./components/TopAdministration.tsx";
 import TopPersonal from "./components/TopPersonal.tsx";
+import Pricing from "./components/Pricing.tsx";
 
 interface Props {
     // Define the props that your component expects
@@ -183,12 +184,18 @@ class App extends Component<Props, State> {
                                     Login
                                 </Link>
                             </li>
-
+                            <li className="nav-item">
+                                <Link to={"/pricing"} className="nav-link">
+                                    Pricing
+                                </Link>
+                            </li>
+                            {/*
                             <li className="nav-item">
                                 <Link to={"/register"} className="nav-link">
                                     Register
                                 </Link>
                             </li>
+                            */}
                         </div>
                     )}
                 </nav>
@@ -199,6 +206,7 @@ class App extends Component<Props, State> {
                         <Route path="/home" element={<Home />} />
                         <Route path="/login" element={<Login />} />
                         <Route path="/register" element={<Register />} />
+                        <Route path="/pricing" element={<Pricing />} />
                         <Route path="/profile" element={<Profile />} />
                         <Route path="/owner" element={<BoardOwner />} />
                         <Route path="/agent" element={<BoardAgent />} />
