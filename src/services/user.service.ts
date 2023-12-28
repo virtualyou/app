@@ -19,25 +19,15 @@ user.service.ts - Userauth service utilizing API
 */
 
 import axios from 'axios';
-import authHeader from './auth-header';
+import clientHeader from "./client-header";
+import authHeader from "./auth-header";
 
 const USER_URL = import.meta.env.VITE_APP_BASEPATH + "/userauth/v1/"
 
+// app calling userauth and not as user/role
 class UserService {
-  getPublicContent() {
-    return axios.get(USER_URL + 'all', { headers: authHeader() });
-  }
-
-  getOwnerBoard() {
-    return axios.get(USER_URL + 'owner', { headers: authHeader() });
-  }
-
   getAgentBoard() {
     return axios.get(USER_URL + 'agent', { headers: authHeader() });
-  }
-
-  getMonitorBoard() {
-    return axios.get(USER_URL + 'monitor', { headers: authHeader() });
   }
 
   getAdminBoard() {
@@ -45,7 +35,8 @@ class UserService {
   }
 
   getOwner(ownerId: number) {
-    return axios.get(USER_URL + 'users/' + ownerId, { headers: authHeader() });
+    // send with client_id and client_secret
+    return axios.get(USER_URL + 'users/' + ownerId, { headers: clientHeader() });
   }
 }
 

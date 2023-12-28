@@ -19,7 +19,7 @@ RegisterMonitor.tsx - Monitor registration (component)
 */
 
 import { useLocation } from 'react-router-dom';
-import {keysMatchForMonitor} from "../utility/KeyValidator.ts";
+import {keysMatchForMonitor} from "../utility/key.utils.ts";
 import {ErrorMessage, Field, Form, Formik} from "formik";
 import AuthService from "../services/auth.service.ts";
 import {useEffect, useState} from "react";

@@ -19,7 +19,7 @@ RegisterAgent.tsx - Agent registration (component)
 */
 
 import { useLocation } from 'react-router-dom';
-import {keysMatchForAgent} from "../utility/KeyValidator.ts";
+import {keysMatchForAgent} from "../utility/key.utils.ts";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import AuthService from "../services/auth.service.ts";
 import { useState, useEffect } from "react";

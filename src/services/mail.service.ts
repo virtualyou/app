@@ -18,47 +18,52 @@ mail.service.ts - AWS SES email service
 
 */
 
-import { SES } from "@aws-sdk/client-ses";
+import InviteFormValues from "../types/formvalues.type";
+import axios from "axios";
+import authHeader from "./auth-header.ts";
+import { getCurrentUser, getAgentReturnLink, getMonitorReturnLink} from "../utility/email.utils.ts";
 
-import { getParams } from "../utility/EmailParams.ts";
-import { getAgentBody, getMonitorBody } from "../utility/EmailBody.ts"
-import FormValues from "../types/formvalues.type.ts";
-
+const NOTIFICATION_URL = import.meta.env.VITE_APP_BASEPATH + "/notification/v1/owner/";
 class MailService {
 
-    // AWS SES Client
-    private ses = new SES({
-        region: import.meta.env.VITE_AWS_REGION,
-        credentials: {
-            accessKeyId: import.meta.env.VITE_AWS_ACCESS_KEY,
-            secretAccessKey: import.meta.env.VITE_AWS_SECRET_ACCESS_KEY,
-        }
-    });
-
     // Send Agent Invitation Email
-    emailAgent(formData: FormValues) {
-        console.log(formData.email);
-        const params= getParams(formData.email, getAgentBody(formData.name), "VirtualYou Agent Invitation", "me@dlwhitehurst.com");
-        this.ses.sendEmail(params, (err: any, data: any) => {
-            if (err) {
-                console.error(err);
-            } else {
-                console.log(data);
+    emailAgent(formData: InviteFormValues) {
+        const owner = getCurrentUser().username;
+        const name = formData.name;
+        const email = formData.email;
+        const returnLink = getAgentReturnLink();
+        // axios POST to API
+        return axios.post(NOTIFICATION_URL + "agent-invite", {
+            name,
+            email,
+            owner,
+            returnLink
+        }, { headers: authHeader() })
+            .then(response => {
+            if (response.data) {
+                console.log(response.data);
             }
         });
     }
 
     // Send Monitor Invitation Email
-    emailMonitor(formData: FormValues) {
-        console.log(formData.email);
-        const params= getParams(formData.email, getMonitorBody(formData.name), "VirtualYou Monitor Invitation", "me@dlwhitehurst.com");
-        this.ses.sendEmail(params, (err: any, data: any) => {
-            if (err) {
-                console.error(err);
-            } else {
-                console.log(data);
-            }
-        });
+    emailMonitor(formData: InviteFormValues) {
+        const owner = getCurrentUser().username;
+        const name = formData.name;
+        const email = formData.email;
+        const returnLink = getMonitorReturnLink();
+        // axios POST to API
+        return axios.post(NOTIFICATION_URL + "monitor-invite", {
+            name,
+            email,
+            owner,
+            returnLink
+        }, { headers: authHeader() })
+            .then(response => {
+                if (response.data) {
+                    console.log(response.data);
+                }
+            });
     }
 }
 

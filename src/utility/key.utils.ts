@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
-KeyValidator.ts - Functions for matching Agent and Monitor deterministic keys
+key.utils.ts - Functions for matching Agent and Monitor deterministic keys
 @author David L Whitehurst
 
 */
@@ -35,6 +35,7 @@ export async function keysMatchForAgent(id: number, key: string): Promise<boolea
             const md = forge.md.sha256.create();
             md.update(result.data.agentMnemonic);
             const originalKey = md.digest().toHex();
+            console.log(originalKey);
             return originalKey === key;
         })
         .catch((error) => {
@@ -57,6 +58,7 @@ export async function keysMatchForMonitor(id: number, key: string): Promise<bool
             const md = forge.md.sha256.create();
             md.update(result.data.monitorMnemonic);
             const originalKey = md.digest().toHex();
+            console.log(originalKey);
             return originalKey === key;
         })
         .catch((error) => {
