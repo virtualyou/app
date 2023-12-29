@@ -44,6 +44,7 @@ const RegisterMonitor = () => {
 
     interface Values {
         username: string,
+        fullname: string,
         email: string,
         password: string,
         idOwner: any
@@ -51,6 +52,7 @@ const RegisterMonitor = () => {
 
     const initialValues: Values = {
         username: "",
+        fullname: "",
         email: "",
         password: "",
         idOwner: ownerId
@@ -71,6 +73,16 @@ const RegisterMonitor = () => {
             email: Yup.string()
                 .email("This is not a valid email.")
                 .required("This field is required!"),
+            fullname: Yup.string()
+                .test(
+                    "len",
+                    "The fullname must be between 4 and 32 characters",
+                    (val: any) =>
+                        val &&
+                        val.toString().length >= 4 &&
+                        val.toString().length <= 32
+                )
+                .required("This field is required"),
             password: Yup.string()
                 .test(
                     "len",
@@ -84,12 +96,13 @@ const RegisterMonitor = () => {
         });
     };
 
-    const handleRegister = (formValue: { username: string; email: string; password: string; idOwner: string }) => {
-        const { username, email, password, idOwner } = formValue;
+    const handleRegister = (formValue: { username: string; email: string; fullname: string; password: string; idOwner: string }) => {
+        const { username, email, fullname, password, idOwner } = formValue;
         setMessage("");
         setSuccessful(false);
         AuthService.registerHelper(
             username,
+            fullname,
             email,
             password,
             parseInt(idOwner),
@@ -141,6 +154,16 @@ const RegisterMonitor = () => {
                                         <Field name="username" type="text" className="form-control"/>
                                         <ErrorMessage
                                             name="username"
+                                            component="div"
+                                            className="alert alert-danger"
+                                        />
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label htmlFor="fullname"> Fullname </label>
+                                        <Field name="fullname" type="text" className="form-control" />
+                                        <ErrorMessage
+                                            name="fullname"
                                             component="div"
                                             className="alert alert-danger"
                                         />

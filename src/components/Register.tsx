@@ -32,6 +32,7 @@ interface Props {
 type State = {
     username: string,
     email: string,
+    fullname: string,
     password: string,
     successful: boolean,
     message: string
@@ -47,6 +48,7 @@ export default class Register extends Component<Props, State> {
             username: "",
             email: "",
             password: "",
+            fullname: "",
             successful: false,
             message: "",
         };
@@ -70,6 +72,16 @@ export default class Register extends Component<Props, State> {
             email: Yup.string()
                 .email("This is not a valid email.")
                 .required("This field is required!"),
+            fullname: Yup.string()
+                .test(
+                    "len",
+                    "The fullname must be between 4 and 32 characters",
+                    (val: any) =>
+                        val &&
+                        val.toString().length >= 4 &&
+                        val.toString().length <= 32
+                )
+                .required("This field is required"),
             password: Yup.string()
                 .test(
                     "len",
@@ -83,8 +95,8 @@ export default class Register extends Component<Props, State> {
         });
     }
 
-    handleRegister(formValue: { username: string; email: string; password: string }) {
-        const { username, email, password } = formValue;
+    handleRegister(formValue: { username: string; email: string; fullname: string; password: string }) {
+        const { username, email, fullname, password } = formValue;
 
         this.setState({
             message: "",
@@ -94,7 +106,8 @@ export default class Register extends Component<Props, State> {
         AuthService.register(
             username,
             email,
-            password
+            fullname,
+            password,
         ).then(
             response => {
                 this.setState({
@@ -124,6 +137,7 @@ export default class Register extends Component<Props, State> {
         const initialValues = {
             username: "",
             email: "",
+            fullname: "",
             password: "",
         };
 
@@ -149,6 +163,16 @@ export default class Register extends Component<Props, State> {
                                         <Field name="username" type="text" className="form-control" />
                                         <ErrorMessage
                                             name="username"
+                                            component="div"
+                                            className="alert alert-danger"
+                                        />
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label htmlFor="fullname"> Fullname </label>
+                                        <Field name="fullname" type="text" className="form-control" />
+                                        <ErrorMessage
+                                            name="fullname"
                                             component="div"
                                             className="alert alert-danger"
                                         />

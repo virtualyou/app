@@ -131,8 +131,7 @@ const BoardMonitor = () => {
         <div className="container">
             <header className="jumbotron">
                 <h1 className="display-4">Monitor Dashboard</h1>
-                <p className="red-bold">WARNING: This data is owned by {owner.username}. You cannot change it however,
-                    you are still responsible for the integrity of someone else's data.</p>
+                <p className="red-bold">WARNING: This read-only data is owned by {owner.fullname}. You are still responsible for the integrity of this data.</p>
                 <InfoAlert note={"Don't forget to validate medications."} />
                 <h3 className="font-weight-light">Tasks</h3>
                 <TaskDisplay data={tasks} />

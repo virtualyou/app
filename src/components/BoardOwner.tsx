@@ -95,7 +95,7 @@ const BoardOwner = () => {
         <div className="container">
             <header className="jumbotron">
                 <h1 className="display-4">Owner Dashboard</h1>
-                <p>Owner: <b>{user.username}</b></p>
+                <p>Owner: <b>{user.fullname}</b></p>
                 <p className="lead">This dashboard provides notifications and key data on a single landing page.</p>
                 <InfoAlert note={"Hello Mom, from your favorite Agent, David L Whitehurst"} />
                 <h3 className="font-weight-light">Tasks</h3>

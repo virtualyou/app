@@ -32,9 +32,8 @@ export function getOwnerName() {
 }
 
 export function getAgentReturnLink() {
-    let id = -1;
     let dkey = '';
-    id = getCurrentUser().id;
+    let id = getCurrentUser().id;
     if (id > 0) {
         const agentMne = getCurrentUser().agentMnemonic;
         const md = forge.md.sha256.create();
@@ -47,9 +46,8 @@ export function getAgentReturnLink() {
 }
 
 export function getMonitorReturnLink() {
-    let id = -1;
     let dkey = '';
-    id = getCurrentUser().id;
+    let id = getCurrentUser().id;
     if (id > 0) {
         const monitorMne = getCurrentUser().monitorMnemonic;
         const md = forge.md.sha256.create();

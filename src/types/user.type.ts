@@ -21,6 +21,7 @@ user.type.ts - User type interface
 export default interface User {
     id: number,
     username: string | null,
+    fullname: string,
     email: string,
     password: string,
     roles: Array<string>,

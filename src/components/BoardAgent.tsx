@@ -130,8 +130,8 @@ const BoardAgent = () => {
         <div className="container">
             <header className="jumbotron">
                 <h1 className="display-4">Agent Dashboard</h1>
-                <p className="red-bold">WARNING: This data is owned by {owner.username}. You are responsible for the
-                    integrity of someone else's data.</p>
+                <p className="red-bold">WARNING: This data is owned by {owner.fullname}. You are responsible for the
+                    integrity of this data.</p>
                 <InfoAlert note={"Don't forget to validate medications."} />
                 <h3 className="font-weight-light">Tasks</h3>
                 <TaskDisplay data={tasks} />

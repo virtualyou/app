@@ -43,8 +43,12 @@ const AssetDetails: React.FC = () => {
     }
 
     // modal state
-    const handleOkay = () => {
-        FinancialService.deleteAsset(parseInt(param));
+    const handleOkay = async () => {
+        try {
+            await FinancialService.deleteAsset(parseInt(param));
+        } catch (error) {
+            console.error(error);
+        }
         handleClose();
         goBack();
     };
@@ -62,7 +66,7 @@ const AssetDetails: React.FC = () => {
     }
 
     // editor popup modal
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
         const formAssetValues: Asset = {
@@ -79,7 +83,12 @@ const AssetDetails: React.FC = () => {
             balance: formData.get('balance') as string,
             userKey: userkey
         };
-        FinancialService.updateAsset(parseInt(param), formAssetValues);
+        try {
+            await FinancialService.updateAsset(parseInt(param), formAssetValues);
+        } catch(error) {
+            console.error(error);
+        }
+
         handleEditorClose();
         goBack();
     };

@@ -28,7 +28,7 @@ class MailService {
 
     // Send Agent Invitation Email
     emailAgent(formData: InviteFormValues) {
-        const owner = getCurrentUser().username;
+        const owner = getCurrentUser().fullname;
         const name = formData.name;
         const email = formData.email;
         const returnLink = getAgentReturnLink();
@@ -48,7 +48,7 @@ class MailService {
 
     // Send Monitor Invitation Email
     emailMonitor(formData: InviteFormValues) {
-        const owner = getCurrentUser().username;
+        const owner = getCurrentUser().fullname;
         const name = formData.name;
         const email = formData.email;
         const returnLink = getMonitorReturnLink();
