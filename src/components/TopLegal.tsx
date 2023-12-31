@@ -39,7 +39,7 @@ const TopLegal = () => {
     const [tmpType, setTmpType] = useState('');
 
     // create popup modal
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
         const formDocValues: CreateDoc = {
@@ -48,7 +48,13 @@ const TopLegal = () => {
             link: formData.get('link') as string,
             userKey: parseInt(localStorage.getItem("ownerid") || "0")
         };
-        LegalService.createDoc(formDocValues);
+        try {
+            await LegalService.createDoc(formDocValues);
+        } catch (error) {
+            console.error(error);
+        }
+
+        await handleReset();
         closeModal();
         setRefreshDoc(oldVal => oldVal + 1);
     };
@@ -64,8 +70,8 @@ const TopLegal = () => {
             callback: (type: string) => setTmpType(type)
         },
     ]
-
-    const { transcript, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition({commands});
+    // removing transcript
+    const { resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition({commands});
 
     if (!browserSupportsSpeechRecognition) {
         return (
@@ -83,24 +89,32 @@ const TopLegal = () => {
         };
     }
 
-    const startListener = () => {
+    const startListener = async () => {
         flushTmpState();
         resetTranscript();
         setIsListening(true);
         // @ts-ignore
         microphoneRef.current.classList.add("listening");
-        SpeechRecognition.startListening({
-            continuous: true,
-        });
+        try {
+            await SpeechRecognition.startListening({
+                continuous: true,
+            });
+        } catch (error) {
+            console.error(error);
+        }
     };
-    const stopListener = () => {
+    const stopListener = async () => {
         setIsListening(false);
         // @ts-ignore
         microphoneRef.current.classList.remove("listening");
-        SpeechRecognition.stopListening();
+        try {
+            await SpeechRecognition.stopListening();
+        } catch (error) {
+            console.error(error);
+        }
     };
-    const handleReset = () => {
-        stopListener();
+    const handleReset = async () => {
+        await stopListener();
         resetTranscript();
         flushTmpState();
     };
@@ -144,21 +158,21 @@ const TopLegal = () => {
                             <div className="led-red" ref={microphoneRef} onClick={startListener}>
                             </div>
                         )}
-                        <div>{transcript}</div>
+                        {/* <div>{transcript}</div> */}
                     </Modal.Header>
                     <Modal.Body>
                         <Form onSubmit={handleSubmit}>
-                            <Form.Group controlId="form1">
+                            <Form.Group>
                                 <Form.Label><b>Name</b></Form.Label>
                                 <Form.Control type="text" placeholder="Enter name" defaultValue={tmpName} id="name" name="name"
                                               title="You can say, the name is health care directive."/>
                             </Form.Group>
-                            <Form.Group controlId="form2">
+                            <Form.Group>
                                 <Form.Label><b>Type</b></Form.Label>
                                 <Form.Control type="text" placeholder="Enter type" defaultValue={tmpType} id="type" name="type"
                                               title="You can say, the type is google drive"/>
                             </Form.Group>
-                            <Form.Group controlId="form3">
+                            <Form.Group>
                                 <Form.Label><b>Link</b></Form.Label>
                                 <Form.Control type="text" placeholder="Enter link" id="link" name="link"
                                               title="We cannot take this verbally. We suggest you paste the link here."/>

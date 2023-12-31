@@ -19,13 +19,17 @@ user.type.ts - User type interface
 */
 
 export default interface User {
-    id: number,
     username: string | null,
     fullname: string,
     email: string,
     password: string,
-    roles: Array<string>,
     ownerId: number,
+    agentOwnerId: number,
+    monitorOwnerId: number,
+    agentActive: boolean,
+    monitorActive: boolean,
     agentMnemonic: string,
-    monitorMnemonic: string
+    monitorMnemonic: string,
+    agentId: number,
+    monitorId: number
 }

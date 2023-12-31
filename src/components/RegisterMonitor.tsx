@@ -22,6 +22,7 @@ import { useLocation } from 'react-router-dom';
 import {keysMatchForMonitor} from "../utility/key.utils.ts";
 import {ErrorMessage, Field, Form, Formik} from "formik";
 import AuthService from "../services/auth.service.ts";
+import UserService from "../services/user.service.ts";
 import {useEffect, useState} from "react";
 import * as Yup from "yup";
 
@@ -100,17 +101,26 @@ const RegisterMonitor = () => {
         const { username, email, fullname, password, idOwner } = formValue;
         setMessage("");
         setSuccessful(false);
+
+        // signup as monitor
         AuthService.registerHelper(
             username,
-            fullname,
             email,
+            fullname,
             password,
+            0,
+            0,
             parseInt(idOwner),
             "monitor"
         ).then(
             response => {
                 setMessage(response.data.message);
                 setSuccessful(true);
+                UserService.getMonitorWhereOwnerId(parseInt(idOwner)).then(
+                    response => {
+                        UserService.setMonitorIdForOwner(response.data.id, parseInt(idOwner));
+                    }
+                );
             },
             error => {
                 const resMessage =

@@ -53,6 +53,12 @@ const BoardAdmin = () => {
       <header className="jumbotron">
         <h3>{content}</h3>
       </header>
+      <p></p>
+      <p></p>
+      <footer className="container">
+        <p><img src="https://dlwhitehurst.com/vy.png" alt="brand icon" width="24"
+                height="24"/> &copy; VirtualYou and David L Whitehurst 2023</p>
+      </footer>
     </div>
   );
 };

@@ -43,8 +43,12 @@ const PeepDetails: React.FC = () => {
     }
 
     // modal state
-    const handleOkay = () => {
-        PersonalService.deletePeep(parseInt(param));
+    const handleOkay = async () => {
+        try {
+            await PersonalService.deletePeep(parseInt(param));
+        } catch (error) {
+            console.error(error);
+        }
         handleClose();
         goBack();
     };
@@ -62,7 +66,7 @@ const PeepDetails: React.FC = () => {
     }
 
     // editor popup modal
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
         const formPeepValues: Peep = {
@@ -75,7 +79,11 @@ const PeepDetails: React.FC = () => {
             note: formData.get('note') as string,
             userKey: userkey
         };
-        PersonalService.updatePeep(parseInt(param), formPeepValues);
+        try {
+            await PersonalService.updatePeep(parseInt(param), formPeepValues);
+        } catch (error) {
+            console.error(error);
+        }
         handleEditorClose();
         goBack();
     };

@@ -19,6 +19,7 @@ Debt.tsx - Detail page for single Debt
 */
 
 import './custom.css';
+import type React from 'react';
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import FinancialService from "../../services/financial.service.ts";
@@ -45,8 +46,12 @@ const DebtDetails: React.FC = () => {
     }
 
     // modal state
-    const handleOkay = () => {
-        FinancialService.deleteDebt(parseInt(param));
+    const handleOkay = async () => {
+        try {
+            await FinancialService.deleteDebt(parseInt(param));
+        } catch (error) {
+            console.error(error);
+        }
         handleClose();
         goBack();
     };
@@ -64,7 +69,7 @@ const DebtDetails: React.FC = () => {
     }
 
     // editor popup modal
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
         const formDebtValues: Debt = {
@@ -84,7 +89,11 @@ const DebtDetails: React.FC = () => {
             payment: formData.get('payment') as string,
             userKey: userkey
         };
-        FinancialService.updateDebt(parseInt(param), formDebtValues);
+        try {
+            await FinancialService.updateDebt(parseInt(param), formDebtValues);
+        } catch (error) {
+            console.error(error);
+        }
         handleEditorClose();
         goBack();
     };

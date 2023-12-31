@@ -30,7 +30,7 @@ export default interface CreateDebt {
     holdingCompanyPhone: string,
     balance: string,
     frequency: string,
-    due: string,
+    due: string | null,
     payment: string,
     userKey: number
 }

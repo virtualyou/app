@@ -19,12 +19,12 @@ createtask.type.ts - Task type interface with no id (POST type)
 */
 
 export default interface CreateTask {
-    name: string,
-    type: string,
-    priority: string,
-    due: string,
-    completed: string,
-    trigger: string,
-    note: string,
-    userKey: number
+    name: string;
+    type: string;
+    priority: string;
+    due: string | null;
+    completed: string | null;
+    trigger: string;
+    note: string;
+    userKey: number;
 }

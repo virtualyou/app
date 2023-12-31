@@ -95,13 +95,18 @@ class AuthService {
      *
      * @param username - String username
      * @param email - String email
+     * @param fullname - String fullname
      * @param password - String password
+     * @param ownerId - Number id for owner unique key
+     * @param agentOwnerId - Number id for owner id designating agent
+     * @param monitorOwnerId - Number id for owner id designating monitor
      * @param role - String role (strict set of names e.g. owner, agent, monitor, admin)
      * @remarks
      * using Axios calling userauth API
      * @returns Promise.
      */
-    registerHelper(username: string, email: string, fullname: string, password: string, ownerId: number, role: string) {
+    registerHelper(username: string, email: string, fullname: string, password: string, ownerId: number,
+                   agentOwnerId: number, monitorOwnerId: number, role: string) {
         // must generate deterministic key from owner mnemonic and verify against the registrant's query parameter dkey
             const roles: string[] = [role];
             return axios.post(AUTH_URL + "signup", {
@@ -110,6 +115,8 @@ class AuthService {
                 fullname,
                 password,
                 ownerId,
+                agentOwnerId,
+                monitorOwnerId,
                 roles
             }, { headers: authHeader() });
     }

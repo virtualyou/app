@@ -35,8 +35,8 @@ const TopAdministration = () => {
     const [tasks, setTasks] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [refreshAdmin, setRefreshAdmin] = useState(0);
-    const [dueDate, setDueDate] = useState<Date | null>(new Date());
-    const [completeDate, setCompleteDate] = useState<Date | null>(new Date());
+    const [dueDate, setDueDate] = useState<Date | null>(null);
+    const [completeDate, setCompleteDate] = useState<Date | null>(null);
     const [isListening, setIsListening] = useState(false);
     const microphoneRef = useRef(null);
     const [tmpName, setTmpName] = useState('');
@@ -46,20 +46,43 @@ const TopAdministration = () => {
     const [tmpNote, setTmpNote] = useState('');
 
     // create popup modal
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
+
+        let completed;
+        let due;
+
+        if (formData.get('completed') === "") {
+            completed = null;
+        } else {
+            completed = formData.get('completed') as string;
+        }
+
+        if (formData.get('due') === "") {
+            due = null;
+        } else {
+            due = formData.get('due') as string;
+        }
+
         const formPeepValues: CreateTask = {
             name: formData.get('name') as string,
             type: formData.get('type') as string,
             priority: formData.get('priority') as string,
-            due: formData.get('due') as string,
-            completed: formData.get('completed') as string,
+            due: due,
+            completed: completed,
             trigger: formData.get('trigger') as string,
             note: formData.get('note') as string,
             userKey: parseInt(localStorage.getItem("ownerid") || "0")
         };
-        AdministrationService.createTask(formPeepValues);
+
+        try {
+            await AdministrationService.createTask(formPeepValues);
+        } catch (error) {
+            console.error(error);
+        }
+
+        await handleReset();
         closeModal();
         setRefreshAdmin(oldVal => oldVal +1);
     };
@@ -87,8 +110,8 @@ const TopAdministration = () => {
             callback: (note: string) => setTmpNote(note)
         },
     ]
-
-    const { transcript, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition({commands});
+    // removing transcript
+    const { resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition({commands});
 
     if (!browserSupportsSpeechRecognition) {
         return (
@@ -106,24 +129,32 @@ const TopAdministration = () => {
         };
     }
 
-    const startListener = () => {
+    const startListener = async () => {
         flushTmpState();
         resetTranscript();
         setIsListening(true);
         // @ts-ignore
         microphoneRef.current.classList.add("listening");
-        SpeechRecognition.startListening({
-            continuous: true,
-        });
+        try {
+            await SpeechRecognition.startListening({
+                continuous: true,
+            });
+        } catch (error) {
+            console.error(error);
+        }
     };
-    const stopListener = () => {
+    const stopListener = async () => {
         setIsListening(false);
         // @ts-ignore
         microphoneRef.current.classList.remove("listening");
-        SpeechRecognition.stopListening();
+        try {
+            await SpeechRecognition.stopListening();
+        } catch (error) {
+            console.error(error);
+        }
     };
-    const handleReset = () => {
-        stopListener();
+    const handleReset = async() => {
+        await stopListener();
         resetTranscript();
         flushTmpState();
     };
@@ -170,23 +201,23 @@ const TopAdministration = () => {
                             <div className="led-red" ref={microphoneRef} onClick={startListener}>
                             </div>
                         )}
-                        <div>{transcript}</div>
+                        {/* <div>{transcript}</div> */}
                     </Modal.Header>
                     <Modal.Body>
                         <Form onSubmit={handleSubmit}>
-                            <Form.Group controlId="form1">
+                            <Form.Group>
                                 <Form.Label><b>Name</b></Form.Label>
                                 <Form.Control type="text" placeholder="Enter name" defaultValue={tmpName} id="name" name="name"/>
                             </Form.Group>
-                            <Form.Group controlId="form2">
+                            <Form.Group>
                                 <Form.Label><b>Type</b></Form.Label>
                                 <Form.Control type="text" placeholder="Enter type" defaultValue={tmpType} id="type" name="type"/>
                             </Form.Group>
-                            <Form.Group controlId="form3">
+                            <Form.Group>
                                 <Form.Label><b>Priority</b></Form.Label>
                                 <Form.Control type="text" placeholder="Enter priority" defaultValue={tmpPriority} id="priority" name="priority"/>
                             </Form.Group>
-                            <Form.Group controlId="form4">
+                            <Form.Group controlId="due">
                                 <Form.Label><b>Due</b></Form.Label>
                                 <DatePicker
                                     selected={dueDate}
@@ -196,7 +227,7 @@ const TopAdministration = () => {
                                     customInput={<Form.Control type="text" />}
                                 />
                             </Form.Group>
-                            <Form.Group controlId="form5">
+                            <Form.Group controlId="completed">
                                 <Form.Label><b>Completed</b></Form.Label>
                                 <DatePicker
                                     selected={completeDate}
@@ -206,11 +237,11 @@ const TopAdministration = () => {
                                     customInput={<Form.Control type="text" />}
                                 />
                             </Form.Group>
-                            <Form.Group controlId="form6">
+                            <Form.Group>
                                 <Form.Label><b>Trigger</b></Form.Label>
                                 <Form.Control type="text" placeholder="Enter trigger" defaultValue={tmpTrigger} id="trigger" name="trigger"/>
                             </Form.Group>
-                            <Form.Group controlId="form7">
+                            <Form.Group>
                                 <Form.Label><b>Note</b></Form.Label>
                                 <Form.Control type="text" placeholder="Enter note" defaultValue={tmpNote} id="note" name="note"/>
                             </Form.Group>

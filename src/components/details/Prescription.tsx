@@ -48,8 +48,12 @@ const PrescriptionDetails: React.FC = () => {
     }
 
     // modal state
-    const handleOkay = () => {
-        MedicalService.deletePrescription(parseInt(param));
+    const handleOkay = async () => {
+        try {
+            await MedicalService.deletePrescription(parseInt(param));
+        } catch (error) {
+            console.error(error);
+        }
         handleClose();
         goBack();
     };
@@ -67,7 +71,7 @@ const PrescriptionDetails: React.FC = () => {
     }
 
     // editor popup modal
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
         const formPrescriptionValues: Prescription = {
@@ -89,7 +93,11 @@ const PrescriptionDetails: React.FC = () => {
             note: formData.get('note') as string,
             userKey: userkey
         };
-        MedicalService.updatePrescription(parseInt(param), formPrescriptionValues);
+        try {
+            await MedicalService.updatePrescription(parseInt(param), formPrescriptionValues);
+        } catch (error) {
+            console.error(error);
+        }
         handleEditorClose();
         goBack();
     };

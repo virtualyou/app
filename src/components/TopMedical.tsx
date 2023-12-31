@@ -35,9 +35,9 @@ const TopMedical = () => {
     const [prescriptions, setPrescriptions] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [refreshRx, setRefreshRx] = useState(0);
-    const [writtenDate, setWrittenDate] = useState<Date | null>(new Date());
-    const [filledDate, setFilledDate] = useState<Date | null>(new Date());
-    const [expiresDate, setExpiresDate] = useState<Date | null>(new Date());
+    const [writtenDate, setWrittenDate] = useState<Date | null>(null);
+    const [filledDate, setFilledDate] = useState<Date | null>(null);
+    const [expiresDate, setExpiresDate] = useState<Date | null>(null);
     const [isListening, setIsListening] = useState(false);
     const microphoneRef = useRef(null);
     const [tmpName, setTmpName] = useState('');
@@ -54,9 +54,32 @@ const TopMedical = () => {
     const [tmpNote, setTmpNote] = useState('');
 
     // create popup modal
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
+
+        let written;
+        let filled;
+        let expires;
+
+        if (formData.get('written') === "") {
+            written = null;
+        } else {
+            written = formData.get('written') as string;
+        }
+
+        if (formData.get('filled') === "") {
+            filled = null;
+        } else {
+            filled = formData.get('filled') as string;
+        }
+
+        if (formData.get('expires') === "") {
+            expires = null;
+        } else {
+            expires = formData.get('expires') as string;
+        }
+
         const formPrescriptionValues: CreatePrescription = {
             name: formData.get('name') as string,
             identNo: formData.get('identNo') as string,
@@ -66,16 +89,22 @@ const TopMedical = () => {
             quantity: formData.get('quantity') as string,
             pharmacy: formData.get('pharmacy') as string,
             pharmacyPhone: formData.get('pharmacyPhone') as string,
-            written: formData.get('written') as string,
+            written: written,
             writtenBy: formData.get('writtenBy') as string,
-            filled: formData.get('filled') as string,
-            expires: formData.get('expires') as string,
+            filled: filled,
+            expires: expires,
             refillNote: formData.get('refillNote') as string,
             manufacturedBy: formData.get('manufacturedBy') as string,
             note: formData.get('note') as string,
             userKey: parseInt(localStorage.getItem("ownerid") || "0")
         };
-        MedicalService.createPrescription(formPrescriptionValues);
+        try {
+            await MedicalService.createPrescription(formPrescriptionValues);
+        } catch (error) {
+            console.error(error);
+        }
+
+        await handleReset();
         closeModal();
         setRefreshRx(oldVal => oldVal +1);
     };
@@ -131,8 +160,8 @@ const TopMedical = () => {
             callback: (note: string) => setTmpNote(note)
         },
     ]
-
-    const { transcript, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition({commands});
+    // removing transcript
+    const { resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition({commands});
 
     if (!browserSupportsSpeechRecognition) {
         return (
@@ -150,24 +179,32 @@ const TopMedical = () => {
         };
     }
 
-    const startListener = () => {
+    const startListener = async () => {
         flushTmpState();
         resetTranscript();
         setIsListening(true);
         // @ts-ignore
         microphoneRef.current.classList.add("listening");
-        SpeechRecognition.startListening({
-            continuous: true,
-        });
+        try {
+            await SpeechRecognition.startListening({
+                continuous: true,
+            });
+        } catch (error) {
+            console.error(error);
+        }
     };
-    const stopListener = () => {
+    const stopListener = async () => {
         setIsListening(false);
         // @ts-ignore
         microphoneRef.current.classList.remove("listening");
-        SpeechRecognition.stopListening();
+        try {
+            await SpeechRecognition.stopListening();
+        } catch (error) {
+            console.error(error);
+        }
     };
-    const handleReset = () => {
-        stopListener();
+    const handleReset = async () => {
+        await stopListener();
         resetTranscript();
         flushTmpState();
     };
@@ -221,43 +258,43 @@ const TopMedical = () => {
                             <div className="led-red" ref={microphoneRef} onClick={startListener}>
                             </div>
                         )}
-                        <div>{transcript}</div>
+                        {/* <div>{transcript}</div> */}
                     </Modal.Header>
                     <Modal.Body>
                         <Form onSubmit={handleSubmit}>
-                            <Form.Group controlId="form1">
+                            <Form.Group>
                                 <Form.Label><b>Name</b></Form.Label>
                                 <Form.Control type="text" placeholder="Enter name" defaultValue={tmpName} id="name" name="name"/>
                             </Form.Group>
-                            <Form.Group controlId="form2">
+                            <Form.Group>
                                 <Form.Label><b>IdentNo</b></Form.Label>
                                 <Form.Control type="text" placeholder="Enter ident no" defaultValue={tmpIdentNo} id="identNo" name="identNo"/>
                             </Form.Group>
-                            <Form.Group controlId="form3">
+                            <Form.Group>
                                 <Form.Label><b>Size</b></Form.Label>
                                 <Form.Control type="text" placeholder="Enter size" defaultValue={tmpSize} id="size" name="size"/>
                             </Form.Group>
-                            <Form.Group controlId="form4">
+                            <Form.Group>
                                 <Form.Label><b>Form</b></Form.Label>
                                 <Form.Control type="text" placeholder="Enter form" defaultValue={tmpForm} id="form" name="form"/>
                             </Form.Group>
-                            <Form.Group controlId="form5">
+                            <Form.Group>
                                 <Form.Label><b>RxUnit</b></Form.Label>
                                 <Form.Control type="text" placeholder="Enter Rx unit" defaultValue={tmpRxUnit} id="rxUnit" name="rxUnit"/>
                             </Form.Group>
-                            <Form.Group controlId="form6">
+                            <Form.Group>
                                 <Form.Label><b>Quantity</b></Form.Label>
                                 <Form.Control type="text" placeholder="Enter quantity" defaultValue={tmpQuantity} id="quantity" name="quantity"/>
                             </Form.Group>
-                            <Form.Group controlId="form7">
+                            <Form.Group>
                                 <Form.Label><b>Pharmacy</b></Form.Label>
                                 <Form.Control type="text" placeholder="Enter pharmacy" defaultValue={tmpPharmacy} id="pharmacy" name="pharmacy"/>
                             </Form.Group>
-                            <Form.Group controlId="form8">
+                            <Form.Group>
                                 <Form.Label><b>Pharmacy Phone</b></Form.Label>
                                 <Form.Control type="text" placeholder="Enter pharmacy phone" defaultValue={tmpPharmacyPhone} id="pharmacyPhone" name="pharmacyPhone"/>
                             </Form.Group>
-                            <Form.Group controlId="form9">
+                            <Form.Group controlId="written">
                                 <Form.Label><b>Written</b></Form.Label>
                                 <DatePicker
                                     selected={writtenDate}
@@ -267,11 +304,11 @@ const TopMedical = () => {
                                     customInput={<Form.Control type="text" />}
                                 />
                             </Form.Group>
-                            <Form.Group controlId="form10">
+                            <Form.Group>
                                 <Form.Label><b>Written By</b></Form.Label>
                                 <Form.Control type="text" placeholder="Enter written by" defaultValue={tmpWrittenBy} id="writtenBy" name="writtenBy"/>
                             </Form.Group>
-                            <Form.Group controlId="form11">
+                            <Form.Group controlId="filled">
                                 <Form.Label><b>Filled</b></Form.Label>
                                 <DatePicker
                                     selected={filledDate}
@@ -281,7 +318,7 @@ const TopMedical = () => {
                                     customInput={<Form.Control type="text" />}
                                 />
                             </Form.Group>
-                            <Form.Group controlId="form12">
+                            <Form.Group controlId="expires">
                                 <Form.Label><b>Expires</b></Form.Label>
                                 <DatePicker
                                     selected={expiresDate}
@@ -291,15 +328,15 @@ const TopMedical = () => {
                                     customInput={<Form.Control type="text" />}
                                 />
                             </Form.Group>
-                            <Form.Group controlId="form13">
+                            <Form.Group>
                                 <Form.Label><b>Refill Note</b></Form.Label>
                                 <Form.Control type="text" placeholder="Enter refill note" defaultValue={tmpRefillNote} id="refillNote" name="refillNote"/>
                             </Form.Group>
-                            <Form.Group controlId="form14">
+                            <Form.Group>
                                 <Form.Label><b>Manufactured By</b></Form.Label>
                                 <Form.Control type="text" placeholder="Enter manufactured by" defaultValue={tmpManufacturedBy} id="manufacturedBy" name="manufacturedBy"/>
                             </Form.Group>
-                            <Form.Group controlId="form15">
+                            <Form.Group>
                                 <Form.Label><b>Note</b></Form.Label>
                                 <Form.Control type="text" placeholder="Enter note" defaultValue={tmpNote} id="note" name="note"/>
                             </Form.Group>

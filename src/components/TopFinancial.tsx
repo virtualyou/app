@@ -41,67 +41,96 @@ const TopFinancial = () => {
     const [showDebtModal, setShowDebtModal] = useState(false);
     const [refreshAsset, setRefreshAsset] = useState(0);
     const [refreshDebt, setRefreshDebt] = useState(0);
-    const [dueDate, setDueDate] = useState<Date | null>(new Date());
+    const [dueDate, setDueDate] = useState<Date | null>(null);
     const [isListening, setIsListening] = useState(false);
     const microphoneRef = useRef(null);
-    const [tmpName, setTmpName] = useState('');
+    const [tmpAssetName, setTmpAssetName] = useState('');
+    const [tmpDebtName, setTmpDebtName] = useState('');
     const [tmpAssetType, setTmpAssetType] = useState('');
     const [tmpDebtType, setTmpDebtType] = useState('');
-    const [tmpAccountNo, setTmpAccountNo] = useState('');
-    const [tmpWebsite, setTmpWebsite] = useState('');
-    const [tmpWebsiteUser, setTmpWebsiteUser] = useState('');
-    const [tmpWebsitePassword, setTmpWebsitePassword] = useState('');
-    const [tmpHoldingCompany, setTmpHoldingCompany] = useState('');
-    const [tmpHoldingCompanyAddress, setTmpHoldingCompanyAddress] = useState('');
-    const [tmpHoldingCompanyPhone, setTmpHoldingCompanyPhone] = useState('');
-    const [tmpBalance, setTmpBalance] = useState('');
-    const [tmpFrequency, setTmpFrequency] = useState('');
-    const [tmpPayment, setTmpPayment] = useState('');
+    const [tmpAssetAccountNo, setTmpAssetAccountNo] = useState('');
+    const [tmpDebtAccountNo, setTmpDebtAccountNo] = useState('');
+    const [tmpAssetWebsite, setTmpAssetWebsite] = useState('');
+    const [tmpDebtWebsite, setTmpDebtWebsite] = useState('');
+    const [tmpAssetWebsiteUser, setTmpAssetWebsiteUser] = useState('');
+    const [tmpDebtWebsiteUser, setTmpDebtWebsiteUser] = useState('');
+    const [tmpAssetWebsitePassword, setTmpAssetWebsitePassword] = useState('');
+    const [tmpDebtWebsitePassword, setTmpDebtWebsitePassword] = useState('');
+    const [tmpAssetHoldingCompany, setTmpAssetHoldingCompany] = useState('');
+    const [tmpDebtHoldingCompany, setTmpDebtHoldingCompany] = useState('');
+    const [tmpAssetHoldingCompanyAddress, setTmpAssetHoldingCompanyAddress] = useState('');
+    const [tmpDebtHoldingCompanyAddress, setTmpDebtHoldingCompanyAddress] = useState('');
+    const [tmpAssetHoldingCompanyPhone, setTmpAssetHoldingCompanyPhone] = useState('');
+    const [tmpDebtHoldingCompanyPhone, setTmpDebtHoldingCompanyPhone] = useState('');
+    const [tmpAssetBalance, setTmpAssetBalance] = useState('');
+    const [tmpDebtBalance, setTmpDebtBalance] = useState('');
+    const [tmpDebtFrequency, setTmpDebtFrequency] = useState('');
+    const [tmpDebtPayment, setTmpDebtPayment] = useState('');
 
     // create asset popup modal
-    const handleAssetSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleAssetSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
         const formAssetValues: CreateAsset = {
-            name: formData.get('name') as string,
+            name: formData.get('assetName') as string,
             assetType: formData.get('assetType') as string,
-            accountNo: formData.get('accountNo') as string,
-            website: formData.get('website') as string,
-            websiteUser: formData.get('websiteUser') as string,
-            websitePassword: formData.get('websitePassword') as string,
-            holdingCompany: formData.get('holdingCompany') as string,
-            holdingCompanyAddress: formData.get('holdingCompanyAddress') as string,
-            holdingCompanyPhone: formData.get('holdingCompanyPhone') as string,
-            balance: formData.get('balance') as string,
+            accountNo: formData.get('assetAccountNo') as string,
+            website: formData.get('assetWebsite') as string,
+            websiteUser: formData.get('assetWebsiteUser') as string,
+            websitePassword: formData.get('assetWebsitePassword') as string,
+            holdingCompany: formData.get('assetHoldingCompany') as string,
+            holdingCompanyAddress: formData.get('assetHoldingCompanyAddress') as string,
+            holdingCompanyPhone: formData.get('assetHoldingCompanyPhone') as string,
+            balance: formData.get('assetBalance') as string,
             userKey: parseInt(localStorage.getItem("ownerid") || "0")
         };
-        FinancialService.createAsset(formAssetValues);
+        try {
+            await FinancialService.createAsset(formAssetValues);
+        } catch (error) {
+            console.error(error);
+        }
+
+        await handleReset();
         closeAssetModal();
         setRefreshAsset(oldVal => oldVal +1);
     };
 
     // create debt popup modal
-    const handleDebtSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleDebtSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
+
+        let due;
+        if (formData.get('due') === "") {
+            due = null;
+        } else {
+            due = formData.get('due') as string;
+        }
+
         const formDebtValues: CreateDebt = {
-            name: formData.get('name') as string,
+            name: formData.get('debtName') as string,
             debtType: formData.get('debtType') as string,
-            accountNo: formData.get('accountNo') as string,
-            website: formData.get('website') as string,
-            websiteUser: formData.get('websiteUser') as string,
-            websitePassword: formData.get('websitePassword') as string,
-            holdingCompany: formData.get('holdingCompany') as string,
-            holdingCompanyAddress: formData.get('holdingCompanyAddress') as string,
-            holdingCompanyPhone: formData.get('holdingCompanyPhone') as string,
-            balance: formData.get('balance') as string,
-            frequency: formData.get('frequency') as string,
-            due: formData.get('due') as string,
-            payment: formData.get('payment') as string,
+            accountNo: formData.get('debtAccountNo') as string,
+            website: formData.get('debtWebsite') as string,
+            websiteUser: formData.get('debtWebsiteUser') as string,
+            websitePassword: formData.get('debtWebsitePassword') as string,
+            holdingCompany: formData.get('debtHoldingCompany') as string,
+            holdingCompanyAddress: formData.get('debtHoldingCompanyAddress') as string,
+            holdingCompanyPhone: formData.get('debtHoldingCompanyPhone') as string,
+            balance: formData.get('debtBalance') as string,
+            frequency: formData.get('debtFrequency') as string,
+            due: due,
+            payment: formData.get('debtPayment') as string,
             userKey: parseInt(localStorage.getItem("ownerid") || "0")
         }
-        console.log(formDebtValues);
-        FinancialService.createDebt(formDebtValues);
+
+        try {
+            await FinancialService.createDebt(formDebtValues);
+        } catch (error) {
+            console.error(error);
+        }
+
+        await handleReset();
         closeDebtModal();
         setRefreshDebt(oldVal => oldVal +1);
     };
@@ -109,8 +138,12 @@ const TopFinancial = () => {
     // declare speech recognition
     const commands = [
         {
-            command: 'The name is *',
-            callback: (name: string) => setTmpName(name)
+            command: 'The asset name is *',
+            callback: (name: string) => setTmpAssetName(name)
+        },
+        {
+            command: 'The debt name is *',
+            callback: (name: string) => setTmpDebtName(name)
         },
         {
             command: 'The asset type is *',
@@ -121,49 +154,81 @@ const TopFinancial = () => {
             callback: (debttype: string) => setTmpDebtType(debttype)
         },
         {
-            command: 'The account number is *',
-            callback: (accountno: string) => setTmpAccountNo(accountno)
+            command: 'The asset account number is *',
+            callback: (accountno: string) => setTmpAssetAccountNo(accountno)
         },
         {
-            command: 'The website is *',
-            callback: (website: string) => setTmpWebsite(website)
+            command: 'The debt account number is *',
+            callback: (accountno: string) => setTmpDebtAccountNo(accountno)
         },
         {
-            command: 'The website user is *',
-            callback: (webuser: string) => setTmpWebsiteUser(webuser)
+            command: 'The asset website is *',
+            callback: (website: string) => setTmpAssetWebsite(website)
         },
         {
-            command: 'The website password is *',
-            callback: (webpass: string) => setTmpWebsitePassword(webpass)
+            command: 'The debt website is *',
+            callback: (website: string) => setTmpDebtWebsite(website)
         },
         {
-            command: 'The holding company is *',
-            callback: (hcomp: string) => setTmpHoldingCompany(hcomp)
+            command: 'The asset website user is *',
+            callback: (webuser: string) => setTmpAssetWebsiteUser(webuser)
         },
         {
-            command: 'The holding company address is *',
-            callback: (hcompaddr: string) => setTmpHoldingCompanyAddress(hcompaddr)
+            command: 'The debt website user is *',
+            callback: (webuser: string) => setTmpDebtWebsiteUser(webuser)
         },
         {
-            command: 'The holding company phone is *',
-            callback: (hcompphone: string) => setTmpHoldingCompanyPhone(hcompphone)
+            command: 'The asset website password is *',
+            callback: (webpass: string) => setTmpAssetWebsitePassword(webpass)
         },
         {
-            command: 'The balance is *',
-            callback: (balance: string) => setTmpBalance(balance)
+            command: 'The debt website password is *',
+            callback: (webpass: string) => setTmpDebtWebsitePassword(webpass)
         },
         {
-            command: 'The frequency is *',
-            callback: (freq: string) => setTmpFrequency(freq)
+            command: 'The asset holding company is *',
+            callback: (hcomp: string) => setTmpAssetHoldingCompany(hcomp)
         },
         {
-            command: 'The payment is *',
-            callback: (payment: string) => setTmpPayment(payment)
+            command: 'The debt holding company is *',
+            callback: (hcomp: string) => setTmpDebtHoldingCompany(hcomp)
+        },
+        {
+            command: 'The asset holding company address is *',
+            callback: (hcompaddr: string) => setTmpAssetHoldingCompanyAddress(hcompaddr)
+        },
+        {
+            command: 'The debt holding company address is *',
+            callback: (hcompaddr: string) => setTmpDebtHoldingCompanyAddress(hcompaddr)
+        },
+        {
+            command: 'The asset holding company phone is *',
+            callback: (hcompphone: string) => setTmpAssetHoldingCompanyPhone(hcompphone)
+        },
+        {
+            command: 'The debt holding company phone is *',
+            callback: (hcompphone: string) => setTmpDebtHoldingCompanyPhone(hcompphone)
+        },
+        {
+            command: 'The asset balance is *',
+            callback: (balance: string) => setTmpAssetBalance(balance)
+        },
+        {
+            command: 'The debt balance is *',
+            callback: (balance: string) => setTmpDebtBalance(balance)
+        },
+        {
+            command: 'The debt frequency is *',
+            callback: (freq: string) => setTmpDebtFrequency(freq)
+        },
+        {
+            command: 'The debt payment is *',
+            callback: (payment: string) => setTmpDebtPayment(payment)
         },
 
     ]
-
-    const { transcript, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition({commands});
+    // removing transcript
+    const { resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition({commands});
 
     if (!browserSupportsSpeechRecognition) {
         return (
@@ -190,42 +255,59 @@ const TopFinancial = () => {
     }
 
     // only one listener per page
-    const startListener = () => {
+    const startListener = async () => {
         flushTmpState();
         resetTranscript();
         setIsListening(true);
         // @ts-ignore
-        microphoneRef.current.classList.add("listening");
-        SpeechRecognition.startListening({
-            continuous: true,
-        });
+        microphoneRef.current.classList.add("listening")
+        try {
+            await SpeechRecognition.startListening({
+                continuous: true,
+            });
+        } catch (error) {
+            console.error(error);
+        }
     };
-    const stopListener = () => {
+    const stopListener = async () => {
         setIsListening(false);
         // @ts-ignore
         microphoneRef.current.classList.remove("listening");
-        SpeechRecognition.stopListening();
+        try {
+            await SpeechRecognition.stopListening();
+        } catch (error) {
+            console.error(error);
+        }
     };
-    const handleReset = () => {
-        stopListener();
+    const handleReset = async () => {
+        await stopListener();
         resetTranscript();
         flushTmpState();
     };
 
     const flushTmpState = () => {
-        setTmpName('');
+        setTmpAssetName('');
+        setTmpDebtName('');
         setTmpAssetType('');
         setTmpDebtType('');
-        setTmpAccountNo('');
-        setTmpWebsite('');
-        setTmpWebsiteUser('');
-        setTmpWebsitePassword('');
-        setTmpHoldingCompany('');
-        setTmpHoldingCompanyAddress('');
-        setTmpHoldingCompanyPhone('');
-        setTmpBalance('');
-        setTmpFrequency('');
-        setTmpPayment('');
+        setTmpAssetAccountNo('');
+        setTmpDebtAccountNo('');
+        setTmpAssetWebsite('');
+        setTmpDebtWebsite('');
+        setTmpAssetWebsiteUser('');
+        setTmpDebtWebsiteUser('');
+        setTmpAssetWebsitePassword('');
+        setTmpDebtWebsitePassword('');
+        setTmpAssetHoldingCompany('');
+        setTmpDebtHoldingCompany('');
+        setTmpAssetHoldingCompanyAddress('');
+        setTmpDebtHoldingCompanyAddress('');
+        setTmpAssetHoldingCompanyPhone('');
+        setTmpDebtHoldingCompanyPhone('');
+        setTmpAssetBalance('');
+        setTmpDebtBalance('');
+        setTmpDebtFrequency('');
+        setTmpDebtPayment('');
     }
 
     const closeAssetModal = () => {
@@ -274,49 +356,49 @@ const TopFinancial = () => {
                             <div className="led-red" ref={microphoneRef} onClick={startListener}>
                             </div>
                         )}
-                        <div>{transcript}</div>
+                        {/* <div>{transcript}</div> */}
                     </Modal.Header>
                     <Modal.Body>
                         <Form onSubmit={handleAssetSubmit}>
-                            <Form.Group controlId="form1">
-                                <Form.Label><b>Name</b></Form.Label>
-                                <Form.Control type="text" placeholder="Enter name" defaultValue={tmpName} id="name" name="name"/>
+                            <Form.Group>
+                                <Form.Label><b>Asset Name</b></Form.Label>
+                                <Form.Control type="text" placeholder="Enter name" defaultValue={tmpAssetName} id="assetName" name="assetName"/>
                             </Form.Group>
-                            <Form.Group controlId="form2">
+                            <Form.Group>
                                 <Form.Label><b>Asset Type</b></Form.Label>
                                 <Form.Control type="text" placeholder="Enter asset type" defaultValue={tmpAssetType} id="assetType" name="assetType"/>
                             </Form.Group>
-                            <Form.Group controlId="form3">
-                                <Form.Label><b>Account Number</b></Form.Label>
-                                <Form.Control type="text" placeholder="Enter account number" defaultValue={tmpAccountNo} id="accountNo" name="accountNo"/>
+                            <Form.Group>
+                                <Form.Label><b>Asset Account Number</b></Form.Label>
+                                <Form.Control type="text" placeholder="Enter account number" defaultValue={tmpAssetAccountNo} id="assetAccountNo" name="assetAccountNo"/>
                             </Form.Group>
-                            <Form.Group controlId="form4">
-                                <Form.Label><b>Website</b></Form.Label>
-                                <Form.Control type="text" placeholder="Enter website" defaultValue={tmpWebsite} id="website" name="website"/>
+                            <Form.Group>
+                                <Form.Label><b>Asset Website</b></Form.Label>
+                                <Form.Control type="text" placeholder="Enter website" defaultValue={tmpAssetWebsite} id="assetWebsite" name="assetWebsite"/>
                             </Form.Group>
-                            <Form.Group controlId="form5">
-                                <Form.Label><b>Web Site User</b></Form.Label>
-                                <Form.Control type="text" placeholder="Enter website user" defaultValue={tmpWebsiteUser} id="websiteUser" name="websiteUser"/>
+                            <Form.Group>
+                                <Form.Label><b>Asset Web Site User</b></Form.Label>
+                                <Form.Control type="text" placeholder="Enter website user" defaultValue={tmpAssetWebsiteUser} id="assetWebsiteUser" name="assetWebsiteUser"/>
                             </Form.Group>
-                            <Form.Group controlId="form6">
-                                <Form.Label><b>Web Site Password</b></Form.Label>
-                                <Form.Control type="password" placeholder="Enter website password" defaultValue={tmpWebsitePassword} id="websitePassword" name="websitePassword"/>
+                            <Form.Group>
+                                <Form.Label><b>Asset Web Site Password</b></Form.Label>
+                                <Form.Control type="password" placeholder="Enter website password" defaultValue={tmpAssetWebsitePassword} id="assetWebsitePassword" name="assetWebsitePassword"/>
                             </Form.Group>
-                            <Form.Group controlId="form7">
-                                <Form.Label><b>Holding Company</b></Form.Label>
-                                <Form.Control type="text" placeholder="Enter holding company" defaultValue={tmpHoldingCompany} id="holdingCompany" name="holdingCompany"/>
+                            <Form.Group>
+                                <Form.Label><b>Asset Holding Company</b></Form.Label>
+                                <Form.Control type="text" placeholder="Enter holding company" defaultValue={tmpAssetHoldingCompany} id="assetHoldingCompany" name="assetHoldingCompany"/>
                             </Form.Group>
-                            <Form.Group controlId="form8">
-                                <Form.Label><b>Holding Company Address</b></Form.Label>
-                                <Form.Control type="text" placeholder="Enter holding company address" defaultValue={tmpHoldingCompanyAddress} id="holdingCompanyAddress" name="holdingCompanyAddress"/>
+                            <Form.Group>
+                                <Form.Label><b>Asset Holding Company Address</b></Form.Label>
+                                <Form.Control type="text" placeholder="Enter holding company address" defaultValue={tmpAssetHoldingCompanyAddress} id="assetHoldingCompanyAddress-a" name="assetHoldingCompanyAddress"/>
                             </Form.Group>
-                            <Form.Group controlId="form9">
-                                <Form.Label><b>Holding Company Phone</b></Form.Label>
-                                <Form.Control type="text" placeholder="Enter holding company phone" defaultValue={tmpHoldingCompanyPhone} id="holdingCompanyPhone" name="holdingCompanyPhone"/>
+                            <Form.Group>
+                                <Form.Label><b>Asset Holding Company Phone</b></Form.Label>
+                                <Form.Control type="text" placeholder="Enter holding company phone" defaultValue={tmpAssetHoldingCompanyPhone} id="assetHoldingCompanyPhone-a" name="assetHoldingCompanyPhone"/>
                             </Form.Group>
-                            <Form.Group controlId="form10">
-                                <Form.Label><b>Balance</b></Form.Label>
-                                <Form.Control type="text" placeholder="Enter balance" defaultValue={tmpBalance} id="balance" name="balance"/>
+                            <Form.Group>
+                                <Form.Label><b>Asset Balance</b></Form.Label>
+                                <Form.Control type="text" placeholder="Enter balance" defaultValue={tmpAssetBalance} id="assetBalance" name="assetBalance"/>
                             </Form.Group>
                             <Button className="buttonMargin" variant="primary" type="submit">
                                 Submit
@@ -345,56 +427,56 @@ const TopFinancial = () => {
                             <div className="led-red" ref={microphoneRef} onClick={startListener}>
                             </div>
                         )}
-                        <div>{transcript}</div>
+                        {/* <div>{transcript}</div> */}
                     </Modal.Header>
                     <Modal.Body>
                         <Form onSubmit={handleDebtSubmit}>
-                            <Form.Group controlId="form1">
-                                <Form.Label><b>Name</b></Form.Label>
-                                <Form.Control type="text" placeholder="Enter name" defaultValue={tmpName} id="name" name="name"/>
+                            <Form.Group>
+                                <Form.Label><b>Debt Name</b></Form.Label>
+                                <Form.Control type="text" placeholder="Enter name" defaultValue={tmpDebtName} id="debtName" name="debtName"/>
                             </Form.Group>
-                            <Form.Group controlId="form2">
+                            <Form.Group>
                                 <Form.Label><b>Debt Type</b></Form.Label>
                                 <Form.Control type="text" placeholder="Enter debt type" defaultValue={tmpDebtType} id="debtType" name="debtType"/>
                             </Form.Group>
-                            <Form.Group controlId="form3">
-                                <Form.Label><b>Account Number</b></Form.Label>
-                                <Form.Control type="text" placeholder="Enter account number" defaultValue={tmpAccountNo} id="accountNo" name="accountNo"/>
+                            <Form.Group>
+                                <Form.Label><b>Debt Account Number</b></Form.Label>
+                                <Form.Control type="text" placeholder="Enter account number" defaultValue={tmpDebtAccountNo} id="debtAccountNo" name="debtAccountNo"/>
                             </Form.Group>
-                            <Form.Group controlId="form4">
-                                <Form.Label><b>Website</b></Form.Label>
-                                <Form.Control type="text" placeholder="Enter website" defaultValue={tmpWebsite} id="website" name="website"/>
+                            <Form.Group>
+                                <Form.Label><b>Debt Website</b></Form.Label>
+                                <Form.Control type="text" placeholder="Enter website" defaultValue={tmpDebtWebsite} id="debtWebsite" name="debtWebsite"/>
                             </Form.Group>
-                            <Form.Group controlId="form5">
-                                <Form.Label><b>Web Site User</b></Form.Label>
-                                <Form.Control type="text" placeholder="Enter website user" defaultValue={tmpWebsiteUser} id="websiteUser" name="websiteUser"/>
+                            <Form.Group>
+                                <Form.Label><b>Debt Web Site User</b></Form.Label>
+                                <Form.Control type="text" placeholder="Enter website user" defaultValue={tmpDebtWebsiteUser} id="debtWebsiteUser" name="debtWebsiteUser"/>
                             </Form.Group>
-                            <Form.Group controlId="form6">
-                                <Form.Label><b>Web Site Password</b></Form.Label>
-                                <Form.Control type="password" placeholder="Enter website password" defaultValue={tmpWebsitePassword} id="websitePassword" name="websitePassword"/>
+                            <Form.Group>
+                                <Form.Label><b>Debt Web Site Password</b></Form.Label>
+                                <Form.Control type="password" placeholder="Enter website password" defaultValue={tmpDebtWebsitePassword} id="debtWebsitePassword" name="debtWebsitePassword"/>
                             </Form.Group>
-                            <Form.Group controlId="form7">
-                                <Form.Label><b>Holding Company</b></Form.Label>
-                                <Form.Control type="text" placeholder="Enter holding company" defaultValue={tmpHoldingCompany} id="holdingCompany" name="holdingCompany"/>
+                            <Form.Group>
+                                <Form.Label><b>Debt Holding Company</b></Form.Label>
+                                <Form.Control type="text" placeholder="Enter holding company" defaultValue={tmpDebtHoldingCompany} id="debtHoldingCompany" name="debtHoldingCompany"/>
                             </Form.Group>
-                            <Form.Group controlId="form8">
-                                <Form.Label><b>Holding Company Address</b></Form.Label>
-                                <Form.Control type="text" placeholder="Enter holding company address" defaultValue={tmpHoldingCompanyAddress} id="holdingCompanyAddress" name="holdingCompanyAddress"/>
+                            <Form.Group>
+                                <Form.Label><b>Debt Holding Company Address</b></Form.Label>
+                                <Form.Control type="text" placeholder="Enter holding company address" defaultValue={tmpDebtHoldingCompanyAddress} id="debtHoldingCompanyAddress" name="debtHoldingCompanyAddress"/>
                             </Form.Group>
-                            <Form.Group controlId="form9">
-                                <Form.Label><b>Holding Company Phone</b></Form.Label>
-                                <Form.Control type="text" placeholder="Enter holding company phone" defaultValue={tmpHoldingCompanyPhone} id="holdingCompanyPhone" name="holdingCompanyPhone"/>
+                            <Form.Group>
+                                <Form.Label><b>Debt Holding Company Phone</b></Form.Label>
+                                <Form.Control type="text" placeholder="Enter holding company phone" defaultValue={tmpDebtHoldingCompanyPhone} id="debtHoldingCompanyPhone" name="debtHoldingCompanyPhone"/>
                             </Form.Group>
-                            <Form.Group controlId="form10">
-                                <Form.Label><b>Balance</b></Form.Label>
-                                <Form.Control type="text" placeholder="Enter balance" defaultValue={tmpBalance} id="balance" name="balance"/>
+                            <Form.Group>
+                                <Form.Label><b>Debt Balance</b></Form.Label>
+                                <Form.Control type="text" placeholder="Enter balance" defaultValue={tmpDebtBalance} id="debtBalance" name="debtBalance"/>
                             </Form.Group>
-                            <Form.Group controlId="form11">
-                                <Form.Label><b>Frequency</b></Form.Label>
-                                <Form.Control type="text" placeholder="Enter frequency" defaultValue={tmpFrequency} id="frequency" name="frequency"/>
+                            <Form.Group>
+                                <Form.Label><b>Debt Frequency</b></Form.Label>
+                                <Form.Control type="text" placeholder="Enter frequency" defaultValue={tmpDebtFrequency} id="debtFrequency" name="debtFrequency"/>
                             </Form.Group>
-                            <Form.Group controlId="form12">
-                                <Form.Label><b>Due</b></Form.Label>
+                            <Form.Group controlId="due">
+                                <Form.Label><b>Debt Due Date</b></Form.Label>
                                 <DatePicker
                                     selected={dueDate}
                                     onChange={(date) => setDueDate(date)}
@@ -403,9 +485,9 @@ const TopFinancial = () => {
                                     customInput={<Form.Control type="text" />}
                                 />
                             </Form.Group>
-                            <Form.Group controlId="form13">
-                                <Form.Label><b>Payment</b></Form.Label>
-                                <Form.Control type="text" placeholder="Enter payment" defaultValue={tmpPayment} id="payment" name="payment"/>
+                            <Form.Group>
+                                <Form.Label><b>Debt Payment</b></Form.Label>
+                                <Form.Control type="text" placeholder="Enter payment" defaultValue={tmpDebtPayment} id="debtPayment" name="debtPayment"/>
                             </Form.Group>
                             <Button className="buttonMargin" variant="primary" type="submit">
                                 Submit

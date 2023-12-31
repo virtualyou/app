@@ -30,7 +30,7 @@ import forge from "node-forge";
  * @returns {Promise<boolean>} - The keys match?
  */
 export async function keysMatchForAgent(id: number, key: string): Promise<boolean> {
-    return await UserService.getOwner(id)
+    return await UserService.getUser(id)
         .then((result) => {
             const md = forge.md.sha256.create();
             md.update(result.data.agentMnemonic);
@@ -53,7 +53,7 @@ export async function keysMatchForAgent(id: number, key: string): Promise<boolea
  * @returns {Promise<boolean>} - The keys match?
  */
 export async function keysMatchForMonitor(id: number, key: string): Promise<boolean> {
-    return await UserService.getOwner(id)
+    return await UserService.getUser(id)
         .then((result) => {
             const md = forge.md.sha256.create();
             md.update(result.data.monitorMnemonic);

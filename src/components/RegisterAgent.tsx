@@ -21,7 +21,8 @@ RegisterAgent.tsx - Agent registration (component)
 import { useLocation } from 'react-router-dom';
 import {keysMatchForAgent} from "../utility/key.utils.ts";
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import AuthService from "../services/auth.service.ts";
+import AuthService from "../services/auth.service.ts"
+import UserService from "../services/user.service.ts";
 import { useState, useEffect } from "react";
 import * as Yup from "yup";
 
@@ -96,21 +97,30 @@ const RegisterAgent = () => {
         });
     };
 
-    const handleRegister = (formValue: { username: string; email: string; fullname: string; password: string; idOwner: string }) => {
+    const handleRegister = async (formValue: { username: string; email: string; fullname: string; password: string; idOwner: string }) => {
         const { username, email, fullname, password, idOwner } = formValue;
         setMessage("");
         setSuccessful(false);
+
+        // signup as agent
         AuthService.registerHelper(
             username,
             email,
             fullname,
             password,
+            0,
             parseInt(idOwner),
+            0,
             "agent"
         ).then(
             response => {
                 setMessage(response.data.message);
                 setSuccessful(true);
+                UserService.getAgentWhereOwnerId(parseInt(idOwner)).then(
+                    response => {
+                        UserService.setAgentIdForOwner(response.data.id, parseInt(idOwner));
+                    }
+                );
             },
             error => {
                 const resMessage =

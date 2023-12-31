@@ -44,7 +44,7 @@ const BoardAgent = () => {
 
     useEffect(() => {
         const ownerid = localStorage.getItem("ownerid") || "0";
-        UserService.getOwner(parseInt(ownerid)).then(
+        UserService.getUser(parseInt(ownerid)).then(
             (response) => {
                 setOwner(response.data);
             },
@@ -144,6 +144,12 @@ const BoardAgent = () => {
                 <h3 className="font-weight-light">Debts</h3>
                 <DebtDisplay data={debts} />
             </header>
+            <p></p>
+            <p></p>
+            <footer className="container">
+                <p><img src="https://dlwhitehurst.com/vy.png" alt="brand icon" width="24"
+                        height="24"/> &copy; VirtualYou and David L Whitehurst 2023</p>
+            </footer>
         </div>
     );
 };

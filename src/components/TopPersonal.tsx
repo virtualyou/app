@@ -69,8 +69,8 @@ const TopPersonal = () => {
             callback: (note: string) => setTmpNote(note)
         },
     ]
-
-    const { transcript, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition({commands});
+    // removing transcript
+    const { resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition({commands});
 
     if (!browserSupportsSpeechRecognition) {
         return (
@@ -80,34 +80,42 @@ const TopPersonal = () => {
         );
     }
 
-    const playQuip = () => {
+    const playQuip = async () => {
         const audio = new Audio(PEEP_TALK);
-        audio.play(); // must be asynchronous
+        await audio.play(); // must be asynchronous
         audio.onended = function() {
             setShowModal(true);
         };
     }
 
-    const startListener = () => {
+    const startListener = async () => {
         flushTmpState();
         resetTranscript();
         setIsListening(true);
         // @ts-ignore
         microphoneRef.current.classList.add("listening");
-        SpeechRecognition.startListening({
-            continuous: true,
-        });
+        try {
+            await SpeechRecognition.startListening({
+                continuous: true,
+            });
+        } catch (error) {
+            console.error(error);
+        }
     };
 
-    const stopListener = () => {
+    const stopListener = async () => {
         setIsListening(false);
         // @ts-ignore
         microphoneRef.current.classList.remove("listening");
-        SpeechRecognition.stopListening();
+        try {
+            await SpeechRecognition.stopListening();
+        } catch (error) {
+            console.error(error);
+        }
     };
 
-    const handleReset = () => {
-        stopListener();
+    const handleReset = async () => {
+        await stopListener();
         resetTranscript();
         flushTmpState();
     };
@@ -125,7 +133,7 @@ const TopPersonal = () => {
     }
 
     // create popup modal
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
         const formPeepValues: CreatePeep = {
@@ -137,8 +145,12 @@ const TopPersonal = () => {
             note: formData.get('note') as string,
             userKey: parseInt(localStorage.getItem("ownerid") || "0")
         };
-        PersonalService.createPeep(formPeepValues);
-        handleReset();
+        try {
+            await PersonalService.createPeep(formPeepValues);
+        } catch (error) {
+            console.error(error);
+        }
+        await handleReset();
         closeModal();
         setRefreshPeep(oldVal => oldVal +1);
     };
@@ -176,31 +188,31 @@ const TopPersonal = () => {
                             <div className="led-red" ref={microphoneRef} onClick={startListener}>
                             </div>
                         )}
-                        <div>{transcript}</div>
+                        {/* <div>{transcript}</div> */}
                     </Modal.Header>
                     <Modal.Body>
                         <Form onSubmit={handleSubmit}>
-                            <Form.Group controlId="form1">
+                            <Form.Group>
                                 <Form.Label><b>Name</b></Form.Label>
                                 <Form.Control type="text" placeholder="Enter name" defaultValue={tmpName} id="name" name="name"/>
                             </Form.Group>
-                            <Form.Group controlId="form2">
+                            <Form.Group>
                                 <Form.Label><b>Phone1</b></Form.Label>
                                 <Form.Control type="text" placeholder="Enter phone1" defaultValue={tmpPhone1} id="phone1" name="phone1"/>
                             </Form.Group>
-                            <Form.Group controlId="form3">
+                            <Form.Group>
                                 <Form.Label><b>Phone2</b></Form.Label>
                                 <Form.Control type="text" placeholder="Enter phone2" defaultValue={tmpPhone2} id="phone2" name="phone2"/>
                             </Form.Group>
-                            <Form.Group controlId="form4">
+                            <Form.Group>
                                 <Form.Label><b>Email</b></Form.Label>
                                 <Form.Control type="text" placeholder="Enter email" defaultValue={tmpEmail} id="email" name="email"/>
                             </Form.Group>
-                            <Form.Group controlId="form5">
+                            <Form.Group>
                                 <Form.Label><b>Address</b></Form.Label>
                                 <Form.Control type="text" placeholder="Enter address" defaultValue={tmpAddress} id="address" name="address"/>
                             </Form.Group>
-                            <Form.Group controlId="form6">
+                            <Form.Group>
                                 <Form.Label><b>Note</b></Form.Label>
                                 <Form.Control type="text" placeholder="Enter note" defaultValue={tmpNote} id="note" name="note"/>
                             </Form.Group>

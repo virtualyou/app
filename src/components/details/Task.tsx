@@ -47,8 +47,12 @@ const TaskDetails: React.FC = () => {
     }
 
     // modal state
-    const handleOkay = () => {
-        AdministrationService.deleteTask(parseInt(param));
+    const handleOkay = async () => {
+        try {
+            await AdministrationService.deleteTask(parseInt(param));
+        } catch (error) {
+            console.error(error);
+        }
         handleClose();
         goBack();
     };
@@ -66,7 +70,7 @@ const TaskDetails: React.FC = () => {
     }
 
     // editor popup modal
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
         const formTaskValues: Task = {
@@ -80,7 +84,11 @@ const TaskDetails: React.FC = () => {
             note: formData.get('note') as string,
             userKey: userkey
         };
-        AdministrationService.updateTask(parseInt(param), formTaskValues);
+        try {
+            await AdministrationService.updateTask(parseInt(param), formTaskValues);
+        } catch (error) {
+            console.error(error);
+        }
         handleEditorClose();
         goBack();
     };

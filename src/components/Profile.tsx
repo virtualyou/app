@@ -25,6 +25,8 @@ import React, {useState} from "react";
 import MailService from "../services/mail.service.ts";
 import {Button, Form, Modal} from "react-bootstrap";
 import InviteFormValues from "../types/formvalues.type.ts";
+import Agent from "./helper/Agent.tsx";
+import Monitor from "./helper/Monitor.tsx";
 
 const Profile = () => {
     const [isOwner, setIsOwner] = useState(false);
@@ -32,27 +34,40 @@ const Profile = () => {
     const [showAgentModal, setShowAgentModal] = useState(false);
     const [showMonitorModal, setShowMonitorModal] = useState(false);
     const [doOnce, setDoOnce] = useState(true);
+    const [hasAgent, setHasAgent] = useState(false);
+    const [hasMonitor, setHasMonitor] = useState(false);
 
+    // one time check, no rendering loop
     if (currentUser.roles && doOnce) { // has role
             for (let i = 0; i < currentUser.roles.length; i++) {
                 if (currentUser.roles[i] === 'ROLE_OWNER') {
+                    if (currentUser.agentId !== 0) {
+                        setHasAgent(true);
+                    }
+                    if (currentUser.monitorId !== 0) {
+                        setHasMonitor(true);
+                    }
                     setIsOwner(true);
                     setDoOnce(false);
+
                     break;
                 }
             }
         }
 
     // agent modal state
-    const handleAgentSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleAgentSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
         const formAgentValues: InviteFormValues = {
             name: formData.get('name') as string,
             email: formData.get('email') as string,
         };
-
-        MailService.emailAgent(formAgentValues);
+        try {
+            await MailService.emailAgent(formAgentValues);
+        } catch (error) {
+            console.error(error);
+        }
         handleAgentClose();
     };
 
@@ -69,15 +84,18 @@ const Profile = () => {
     }
 
     // monitor modal state
-    const handleMonitorSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleMonitorSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
         const formMonitorValues: InviteFormValues = {
             name: formData.get('name') as string,
             email: formData.get('email') as string,
         };
-
-        MailService.emailMonitor(formMonitorValues);
+        try {
+            await MailService.emailMonitor(formMonitorValues);
+        } catch (error) {
+            console.error(error);
+        }
         handleMonitorClose();
     };
 
@@ -96,11 +114,10 @@ const Profile = () => {
     return (
         <div className="container">
             <header className="jumbotron">
-                <h3>
-                    <strong>{currentUser.username}</strong> Profile
-                </h3>
+                <h1 className="display-4">User Profile</h1>
+                <p>User: <b>{currentUser.fullname}</b></p>
                 <div className="comp-div">
-                    <p>
+                    <div>
                         <ul>
                             <li><strong>Id:</strong> {currentUser.id}</li>
                             <li><strong>Email:</strong> {currentUser.email}</li>
@@ -110,7 +127,7 @@ const Profile = () => {
                             {currentUser.roles &&
                                 currentUser.roles.map((role: string, index: number) => <li key={index}>{role}</li>)}
                         </ul>
-                    </p>
+                    </div>
                 </div>
                 {/* eslint-disable-next-line react/no-unescaped-entities */}
                 <h5>Let's Get Started</h5>
@@ -131,13 +148,14 @@ const Profile = () => {
                         <h5>Need Help?</h5>
                         <p>
                             With your subscription you have two free resources to help you navigate your data collection
-                            and
-                            use of it daily. Invite an Agent to help you add, modify, and/or delete data. Invite a
-                            Monitor to
-                            look at your data either with you or on their own time.
+                            and use of it daily. Invite an Agent to help you add, modify, and/or delete data. Invite a
+                            Monitor to look at your data either with you or on their own time. If the invitation buttons
+                            are not visible below then your invites have already registered.
                         </p>
+                        { !hasAgent ? (
                         <button className="btn btn-secondary buttonMargin" onClick={sendAgentInvite}>Invite
                             Agent &raquo;</button>
+                        ) : ( <Agent/> ) }
                         {/* AGENT INVITE MODAL CONTENT */}
                         <Modal show={showAgentModal} onHide={handleAgentClose}>
                             <Modal.Header closeButton>
@@ -162,8 +180,10 @@ const Profile = () => {
                                 </Form>
                             </Modal.Body>
                         </Modal>
+                        { !hasMonitor ? (
                         <button className="btn btn-secondary buttonMargin" onClick={sendMonitorInvite}>Invite
                             Monitor &raquo;</button>
+                        ) : ( <Monitor/> ) }
                         {/* MONITOR INVITE MODAL CONTENT */}
                         <Modal show={showMonitorModal} onHide={handleMonitorClose}>
                             <Modal.Header closeButton>
