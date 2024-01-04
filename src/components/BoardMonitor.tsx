@@ -35,7 +35,6 @@ import PersonalService from "../services/personal.service.ts";
 import MedicalService from "../services/medical.service.ts";
 
 const BoardMonitor = () => {
-    const [content, setContent] = useState("");
     const [peeps, setPeeps] = useState([]);
     const [prescriptions, setPrescriptions] = useState([]);
     const [assets, setAssets] = useState([]);
@@ -101,29 +100,7 @@ const BoardMonitor = () => {
             })
     }, [])
 
-    useEffect(() => {
-        UserService.getAgentBoard().then(
-            (response) => {
-                setContent(response.data);
-            },
-            (error) => {
-                const _content =
-                    (error.response &&
-                        error.response.data &&
-                        error.response.data.message) ||
-                    error.message ||
-                    error.toString();
-
-                setContent(_content);
-
-                if (error.response && error.response.status === 401) {
-                    EventBus.dispatch("logout");
-                }
-            }
-        );
-    }, []);
-
-    if (!content || !tasks || !peeps || !prescriptions || !assets || !debts || !owner) {
+    if (!tasks || !peeps || !prescriptions || !assets || !debts || !owner) {
         return <div>Loading...</div>;
     }
 

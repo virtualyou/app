@@ -34,7 +34,6 @@ import DebtDisplay from "./display/DebtDisplay.tsx";
 import User from "../types/user.type.ts";
 
 const BoardAgent = () => {
-    const [content, setContent] = useState("");
     const [peeps, setPeeps] = useState([]);
     const [prescriptions, setPrescriptions] = useState([]);
     const [assets, setAssets] = useState([]);
@@ -100,29 +99,7 @@ const BoardAgent = () => {
             })
     }, [])
 
-    useEffect(() => {
-        UserService.getAgentBoard().then(
-            (response) => {
-                setContent(response.data);
-            },
-            (error) => {
-                const _content =
-                    (error.response &&
-                        error.response.data &&
-                        error.response.data.message) ||
-                    error.message ||
-                    error.toString();
-
-                setContent(_content);
-
-                if (error.response && error.response.status === 401) {
-                    EventBus.dispatch("logout");
-                }
-            }
-        );
-    }, []);
-
-    if (!content || !tasks || !peeps || !prescriptions || !assets || !debts || !owner) {
+    if (!tasks || !peeps || !prescriptions || !assets || !debts || !owner) {
         return <div>Loading...</div>;
     }
 

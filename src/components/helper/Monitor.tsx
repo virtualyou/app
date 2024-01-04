@@ -19,25 +19,30 @@ Monitor.tsx - Registered Agent (component)
 */
 
 import { useState, useEffect } from "react";
-
 import UserService from "../../services/user.service";
 import AuthService from "../../services/auth.service";
 
 const Monitor = () => {
     const [monitorName, setMonitorName] = useState("");
 
-    const getMonitor = async(id: number) => {
-        await UserService.getUser(id).then((response) => {
-            setMonitorName(response.data.fullname);
-        });
-    }
-
     useEffect(() => {
         const user = AuthService.getCurrentUser();
         if (user) {
             const monitorId = user.monitorId;
             try {
-                getMonitor(monitorId);
+                UserService.getUser(monitorId).then(response => {
+                        setMonitorName(response.data.fullname);
+                    },
+                    error => {
+                        const resMessage =
+                            (error.response &&
+                                error.response.data &&
+                                error.response.data.message) ||
+                            error.message ||
+                            error.toString();
+                        console.error(resMessage);
+                    }
+                )
             } catch (error) {
                 console.error(error);
             }
@@ -45,6 +50,10 @@ const Monitor = () => {
             console.error('cannot obtain user from local storage!');
         }
     }, []);
+
+    if (!monitorName) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <div>

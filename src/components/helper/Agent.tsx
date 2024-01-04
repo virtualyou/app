@@ -19,25 +19,30 @@ Agent.tsx - Registered Agent (component)
 */
 
 import { useState, useEffect } from "react";
-
 import UserService from "../../services/user.service";
 import AuthService from "../../services/auth.service";
 
 const Agent = () => {
     const [agentName, setAgentName] = useState("");
 
-    const getAgent = async(id: number) => {
-        await UserService.getUser(id).then((response) => {
-            setAgentName(response.data.fullname);
-        });
-    }
-
     useEffect(() => {
         const user = AuthService.getCurrentUser();
         if (user) {
             const agentId = user.agentId;
             try {
-                getAgent(agentId);
+                UserService.getUser(agentId).then(response => {
+                        setAgentName(response.data.fullname);
+                    },
+                    error => {
+                        const resMessage =
+                            (error.response &&
+                                error.response.data &&
+                                error.response.data.message) ||
+                            error.message ||
+                            error.toString();
+                        console.error(resMessage);
+                    }
+                )
             } catch (error) {
                 console.error(error);
             }
@@ -45,6 +50,10 @@ const Agent = () => {
             console.error('cannot obtain user from local storage!');
         }
     }, []);
+
+    if (!agentName) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <div>

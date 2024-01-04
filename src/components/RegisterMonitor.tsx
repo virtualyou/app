@@ -22,7 +22,6 @@ import { useLocation } from 'react-router-dom';
 import {keysMatchForMonitor} from "../utility/key.utils.ts";
 import {ErrorMessage, Field, Form, Formik} from "formik";
 import AuthService from "../services/auth.service.ts";
-import UserService from "../services/user.service.ts";
 import {useEffect, useState} from "react";
 import * as Yup from "yup";
 
@@ -97,13 +96,13 @@ const RegisterMonitor = () => {
         });
     };
 
-    const handleRegister = (formValue: { username: string; email: string; fullname: string; password: string; idOwner: string }) => {
+    const handleMonitorRegister = (formValue: { username: string; email: string; fullname: string; password: string; idOwner: string }) => {
         const { username, email, fullname, password, idOwner } = formValue;
         setMessage("");
         setSuccessful(false);
 
         // signup as monitor
-        AuthService.registerHelper(
+        AuthService.registerMonitor(
             username,
             email,
             fullname,
@@ -115,12 +114,7 @@ const RegisterMonitor = () => {
         ).then(
             response => {
                 setMessage(response.data.message);
-                setSuccessful(true);
-                UserService.getMonitorWhereOwnerId(parseInt(idOwner)).then(
-                    response => {
-                        UserService.setMonitorIdForOwner(response.data.id, parseInt(idOwner));
-                    }
-                );
+                setSuccessful(true); // successful to here
             },
             error => {
                 const resMessage =
@@ -153,7 +147,7 @@ const RegisterMonitor = () => {
                     <Formik
                         initialValues={initialValues}
                         validationSchema={validationSchema}
-                        onSubmit={handleRegister}
+                        onSubmit={handleMonitorRegister}
                     >
                         <Form>
                             {!successful && (

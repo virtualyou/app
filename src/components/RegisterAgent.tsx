@@ -22,7 +22,6 @@ import { useLocation } from 'react-router-dom';
 import {keysMatchForAgent} from "../utility/key.utils.ts";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import AuthService from "../services/auth.service.ts"
-import UserService from "../services/user.service.ts";
 import { useState, useEffect } from "react";
 import * as Yup from "yup";
 
@@ -97,13 +96,13 @@ const RegisterAgent = () => {
         });
     };
 
-    const handleRegister = async (formValue: { username: string; email: string; fullname: string; password: string; idOwner: string }) => {
+    const handleAgentRegister = async (formValue: { username: string; email: string; fullname: string; password: string; idOwner: string }) => {
         const { username, email, fullname, password, idOwner } = formValue;
         setMessage("");
         setSuccessful(false);
 
         // signup as agent
-        AuthService.registerHelper(
+        AuthService.registerAgent(
             username,
             email,
             fullname,
@@ -115,12 +114,7 @@ const RegisterAgent = () => {
         ).then(
             response => {
                 setMessage(response.data.message);
-                setSuccessful(true);
-                UserService.getAgentWhereOwnerId(parseInt(idOwner)).then(
-                    response => {
-                        UserService.setAgentIdForOwner(response.data.id, parseInt(idOwner));
-                    }
-                );
+                setSuccessful(true); // successful to here
             },
             error => {
                 const resMessage =
@@ -153,7 +147,7 @@ const RegisterAgent = () => {
                     <Formik
                         initialValues={initialValues}
                         validationSchema={validationSchema}
-                        onSubmit={handleRegister}
+                        onSubmit={handleAgentRegister}
                     >
                         <Form>
                             {!successful && (
