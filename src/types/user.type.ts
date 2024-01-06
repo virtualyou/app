@@ -31,5 +31,6 @@ export default interface User {
     agentMnemonic: string,
     monitorMnemonic: string,
     agentId: number,
-    monitorId: number
+    monitorId: number,
+    mfa: number
 }

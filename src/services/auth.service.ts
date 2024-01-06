@@ -105,12 +105,13 @@ class AuthService {
      * @param agentOwnerId - Number id for owner id designating agent
      * @param monitorOwnerId - Number id for owner id designating monitor
      * @param role - String role (strict set of names e.g. owner, agent, monitor, admin)
+     * @param rsvp - 3-digit random number given to invitee for verification here
      * @remarks
      * using Axios calling userauth API
      * @returns Promise.
      */
     registerAgent(username: string, email: string, fullname: string, password: string, ownerId: number,
-                   agentOwnerId: number, monitorOwnerId: number, role: string) {
+                   agentOwnerId: number, monitorOwnerId: number, role: string, rsvp: number) {
         // must generate deterministic key from owner mnemonic and verify against the registrant's query parameter dkey
             const roles: string[] = [role];
             return axios.post(AUTH_URL + "agent/signup", {
@@ -121,7 +122,8 @@ class AuthService {
                 ownerId,
                 agentOwnerId,
                 monitorOwnerId,
-                roles
+                roles,
+                rsvp
             }, { headers: authHeader() });
     }
 
@@ -138,12 +140,12 @@ class AuthService {
      * @param agentOwnerId - Number id for owner id designating agent
      * @param monitorOwnerId - Number id for owner id designating monitor
      * @param role - String role (strict set of names e.g. owner, agent, monitor, admin)
-     * @remarks
+     * @param rsvp - 3-digit random number given to invitee for verification here     * @remarks
      * using Axios calling userauth API
      * @returns Promise.
      */
     registerMonitor(username: string, email: string, fullname: string, password: string, ownerId: number,
-                  agentOwnerId: number, monitorOwnerId: number, role: string) {
+                  agentOwnerId: number, monitorOwnerId: number, role: string, rsvp: number) {
         // must generate deterministic key from owner mnemonic and verify against the registrant's query parameter dkey
         const roles: string[] = [role];
         return axios.post(AUTH_URL + "monitor/signup", {
@@ -154,7 +156,8 @@ class AuthService {
             ownerId,
             agentOwnerId,
             monitorOwnerId,
-            roles
+            roles,
+            rsvp
         }, { headers: authHeader() });
     }
 

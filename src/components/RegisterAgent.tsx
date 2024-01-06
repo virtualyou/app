@@ -47,7 +47,8 @@ const RegisterAgent = () => {
         fullname: string,
         email: string,
         password: string,
-        idOwner: any
+        idOwner: any,
+        rsvp: number,
     }
 
     const initialValues: Values = {
@@ -55,7 +56,8 @@ const RegisterAgent = () => {
         email: "",
         fullname: "",
         password: "",
-        idOwner: ownerId
+        idOwner: ownerId,
+        rsvp: 0
     };
 
     const validationSchema = () => {
@@ -93,11 +95,21 @@ const RegisterAgent = () => {
                         val.toString().length <= 40
                 )
                 .required("This field is required!"),
+            rsvp: Yup.string()
+                .test(
+                    "len",
+                    "The RSVP must be a 3-digit number given to you.",
+                    (val: any) =>
+                        val &&
+                        val.toString().length == 3
+                )
+                .required("This field is required!"),
+
         });
     };
 
-    const handleAgentRegister = async (formValue: { username: string; email: string; fullname: string; password: string; idOwner: string }) => {
-        const { username, email, fullname, password, idOwner } = formValue;
+    const handleAgentRegister = async (formValue: { username: string; email: string; fullname: string; password: string; idOwner: string; rsvp: number }) => {
+        const { username, email, fullname, password, idOwner, rsvp } = formValue;
         setMessage("");
         setSuccessful(false);
 
@@ -110,7 +122,8 @@ const RegisterAgent = () => {
             0,
             parseInt(idOwner),
             0,
-            "agent"
+            "agent",
+            rsvp
         ).then(
             response => {
                 setMessage(response.data.message);
@@ -192,6 +205,16 @@ const RegisterAgent = () => {
                                         />
                                         <ErrorMessage
                                             name="password"
+                                            component="div"
+                                            className="alert alert-danger"
+                                        />
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label htmlFor="rsvp"> RSVP </label>
+                                        <Field name="rsvp" type="text" className="form-control" />
+                                        <ErrorMessage
+                                            name="rsvp"
                                             component="div"
                                             className="alert alert-danger"
                                         />

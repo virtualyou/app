@@ -127,6 +127,10 @@ const Profile = () => {
                             {currentUser.roles &&
                                 currentUser.roles.map((role: string, index: number) => <li key={index}>{role}</li>)}
                         </ul>
+                        <strong>RSVP:</strong>
+                        <ul>
+                            <li>{currentUser.mfa}</li>
+                        </ul>
                     </div>
                 </div>
                 {/* eslint-disable-next-line react/no-unescaped-entities */}
@@ -150,7 +154,9 @@ const Profile = () => {
                             With your subscription you have two free resources to help you navigate your data collection
                             and use of it daily. Invite an Agent to help you add, modify, and/or delete data. Invite a
                             Monitor to look at your data either with you or on their own time. If the invitation buttons
-                            are not visible below then your invites have already registered.
+                            are not visible below then your invites have already registered. Please note that your invites
+                            will contact you and need the RSVP number at the top of this page to register. This is necessary
+                            security that protects you.
                         </p>
                         { !hasAgent ? (
                         <button className="btn btn-secondary buttonMargin" onClick={sendAgentInvite}>Invite

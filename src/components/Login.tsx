@@ -20,7 +20,7 @@ Login.tsx - Login (component)
 
 
 import { Component } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, Link } from "react-router-dom";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
@@ -147,6 +147,7 @@ export default class Login extends Component<Props, State> {
                                     component="div"
                                     className="alert alert-danger"
                                 />
+                                {/* <div className="div-spctopbot1"><Link to={`/newpassword`}>forgot password?</Link><Link to={`/register`}>new user?</Link></div>*/}
                             </div>
 
                             <div className="form-group">
