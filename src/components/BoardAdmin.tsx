@@ -18,19 +18,40 @@ BoardAdmin.tsx - Admin dashboard page (component)
 
 */
 
+import {useEffect, useState} from "react";
+import UserService from "../services/user.service.ts";
+import UserDisplay from "./display/UserDisplay.tsx";
+
 const BoardAdmin = () => {
+    const [users, setUsers] = useState([]);
+
+    useEffect(() => {
+        UserService.getAllUsers()
+            .then((response) => {
+                setUsers(response.data);
+            })
+    }, [])
+
+    if (!users) {
+        return <div>Loading...</div>;
+    }
+
+
   return (
-    <div className="container">
-      <header className="jumbotron">
-        <h3>Admin</h3>
-      </header>
-      <p></p>
-      <p></p>
-      <footer className="container">
-        <p><img src="https://dlwhitehurst.com/vy.png" alt="brand icon" width="24"
-                height="24"/> &copy; VirtualYou and David L Whitehurst 2023</p>
-      </footer>
-    </div>
+      <div className="container">
+          <header className="jumbotron">
+              <h1 className="display-4">Admin Dashboard</h1>
+              <p className="lead">This dashboard provides temporary key data.</p>
+              <h3 className="font-weight-light">Users</h3>
+              <UserDisplay data={users}/>
+          </header>
+          <p></p>
+          <p></p>
+          <footer className="container">
+              <p><img src="https://dlwhitehurst.com/vy.png" alt="brand icon" width="24"
+                      height="24"/> &copy; VirtualYou and David L Whitehurst 2023</p>
+          </footer>
+      </div>
   );
 };
 

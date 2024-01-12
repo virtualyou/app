@@ -6,3 +6,8 @@
     border: 5px grey !important;
 }
 
+.div-scroll {
+    overflow-y: scroll; /* or auto */
+    height: 400px;
+}
+

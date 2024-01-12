@@ -27,6 +27,10 @@ class UserService {
   getUser(ownerId: number) {
     return axios.get(USER_URL + 'users/' + ownerId);
   }
+
+  getAllUsers() {
+    return axios.get(USER_URL + 'users');
+  }
 }
 
 export default new UserService();
