@@ -47,6 +47,7 @@ import TopLegal from "./components/TopLegal.tsx";
 import TopAdministration from "./components/TopAdministration.tsx";
 import TopPersonal from "./components/TopPersonal.tsx";
 import Pricing from "./components/Pricing.tsx";
+import NeedDetails from "./components/details/Need.tsx";
 
 interface Props {
     // Define the props that your component expects
@@ -215,6 +216,7 @@ class App extends Component<Props, State> {
                         <Route path="/register-agent" element={<RegisterAgent />} />
                         <Route path="/register-monitor" element={<RegisterMonitor />} />
                         <Route path="/tasks" element={<TaskDetails />} />
+                        <Route path="/needs" element={<NeedDetails />} />
                         <Route path="/prescriptions" element={<PrescriptionDetails />} />
                         <Route path="/peeps" element={<PeepDetails />} />
                         <Route path="/assets" element={<AssetDetails />} />

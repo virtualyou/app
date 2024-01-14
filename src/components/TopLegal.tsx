@@ -143,7 +143,7 @@ const TopLegal = () => {
     return (
         <div className="container">
             <header className="jumbotron">
-                <h1 className="display-4">Medical</h1>
+                <h1 className="display-4">Legal</h1>
                 <p>This is where we keep our legal documents.</p>
                 <h3 className="font-weight-light">Legal Docs
                     {user.roles.includes(("ROLE_MONITOR")) ? <meta/> :

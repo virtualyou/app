@@ -112,7 +112,7 @@ const BoardMonitor = () => {
                 <InfoAlert note={"Don't forget to validate medications."} />
                 <h3 className="font-weight-light">Tasks</h3>
                 <TaskDisplay data={tasks} />
-                <h3 className="font-weight-light">Key Contacts</h3>
+                <h3 className="font-weight-light">Contacts</h3>
                 <PeepDisplay data={peeps} />
                 <h3 className="font-weight-light">Prescriptions</h3>
                 <PrescriptionDisplay data={prescriptions} />

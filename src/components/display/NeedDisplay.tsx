@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
-TaskDisplay.tsx - Table listing Tasks
+NeedDisplay.tsx - Table listing Needs
 @author David L Whitehurst
 
 */
@@ -27,39 +27,38 @@ import './custom.css';
 type Data = {
     id: number;
     name: string;
-    type: string;
-    due: string;
-    completed: string;
+    quantity: number;
+    unit: string;
+    urgency: string;
     note: string;
-    item: object;
-    index: number;
+    userKey: number
 }
 
 // Define the type of the props for the component
 type Props = {
     data: Data[];
 }
-const TaskDisplay: React.FC<Props> = ({ data }) => {
+const NeedDisplay: React.FC<Props> = ({ data }) => {
     return (
         <Table striped bordered hover size="sm">
             <thead>
             <tr>
                 <th>Id</th>
                 <th>Name</th>
-                <th>Type</th>
-                <th>Due</th>
-                <th>Completed</th>
+                <th>Quantity</th>
+                <th>Unit</th>
+                <th>Urgency</th>
                 <th>Note</th>
             </tr>
             </thead>
             <tbody>
             {data.map((item, index) => (
                 <tr key={index}>
-                    <td><Link to={`/tasks?id=${item.id}`}>{item.id}</Link></td>
+                    <td><Link to={`/needs?id=${item.id}`}>{item.id}</Link></td>
                     <td>{item.name}</td>
-                    <td>{item.type}</td>
-                    <td>{item.due}</td>
-                    <td>{item.completed}</td>
+                    <td>{item.quantity}</td>
+                    <td>{item.unit}</td>
+                    <td>{item.urgency}</td>
                     <td>{item.note}</td>
                 </tr>
             ))}
@@ -68,4 +67,4 @@ const TaskDisplay: React.FC<Props> = ({ data }) => {
     );
 };
 
-export default TaskDisplay;
+export default NeedDisplay;

@@ -33,25 +33,36 @@ const Home = () => {
                     and a healthy VirtualYou.
                 </p>
             </div>
+            <div className="text-center">
+                <p><a className="btn btn-primary btn-lg" href="pricing#/pricing" role="button">Sign up for Free!</a>
+                </p>
+            </div>
             <div className="container">
                 <div className="row">
                     <div className="col-md-4">
+                        {/*
                         <h2>You</h2>
                         <p>VirtualYou.info will define you virtually in one easily accessible and convenient
                             application online. And, like every other application out there, we&rsquo;re
                             trying to win your loyalty and attention too. We do differ from the others
                             because we are going to allow all registered users (Owners) to assign one Agent
                             and one Monitor to their account.</p>
+                         */}
+                        <img src="man-on-laptop.jpg" width="400" height="400"/>
                     </div>
                     <div className="col-md-4">
+                        {/*
                         <h2>Monitor</h2>
                         <p>The Monitor can login and see the Owner&rsquo;s data, however they are not
                             authorized to make any changes. A friend could check on a VirtualYou user or
                             even have a discussion on the phone using the application and be thousands of
                             miles away.
                         </p>
+                        */}
+                        <img src="girl-on-laptop.jpg" width="400" height="400"/>
                     </div>
                     <div className="col-md-4">
+                        {/*
                         <h2>Agent</h2>
                         <p>The Agent will have rights to help edit the definition of their Owner&rsquo;s
                             account. The Agent is essentially an assistant to the Owner, e.g. an adult child
@@ -59,15 +70,13 @@ const Home = () => {
                             client with their end-of-life affairs. A family care provider can help a
                             mentally ill parent with day to day activities or appointments.
                         </p>
+                        */}
+                        <img src="man-on-phone.jpg" width="400" height="400"/>
                     </div>
                 </div>
             </div>
             <p></p>
             <p></p>
-            <div className="text-center">
-                <p><a className="btn btn-primary btn-lg" href="pricing#/pricing" role="button">Sign up for Free!</a>
-                </p>
-            </div>
             <footer className="container">
                 <p><img src="https://dlwhitehurst.com/vy.png" alt="brand icon" width="24"
                         height="24"/> &copy; VirtualYou and David L Whitehurst 2023</p>

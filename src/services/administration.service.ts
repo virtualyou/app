@@ -21,6 +21,7 @@ administration.service.ts - Administration service utilizing API
 import axios from "axios";
 import Task from "../types/task.type.ts";
 import CreateTask from "../types/createtask.type.ts";
+import Need from "../types/need.type.ts";
 
 const ADMIN_URL = import.meta.env.VITE_APP_BASEPATH + "/administration/v1/owner/";
 
@@ -38,6 +39,22 @@ const ADMIN_URL = import.meta.env.VITE_APP_BASEPATH + "/administration/v1/owner/
  * ```
  */
 class AdministrationService {
+
+    getNeeds() {
+        return axios.get(ADMIN_URL + 'needs');
+    }
+
+    deleteNeed(id: number) {
+        return axios.delete(ADMIN_URL + 'needs/' + id);
+    }
+
+    updateNeed(id: number, obj: Need) {
+        return axios.put(ADMIN_URL + 'needs/' + id, obj);
+    }
+
+    getNeed(id: number) {
+        return axios.get(ADMIN_URL + 'needs/' + id);
+    }
 
     /**
      * This is a method to get all tasks (for a configured owner)

@@ -20,7 +20,7 @@ Profile.tsx - Profile (component)
 
 import AuthService from "../services/auth.service";
 import './custom.css';
-import {Link} from "react-router-dom";
+// import {Link} from "react-router-dom";
 import React, {useState} from "react";
 import MailService from "../services/mail.service.ts";
 import {Button, Form, Modal} from "react-bootstrap";
@@ -134,34 +134,30 @@ const Profile = () => {
                     </div>
                 </div>
                 {/* eslint-disable-next-line react/no-unescaped-entities */}
-                <h5>Let's Get Started</h5>
-                <p>
-                    Links are provided here to get started building your digital self and keeping your vital
-                    information in one place and up to date. The Dashboard is used to show on-going activity
-                    and also reminders for things that need attention.
-                </p>
-                <ul>
-                    <li><Link to={`/financial`}>Financial</Link></li>
-                    <li><Link to={`/medical`}>Medical</Link></li>
-                    <li><Link to={`/legal`}>Legal</Link></li>
-                    <li><Link to={`/administration`}>Administration</Link></li>
-                    <li><Link to={`/personal`}>Personal</Link></li>
-                </ul>
                 {isOwner ? (
                     <>
-                        <h5>Need Help?</h5>
-                        <p>
-                            With your subscription you have two free resources to help you navigate your data collection
-                            and use of it daily. Invite an Agent to help you add, modify, and/or delete data. Invite a
-                            Monitor to look at your data either with you or on their own time. If the invitation buttons
-                            are not visible below then your invites have already registered. Please note that your invites
-                            will contact you and need the RSVP number at the top of this page to register. This is necessary
-                            security that protects you.
-                        </p>
-                        { !hasAgent ? (
-                        <button className="btn btn-secondary buttonMargin" onClick={sendAgentInvite}>Invite
-                            Agent &raquo;</button>
-                        ) : ( <Agent/> ) }
+                        <div>
+                            <h5>Need Help?</h5>
+                            <img className="img-left1" src="daughter-dad-1.jpg" width="200" height="200"/>
+                            <p>
+                                With your subscription you have two free resources to help you navigate your data
+                                collection
+                                and use of it daily. Invite an Agent to help you add, modify, and/or delete data. Invite
+                                a
+                                Monitor to look at your data either with you or on their own time. If the invitation
+                                buttons
+                                are not visible below then your invites have already registered. Please note that your
+                                invites
+                                will contact you and need the RSVP number at the top of this page to register. This is
+                                necessary
+                                security that protects you.
+                            </p>
+                        </div>
+                        <p>&nbsp;</p>
+                        {!hasAgent ? (
+                            <button className="btn btn-secondary buttonMargin" onClick={sendAgentInvite}>Invite
+                                Agent &raquo;</button>
+                        ) : (<Agent/>)}
                         {/* AGENT INVITE MODAL CONTENT */}
                         <Modal show={showAgentModal} onHide={handleAgentClose}>
                             <Modal.Header closeButton>
@@ -186,10 +182,10 @@ const Profile = () => {
                                 </Form>
                             </Modal.Body>
                         </Modal>
-                        { !hasMonitor ? (
-                        <button className="btn btn-secondary buttonMargin" onClick={sendMonitorInvite}>Invite
-                            Monitor &raquo;</button>
-                        ) : ( <Monitor/> ) }
+                        {!hasMonitor ? (
+                            <button className="btn btn-secondary buttonMargin" onClick={sendMonitorInvite}>Invite
+                                Monitor &raquo;</button>
+                        ) : (<Monitor/>)}
                         {/* MONITOR INVITE MODAL CONTENT */}
                         <Modal show={showMonitorModal} onHide={handleMonitorClose}>
                             <Modal.Header closeButton>
@@ -214,7 +210,7 @@ const Profile = () => {
                                 </Form>
                             </Modal.Body>
                         </Modal>
-                    </> ) : ( <meta/> ) }
+                    </>) : (<meta/>)}
             </header>
             <p></p>
             <p></p>

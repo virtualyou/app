@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Task.tsx - Detail page for single Task
+ * Need.tsx - Detail page for single Need
  * @author David L Whitehurst
  */
 
@@ -23,21 +23,18 @@ import {useState, useEffect} from 'react';
 import {useLocation} from 'react-router-dom';
 import AdministrationService from "../../services/administration.service.ts";
 import {Button, Form, Modal} from 'react-bootstrap';
-import Task from '../../types/task.type.ts';
+import Need from '../../types/need.type.ts';
 import {useNavigate} from "react-router-dom";
 import AuthService from "../../services/auth.service.ts";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-const TaskDetails: React.FC = () => {
+const NeedDetails: React.FC = () => {
 
     const location = useLocation();
     const [param, setParam] = useState("");
-    const [task, setTask] = useState<Task>();
+    const [need, setNeed] = useState<Need>();
     const [showModal, setShowModal] = useState(false);
     const [showEdit, setShowEdit] = useState(false);
-    const [dueDate, setDueDate] = useState<Date | null>(new Date());
-    const [completeDate, setCompleteDate] = useState<Date | null>(new Date());
 
     const navigate = useNavigate();
 
@@ -48,7 +45,7 @@ const TaskDetails: React.FC = () => {
     // modal state
     const handleOkay = async () => {
         try {
-            await AdministrationService.deleteTask(parseInt(param));
+            await AdministrationService.deleteNeed(parseInt(param));
         } catch (error) {
             console.error(error);
         }
@@ -72,19 +69,17 @@ const TaskDetails: React.FC = () => {
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
-        const formTaskValues: Task = {
+        const formNeedValues: Need = {
             id: parseInt(param),
             name: formData.get('name') as string,
-            type: formData.get('type') as string,
-            priority: formData.get('priority') as string,
-            due: formData.get('due') as string,
-            completed: formData.get('completed') as string,
-            trigger: formData.get('trigger') as string,
+            quantity: parseInt(formData.get('quantity') as string),
+            unit: formData.get('unit') as string,
+            urgency: formData.get('urgency') as string,
             note: formData.get('note') as string,
             userKey: userkey
         };
         try {
-            await AdministrationService.updateTask(parseInt(param), formTaskValues);
+            await AdministrationService.updateNeed(parseInt(param), formNeedValues);
         } catch (error) {
             console.error(error);
         }
@@ -111,94 +106,53 @@ const TaskDetails: React.FC = () => {
         if (!id) return;
         setParam(id);
 
-        AdministrationService.getTask(parseInt(id))
+        AdministrationService.getNeed(parseInt(id))
             .then((response) => {
-                setTask(response.data);
+                setNeed(response.data);
             })
 
     }, []);
 
-    // this is sweet !!!!
-    useEffect(() => {
-        if (!task) return;
-
-        if (!task.due) {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-expect-error
-            setDueDate("");
-        } else {
-            setDueDate(new Date(task.due));
-        }
-
-        if (!task.completed) {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-expect-error
-            setCompleteDate("");
-        } else {
-            setCompleteDate(new Date(task.completed));
-        }
-    }, [task]);
-
-    if (!task) {
+    if (!need) {
         return <div>Loading...</div>;
     }
 
-    const userkey = task.userKey;
+    const userkey = need.userKey;
     const user = AuthService.getCurrentUser();
 
     return (
         <div className="container">
             <header className="jumbotron">
-                <h1 className="display-4">Task Details</h1>
-                <p>This is where we show the entire Task Object</p>
+                <h1 className="display-4">Need Details</h1>
+                <p>This is where we show the entire Need Object</p>
                 {user.roles.includes(("ROLE_MONITOR")) ? <meta/> :
                     <Button className="spacial-button" variant="primary" onClick={openEdit}>Edit</Button>}
                 <Button className="spacial-button" variant="secondary" onClick={goBack}>Back</Button>
                 <Modal show={showEdit} onHide={handleEditorClose}>
                     <Modal.Header closeButton>
-                        <Modal.Title>Task Edit</Modal.Title>
+                        <Modal.Title>Need Edit</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <Form onSubmit={handleSubmit}>
                             <Form.Group controlId="form1">
                                 <Form.Label><b>Name</b></Form.Label>
-                                <Form.Control type="text" defaultValue={task.name} name="name"/>
+                                <Form.Control type="text" defaultValue={need.name} name="name"/>
                             </Form.Group>
                             <Form.Group controlId="form2">
-                                <Form.Label><b>Type</b></Form.Label>
-                                <Form.Control type="text" defaultValue={task.type} name="type"/>
+                                <Form.Label><b>Quantity</b></Form.Label>
+                                <Form.Control type="text" defaultValue={need.quantity} name="quantity"/>
                             </Form.Group>
                             <Form.Group controlId="form3">
-                                <Form.Label><b>Priority</b></Form.Label>
-                                <Form.Control type="text" defaultValue={task.priority} name="priority"/>
+                                <Form.Label><b>Unit</b></Form.Label>
+                                <Form.Control type="text" defaultValue={need.unit} name="unit"/>
                             </Form.Group>
                             <Form.Group controlId="form4">
-                                <Form.Label><b>Due</b></Form.Label>
-                                <DatePicker
-                                    selected={dueDate}
-                                    onChange={(date) => setDueDate(date)}
-                                    name="due"
-                                    wrapperClassName="my-datepicker"
-                                    customInput={<Form.Control type="text" />}
-                                />
-                            </Form.Group>
-                            <Form.Group controlId="form5">
-                                <Form.Label><b>Completed</b></Form.Label>
-                                <DatePicker
-                                    selected={completeDate}
-                                    onChange={(date) => setCompleteDate(date)}
-                                    name="completed"
-                                    wrapperClassName="my-datepicker"
-                                    customInput={<Form.Control type="text" />}
-                                />
-                            </Form.Group>
-                            <Form.Group controlId="form6">
-                                <Form.Label><b>Trigger</b></Form.Label>
-                                <Form.Control type="text" defaultValue={task.trigger} name="trigger"/>
+                                <Form.Label><b>Urgency</b></Form.Label>
+                                <Form.Control type="text" defaultValue={need.urgency} name="urgency"/>
                             </Form.Group>
                             <Form.Group controlId="form7">
                                 <Form.Label><b>Note</b></Form.Label>
-                                <Form.Control type="text" defaultValue={task.note} name="note"/>
+                                <Form.Control type="text" defaultValue={need.note} name="note"/>
                             </Form.Group>
                             <Button variant="primary" type="submit">
                                 Submit
@@ -211,14 +165,12 @@ const TaskDetails: React.FC = () => {
                 </Modal>
                 <div className="detail-div">
                     <div><strong>id: </strong> {param}</div>
-                    <div><strong>name:</strong> {task.name}</div>
-                    <div><strong>type:</strong> {task.type}</div>
-                    <div><strong>priority:</strong> {task.priority}</div>
-                    <div><strong>due:</strong> {task.due}</div>
-                    <div><strong>completed:</strong> {task.completed}</div>
-                    <div><strong>trigger:</strong> {task.trigger}</div>
-                    <div><strong>note:</strong> {task.note}</div>
-                    <div><strong>userKey:</strong> {task.userKey}</div>
+                    <div><strong>name:</strong> {need.name}</div>
+                    <div><strong>quantity:</strong> {need.quantity}</div>
+                    <div><strong>unit:</strong> {need.unit}</div>
+                    <div><strong>urgency:</strong> {need.urgency}</div>
+                    <div><strong>note:</strong> {need.note}</div>
+                    <div><strong>userKey:</strong> {need.userKey}</div>
                 </div>
                 {user.roles.includes(("ROLE_MONITOR")) ? <meta/> :
                     <Button variant="danger" onClick={openModal}>Delete</Button>}
@@ -241,4 +193,4 @@ const TaskDetails: React.FC = () => {
     );
 };
 
-export default TaskDetails;
+export default NeedDetails;
