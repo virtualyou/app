@@ -56,7 +56,7 @@ const Agent = () => {
     }
 
     return (
-        <div>
+        <div className="div-smaller1">
             <p><b>Registered Agent:</b> {agentName}</p>
         </div>
     );

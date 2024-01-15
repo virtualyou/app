@@ -138,22 +138,17 @@ const Profile = () => {
                     <>
                         <div>
                             <h5>Need Help?</h5>
-                            <img className="img-left1" src="daughter-dad-1.jpg" width="200" height="200"/>
+                            <img className="img-left1" src="daughter-dad-1.jpg" width="100" height="100"/>
                             <p>
                                 With your subscription you have two free resources to help you navigate your data
-                                collection
-                                and use of it daily. Invite an Agent to help you add, modify, and/or delete data. Invite
-                                a
-                                Monitor to look at your data either with you or on their own time. If the invitation
-                                buttons
-                                are not visible below then your invites have already registered. Please note that your
-                                invites
-                                will contact you and need the RSVP number at the top of this page to register. This is
-                                necessary
-                                security that protects you.
+                                collection and use of it daily. Invite an Agent to help you add, modify, and/or
+                                delete data. Invite a Monitor to look at your data either with you or on their
+                                own time. If the invitation buttons are not visible below then your invites have
+                                already registered. Please note that your invites will contact you and need the
+                                RSVP number at the top of this page to register. This is necessary security that
+                                protects you.
                             </p>
                         </div>
-                        <p>&nbsp;</p>
                         {!hasAgent ? (
                             <button className="btn btn-secondary buttonMargin" onClick={sendAgentInvite}>Invite
                                 Agent &raquo;</button>

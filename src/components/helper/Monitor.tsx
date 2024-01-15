@@ -56,7 +56,7 @@ const Monitor = () => {
     }
 
     return (
-        <div>
+        <div className="div-smaller1">
             <p><b>Registered Monitor:</b> {monitorName}</p>
         </div>
     );
