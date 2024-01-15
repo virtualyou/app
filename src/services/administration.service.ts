@@ -22,6 +22,7 @@ import axios from "axios";
 import Task from "../types/task.type.ts";
 import CreateTask from "../types/createtask.type.ts";
 import Need from "../types/need.type.ts";
+import CreateNeed from "../types/createneed.type.ts";
 
 const ADMIN_URL = import.meta.env.VITE_APP_BASEPATH + "/administration/v1/owner/";
 
@@ -46,6 +47,10 @@ class AdministrationService {
 
     deleteNeed(id: number) {
         return axios.delete(ADMIN_URL + 'needs/' + id);
+    }
+
+    createNeed(obj: CreateNeed) {
+        return axios.post(ADMIN_URL + 'needs', obj);
     }
 
     updateNeed(id: number, obj: Need) {
