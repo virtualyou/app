@@ -40,19 +40,25 @@ class AuthService {
                 password
             }, { headers: authHeader() })
             .then(response => {
-                if (response.data) {
-                    if (response.data.agentOwnerId === 0 && response.data.monitorOwnerId === 0) {
-                        localStorage.setItem("ownerid", response.data.id);
-                    } else {
-                        if (response.data.agentOwnerId !== 0) {
+                if (response.data) { // was .data
+                    if (response.data.mfa != "0") { // owner
+                        if (response.data.ownerId == "-1") {
+                            localStorage.setItem("ownerid", response.data.id);
+                        }
+                        if (response.data.ownerId == "0") {
+                            localStorage.setItem("ownerid", response.data.id);
+                        }
+                    } else { // agent or monitor ( or admin )
+                        if (response.data.agentOwnerId != "0") { // agent
                             localStorage.setItem("ownerid", response.data.agentOwnerId);
                         }
-                        if (response.data.monitorOwnerId !== 0) {
+                        if (response.data.monitorOwnerId != "0") { // monitor
                             localStorage.setItem("ownerid", response.data.monitorOwnerId);
                         }
                     }
                     localStorage.setItem("user", JSON.stringify(response.data));
                 }
+
                 return response.data;
             });
     }
@@ -69,47 +75,26 @@ class AuthService {
         localStorage.removeItem("ownerid");
     }
 
-    /**
-     * This is a method to register a system user, and
-     * specifically a ROLE_OWNER
-     *
-     * @param username - String username
-     * @param email - String email
-     * @param fullname - String fullname
-     * @param password - String password
-     * @remarks
-     * using Axios calling userauth API
-     * @returns Promise.
-     */
+    // admin registration must be done by hand. ownerId = -1
     register(username: string, email: string, fullname: string, password: string) {
-        const ownerId = 0;
+        const ownerId: number = 0;
+        const agentOwnerId: number = 0;
+        const monitorOwnerId: number = 0;
+        const roles: string[] = ["owner"];
         return axios.post(AUTH_URL + "signup", {
-            username,
-            email,
-            password,
-            fullname,
-            ownerId
+            "username": username,
+            "fullname": fullname,
+            "email": email,
+            "password": password,
+            "ownerId": ownerId,
+            "agentOwnerId": agentOwnerId,
+            "monitorOwnerId": monitorOwnerId,
+            "agentActive": false,
+            "monitorActive": false,
+            "roles": roles,
         }, { headers: authHeader() });
    }
 
-    /**
-     * This is a method to register an Agent user, and
-     * specifically a ROLE_AGENT, note
-     * the role required
-     *
-     * @param username - String username
-     * @param email - String email
-     * @param fullname - String fullname
-     * @param password - String password
-     * @param ownerId - Number id for owner unique key
-     * @param agentOwnerId - Number id for owner id designating agent
-     * @param monitorOwnerId - Number id for owner id designating monitor
-     * @param role - String role (strict set of names e.g. owner, agent, monitor, admin)
-     * @param rsvp - 3-digit random number given to invitee for verification here
-     * @remarks
-     * using Axios calling userauth API
-     * @returns Promise.
-     */
     registerAgent(username: string, email: string, fullname: string, password: string, ownerId: number,
                    agentOwnerId: number, monitorOwnerId: number, role: string, rsvp: number) {
         // must generate deterministic key from owner mnemonic and verify against the registrant's query parameter dkey
@@ -127,23 +112,6 @@ class AuthService {
             }, { headers: authHeader() });
     }
 
-    /**
-     * This is a method to register a Monitor user, and
-     * specifically a ROLE_MONITOR, note
-     * the role required
-     *
-     * @param username - String username
-     * @param email - String email
-     * @param fullname - String fullname
-     * @param password - String password
-     * @param ownerId - Number id for owner unique key
-     * @param agentOwnerId - Number id for owner id designating agent
-     * @param monitorOwnerId - Number id for owner id designating monitor
-     * @param role - String role (strict set of names e.g. owner, agent, monitor, admin)
-     * @param rsvp - 3-digit random number given to invitee for verification here     * @remarks
-     * using Axios calling userauth API
-     * @returns Promise.
-     */
     registerMonitor(username: string, email: string, fullname: string, password: string, ownerId: number,
                   agentOwnerId: number, monitorOwnerId: number, role: string, rsvp: number) {
         // must generate deterministic key from owner mnemonic and verify against the registrant's query parameter dkey

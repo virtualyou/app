@@ -26,12 +26,9 @@ import PersonalService from '../services/personal.service.ts';
 import AdministrationService from "../services/administration.service.ts";
 import FinancialService from "../services/financial.service.ts";
 import MedicalService from "../services/medical.service.ts";
-import InfoAlert from "./notification/InfoAlert.tsx";
 import TaskDisplay from "./display/TaskDisplay.tsx";
-import PrescriptionDisplay from "./display/PrescriptionDisplay.tsx";
-import AssetDisplay from "./display/AssetDisplay.tsx";
-import DebtDisplay from "./display/DebtDisplay.tsx";
 import User from "../types/user.type.ts";
+import NeedDisplay from "./display/NeedDisplay.tsx";
 
 const BoardAgent = () => {
     const [peeps, setPeeps] = useState([]);
@@ -39,10 +36,12 @@ const BoardAgent = () => {
     const [assets, setAssets] = useState([]);
     const [debts, setDebts] = useState([]);
     const [tasks, setTasks] = useState([]);
+    const [needs, setNeeds] = useState([]);
     const [owner, setOwner] = useState<User>();
 
     useEffect(() => {
-        const ownerid = localStorage.getItem("ownerid") || "0";
+        const ownerid = localStorage.getItem("ownerid") as string;
+        console.log("owner id is: " + ownerid);
         UserService.getUser(parseInt(ownerid)).then(
             (response) => {
                 setOwner(response.data);
@@ -68,6 +67,13 @@ const BoardAgent = () => {
         AdministrationService.getTasks()
             .then((response) => {
                 setTasks(response.data);
+            })
+    }, [])
+
+    useEffect(() => {
+        AdministrationService.getNeeds()
+            .then((response) => {
+                setNeeds(response.data);
             })
     }, [])
 
@@ -109,17 +115,26 @@ const BoardAgent = () => {
                 <h1 className="display-4">Agent Dashboard</h1>
                 <p className="red-bold">WARNING: This data is owned by {owner.fullname}. You are responsible for the
                     integrity of this data.</p>
-                <InfoAlert note={"Don't forget to validate medications."} />
+                <p className="lead">Tip: Keep lists short, maintained, and important.</p>
+                {/* <InfoAlert note={"Hello Mom, from your favorite Agent, David L Whitehurst"}/> */}
+                {/* new */}
+                <ul className="nav nav-tabs">
+                    <li className="nav-item"><a className="nav-link" href="#administration">Admin</a></li>
+                    <li className="nav-item"><a className="nav-link" href="#financial">Financial</a></li>
+                    <li className="nav-item"><a className="nav-link" href="#medical">Medical</a></li>
+                    <li className="nav-item"><a className="nav-link" href="#legal">Legal</a></li>
+                    <li className="nav-item"><a className="nav-link" href="#personal">Personal</a></li>
+                    <li className="nav-item"><a className="nav-link disabled" href="">Settings</a>
+                    </li>
+                </ul>
+                <div className="div-spctopbot1"></div>
+                {/* new end */}
                 <h3 className="font-weight-light">Tasks</h3>
-                <TaskDisplay data={tasks} />
+                <TaskDisplay data={tasks}/>
+                <h3 className="font-weight-light">Needs</h3>
+                <NeedDisplay data={needs}/>
                 <h3 className="font-weight-light">Contacts</h3>
-                <PeepDisplay data={peeps} />
-                <h3 className="font-weight-light">Prescriptions</h3>
-                <PrescriptionDisplay data={prescriptions} />
-                <h3 className="font-weight-light">Assets</h3>
-                <AssetDisplay data={assets} />
-                <h3 className="font-weight-light">Debts</h3>
-                <DebtDisplay data={debts} />
+                <PeepDisplay data={peeps}/>
             </header>
             <p></p>
             <p></p>

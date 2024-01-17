@@ -79,7 +79,6 @@ export default class Login extends Component<Props, State> {
             loading: true
         });
 
-
         AuthService.login(username, password).then(
             () => {
                 this.setState({
