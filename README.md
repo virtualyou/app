@@ -1,5 +1,5 @@
 # app
-![image info](./landing.png)
+![Fork me on GitHub](https://github.com/you)
 
 This is a Create React App (CRA) that was converted to Typescript and Vite.
 
