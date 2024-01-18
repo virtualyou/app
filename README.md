@@ -1,5 +1,5 @@
 # app
-![Fork me on GitHub](https://github.com/you)
+![Fork me on GitHub](https://github.com/virtualyou/app)
 
 This is a Create React App (CRA) that was converted to Typescript and Vite.
 
