@@ -1,4 +1,6 @@
 # app
+[![Fork me on GitHub](https://img.shields.io/badge/Fork%20me%20on%20GitHub-red.svg?style=social&logo=github)](https://github.com/virtualyou/app)
+
 This is a Create React App (CRA) that was converted to Typescript and Vite.
 
 ## Project Setup
