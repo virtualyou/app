@@ -21,9 +21,12 @@ BoardAdmin.tsx - Admin dashboard page (component)
 import {useEffect, useState} from "react";
 import UserService from "../services/user.service.ts";
 import UserDisplay from "./display/UserDisplay.tsx";
+import MemberDisplay from "./display/MemberDisplay.tsx";
+import BusinessService from "../services/business.service.ts";
 
 const BoardAdmin = () => {
     const [users, setUsers] = useState([]);
+    const [members, setMembers] = useState([]);
 
     useEffect(() => {
         UserService.getAllUsers()
@@ -32,10 +35,16 @@ const BoardAdmin = () => {
             })
     }, [])
 
-    if (!users) {
+    useEffect(() => {
+        BusinessService.getAllMembers()
+            .then((response) => {
+                setMembers(response.data);
+            })
+    }, [])
+
+    if (!users || !members) {
         return <div>Loading...</div>;
     }
-
 
   return (
       <div className="container">
@@ -44,6 +53,8 @@ const BoardAdmin = () => {
               <p className="lead">This dashboard provides temporary key data.</p>
               <h3 className="font-weight-light">Users</h3>
               <UserDisplay data={users}/>
+              <h3 className="font-weight-light">Members</h3>
+              <MemberDisplay data={members}/>
           </header>
           <p></p>
           <p></p>

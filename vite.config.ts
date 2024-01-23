@@ -18,6 +18,7 @@ export default defineConfig({
                 '/administration': 'http://localhost:3005',
                 '/legal': 'http://localhost:3006',
                 '/notification': 'http://localhost:3007',
+                '/business': 'http://localhost:3008',
                 '/speech': 'http://localhost:5000'
             }
         },

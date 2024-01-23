@@ -1,7 +1,7 @@
 {
   "name": "app",
   "private": true,
-  "version": "0.2.19",
+  "version": "0.2.22",
   "license": "Apache-2.0",
   "author": "David L Whitehurst",
   "scripts": {
