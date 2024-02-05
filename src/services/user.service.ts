@@ -22,7 +22,7 @@ import axios from 'axios';
 
 const USER_URL = import.meta.env.VITE_APP_BASEPATH + "/userauth/v1/"
 
-// app calling userauth and not as user/role
+// TODO - these services need to be further secured with OAuth2
 class UserService {
   getUser(ownerId: number) {
     return axios.get(USER_URL + 'users/' + ownerId);
@@ -30,6 +30,17 @@ class UserService {
 
   getAllUsers() {
     return axios.get(USER_URL + 'users');
+  }
+
+  getUserByEmail(email: string) {
+    return axios.get(USER_URL + 'email?avogadro=6021023&email=' + email);
+  }
+
+  updatePassword(id: number, password: string) {
+    const obj = {
+      password: password
+    }
+    return axios.patch(USER_URL + 'users/' + id + '?avogadro=6021023', obj);
   }
 }
 

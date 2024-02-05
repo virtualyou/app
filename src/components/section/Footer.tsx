@@ -13,12 +13,17 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
-formvalues.type.ts - Type for name, email for modal form prior to email invite
+Footer.tsx - Our Footer (component)
 @author David L Whitehurst
 
 */
+const Footer = () => {
+    return (
+        <footer className="container">
+            <p><img src="https://dlwhitehurst.com/vy.png" alt="brand icon" width="24"
+                    height="24"/> &copy; VirtualYou and David L Whitehurst 2024</p>
+        </footer>
+    );
+};
 
-export default interface InviteFormValues {
-     name: string;
-     email: string;
-}
+export default Footer;

@@ -13,12 +13,14 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
-formvalues.type.ts - Type for name, email for modal form prior to email invite
+passwordrenewformvalues.type.ts - Type for name, email for modal form prior to email invite
 @author David L Whitehurst
 
 */
 
-export default interface InviteFormValues {
-     name: string;
-     email: string;
+export default interface PasswordRenewFormValues {
+    email: string;
+    fullname: string;
+    username: string;
+    id:  number;
 }

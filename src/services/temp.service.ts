@@ -13,12 +13,20 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
-formvalues.type.ts - Type for name, email for modal form prior to email invite
+temp.service.ts - temp Service
 @author David L Whitehurst
 
 */
 
-export default interface InviteFormValues {
-     name: string;
-     email: string;
+import axios from 'axios';
+
+const USER_URL = import.meta.env.VITE_APP_BASEPATH + "/userauth/v1/"
+
+export class TempService {
+    getUserByEmail(email: string) {
+        console.log(USER_URL + 'email?avogadro=6021023&email=' + email);
+        return axios.get(USER_URL + 'email?avogadro=6021023&email=' + email);
+    }
 }
+
+//export default TempService;

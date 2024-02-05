@@ -19,7 +19,7 @@ user.type.ts - User type interface
 */
 
 export default interface User {
-    username: string | null,
+    username: string,
     fullname: string,
     email: string,
     password: string,

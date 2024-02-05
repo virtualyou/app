@@ -67,4 +67,18 @@ export async function keysMatchForMonitor(id: number, key: string): Promise<bool
         });
 }
 
+export function keysMatchForPasswordReset(key: string) {
+    let originalKey = '';
+    let retVal = false;
+    const mnemonic = "renew gift cigar foster dad plate idle nerve hungry human moral faith";
+    const md = forge.md.sha256.create();
+    md.update(mnemonic);
+    originalKey = md.digest().toHex();
+    console.log(originalKey);
+    if (originalKey === key) {
+        retVal=true;
+    }
+    return retVal
+}
+
 

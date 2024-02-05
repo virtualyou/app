@@ -21,9 +21,16 @@ mail.service.ts - AWS SES email service
 import InviteFormValues from "../types/formvalues.type";
 import axios from "axios";
 import authHeader from "./auth-header.ts";
-import { getCurrentUser, getAgentReturnLink, getMonitorReturnLink} from "../utility/email.utils.ts";
+import {
+    getCurrentUser,
+    getAgentReturnLink,
+    getMonitorReturnLink,
+    getPasswordRenewReturnLink
+} from "../utility/email.utils.ts";
+import PasswordRenewFormValues from "../types/passwordrenewformvalues.type.ts";
 
 const NOTIFICATION_URL = import.meta.env.VITE_APP_BASEPATH + "/notification/v1/owner/";
+const NOTIFICATION_URL2 = import.meta.env.VITE_APP_BASEPATH + "/notification/v1/";
 class MailService {
 
     // Send Agent Invitation Email
@@ -53,10 +60,46 @@ class MailService {
         const email = formData.email;
         const returnLink = getMonitorReturnLink();
         // axios POST to API
-        return axios.post(NOTIFICATION_URL + "monitor-invite", {
+        return axios.post(NOTIFICATION_URL2 + "monitor-invite", {
             name,
             email,
             owner,
+            returnLink
+        }, { headers: authHeader() })
+            .then(response => {
+                if (response.data) {
+                    console.log(response.data);
+                }
+            });
+    }
+
+    emailUsername(email: string, fullname: string, username: string) {
+        // axios POST to API
+        return axios.post(NOTIFICATION_URL2 + "username-recover?avogadro=6021023", {
+            email,
+            fullname,
+            username
+        }, { headers: authHeader() })
+            .then(response => {
+                if (response.data) {
+                    console.log(response.data);
+                }
+            });
+
+    }
+
+    emailPasswordReset(formData: PasswordRenewFormValues) {
+        const email = formData.email;
+        const fullname = formData.fullname;
+        const username = formData.username;
+        const id = formData.id;
+        const returnLink = getPasswordRenewReturnLink(id);
+
+        // axios POST to API
+        return axios.post(NOTIFICATION_URL2 + "password-renew?avogadro=6021023", {
+            email,
+            fullname,
+            username,
             returnLink
         }, { headers: authHeader() })
             .then(response => {

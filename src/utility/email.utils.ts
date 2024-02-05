@@ -31,6 +31,34 @@ export function getOwnerName() {
     return "TODO: Implement this";
 }
 
+export function getPasswordRenewReturnLink(id: number) {
+    let dkey = '';
+    if (id > 0) {
+        const agentMne = "renew gift cigar foster dad plate idle nerve hungry human moral faith";
+        const md = forge.md.sha256.create();
+        md.update(agentMne);
+        dkey = md.digest().toHex();
+        const currentDate = new Date();
+        const integerCurrent = Date.parse(currentDate.toString());
+        const integerPlusTen = integerCurrent + 600000; // add 10 minutes
+        return BASEPATH + "#/update-password?id=" + id + "&dkey=" + dkey + "&expire=" + integerPlusTen;
+    } else {
+        return "ERROR: bad link ... inform VirtualYou Administrator at me@dlwhitehurst.com";
+    }
+}
+
+export function isNotExpired(expiry: number) {
+    const currentDate = new Date();
+    const now = Date.parse(currentDate.toString());
+    console.log("expiry:" + expiry);
+    console.log("now:" + now);
+    let retVal = false;
+    if (expiry > now) {
+        retVal = true;
+    }
+    return retVal;
+}
+
 export function getAgentReturnLink() {
     let dkey = '';
     let id = getCurrentUser().id;

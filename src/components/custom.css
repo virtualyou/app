@@ -55,6 +55,19 @@
     margin-bottom: 10px;
 }
 
+.div-spctopbot2 {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.div-centertext1 {
+    text-align: center;
+}
+
+.div-bgGray1 {
+    background-color: #d5cece;
+}
+
 .div-smaller1 {
     font-size: smaller;
     margin-bottom: -10px;

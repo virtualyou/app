@@ -48,6 +48,9 @@ import TopAdministration from "./components/TopAdministration.tsx";
 import TopPersonal from "./components/TopPersonal.tsx";
 import Pricing from "./components/Pricing.tsx";
 import NeedDetails from "./components/details/Need.tsx";
+import RecoverUser from "./components/RecoverUser.tsx";
+import RenewPassword from "./components/RenewPassword.tsx";
+import UpdatePassword from "./components/UpdatePassword.tsx";
 
 interface Props {
     // Define the props that your component expects
@@ -226,6 +229,12 @@ class App extends Component<Props, State> {
                         <Route path="/legal" element={<TopLegal />} />
                         <Route path="/administration" element={<TopAdministration />} />
                         <Route path="/personal" element={<TopPersonal />} />
+
+                        {/* current work */}
+                        <Route path="/recoveruser" element={<RecoverUser />} />
+                        <Route path="/renewpassword" element={<RenewPassword />} />
+                        <Route path="/update-password" element={<UpdatePassword />} />
+
                     </Routes>
                 </div>
 

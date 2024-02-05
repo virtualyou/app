@@ -11,3 +11,7 @@
     height: 400px;
 }
 
+.div-scroll-200 {
+    overflow-y: scroll; /* or auto */
+    height: 200px;
+}
