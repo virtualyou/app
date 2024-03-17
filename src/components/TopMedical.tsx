@@ -18,7 +18,7 @@ TopMedical.tsx - All Medical page (component)
 
 */
 
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useState} from "react";
 import MedicalService from "../services/medical.service.ts";
 import CreatePrescription from "../types/createprescription.type.ts";
 import {Button, Form, Modal} from "react-bootstrap";
@@ -26,11 +26,8 @@ import PrescriptionDisplay from "./display/PrescriptionDisplay.tsx";
 import AuthService from "../services/auth.service.ts";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import 'regenerator-runtime/runtime';
-import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
 import "./custom.css";
 
-const RX_TALK = import.meta.env.VITE_APP_BASEPATH + "/speech/v1/assist/create/prescription"
 const TopMedical = () => {
     const [prescriptions, setPrescriptions] = useState([]);
     const [showModal, setShowModal] = useState(false);
@@ -38,8 +35,6 @@ const TopMedical = () => {
     const [writtenDate, setWrittenDate] = useState<Date | null>(null);
     const [filledDate, setFilledDate] = useState<Date | null>(null);
     const [expiresDate, setExpiresDate] = useState<Date | null>(null);
-    const [isListening, setIsListening] = useState(false);
-    const microphoneRef = useRef(null);
     const [tmpName, setTmpName] = useState('');
     const [tmpIdentNo, setTmpIdentNo] = useState('');
     const [tmpSize, setTmpSize] = useState('');
@@ -109,103 +104,7 @@ const TopMedical = () => {
         setRefreshRx(oldVal => oldVal +1);
     };
 
-// declare speech recognition
-    const commands = [
-        {
-            command: 'The name is *',
-            callback: (name: string) => setTmpName(name)
-        },
-        {
-            command: 'The ident number is *',
-            callback: (identNo: string) => setTmpIdentNo(identNo)
-        },
-        {
-            command: 'The size is *',
-            callback: (size: string) => setTmpSize(size)
-        },
-        {
-            command: 'The form is *',
-            callback: (form: string) => setTmpForm(form)
-        },
-        {
-            command: 'The prescription unit is *',
-            callback: (rxUnit: string) => setTmpRxUnit(rxUnit)
-        },
-        {
-            command: 'The quantity is *',
-            callback: (quantity: string) => setTmpQuantity(quantity)
-        },
-        {
-            command: 'The pharmacy is *',
-            callback: (pharmacy: string) => setTmpPharmacy(pharmacy)
-        },
-        {
-            command: 'The pharmacy phone is *',
-            callback: (pharmacyPhone: string) => setTmpPharmacyPhone(pharmacyPhone)
-        },
-        {
-            command: 'The prescription was written by *',
-            callback: (writtenBy: string) => setTmpWrittenBy(writtenBy)
-        },
-        {
-            command: 'The refill note is *',
-            callback: (refillNote: string) => setTmpRefillNote(refillNote)
-        },
-        {
-            command: 'The prescription was manufactured by *',
-            callback: (manufacturedBy: string) => setTmpManufacturedBy(manufacturedBy)
-        },
-        {
-            command: 'The note is *',
-            callback: (note: string) => setTmpNote(note)
-        },
-    ]
-    // removing transcript
-    const { resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition({commands});
-
-    if (!browserSupportsSpeechRecognition) {
-        return (
-            <div className="mircophone-container">
-                Browser does not Support Speech Recognition.
-            </div>
-        );
-    }
-
-    const playQuip = async () => {
-        const audio = new Audio(RX_TALK);
-        await audio.play(); // must be asynchronous
-        audio.onended = function() {
-            setShowModal(true);
-        };
-    }
-
-    const startListener = async () => {
-        flushTmpState();
-        resetTranscript();
-        setIsListening(true);
-        // @ts-ignore
-        microphoneRef.current.classList.add("listening");
-        try {
-            await SpeechRecognition.startListening({
-                continuous: true,
-            });
-        } catch (error) {
-            console.error(error);
-        }
-    };
-    const stopListener = async () => {
-        setIsListening(false);
-        // @ts-ignore
-        microphoneRef.current.classList.remove("listening");
-        try {
-            await SpeechRecognition.stopListening();
-        } catch (error) {
-            console.error(error);
-        }
-    };
     const handleReset = async () => {
-        await stopListener();
-        resetTranscript();
         flushTmpState();
     };
 
@@ -225,6 +124,10 @@ const TopMedical = () => {
     }
     const closeModal = () => {
         return setShowModal(false);
+    }
+
+    const goModal = () => {
+        return setShowModal(true);
     }
 
     useEffect(() => {
@@ -247,18 +150,10 @@ const TopMedical = () => {
                 <p>This is where we work with our health and medical needs.</p>
                 <h3 className="font-weight-light">Prescriptions
                     {user.roles.includes(("ROLE_MONITOR")) ? <meta/> :
-                        <Button className="spacial-button" variant="primary" onClick={playQuip}>New</Button>}</h3>
-                <Modal show={showModal} onHide={closeModal} ref={microphoneRef} onShow={startListener}>
+                        <Button className="spacial-button" variant="primary" onClick={goModal}>New</Button>}</h3>
+                <Modal show={showModal} onHide={closeModal} >
                     <Modal.Header closeButton>
                         <Modal.Title>New Prescription</Modal.Title>
-                        {isListening ? (
-                            <div className="led-green" ref={microphoneRef} onClick={stopListener}>
-                            </div>
-                        ) : (
-                            <div className="led-red" ref={microphoneRef} onClick={startListener}>
-                            </div>
-                        )}
-                        {/* <div>{transcript}</div> */}
                     </Modal.Header>
                     <Modal.Body>
                         <Form onSubmit={handleSubmit}>

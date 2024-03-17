@@ -18,25 +18,22 @@ TopLegal.tsx - All Legal page (component)
 
 */
 
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useState} from "react";
 import LegalService from "../services/legal.service.ts";
 import CreateDoc from "../types/createdoc.type.ts";
 import {Button, Form, Modal} from "react-bootstrap";
 import DocDisplay from "./display/DocDisplay.tsx";
 import AuthService from "../services/auth.service.ts";
-import 'regenerator-runtime/runtime';
-import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
 import "./custom.css";
 
-const DOC_TALK = import.meta.env.VITE_APP_BASEPATH + "/speech/v1/assist/create/doc"
 const TopLegal = () => {
     const [docs, setDocs] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [refreshDoc, setRefreshDoc] = useState(0);
-    const [isListening, setIsListening] = useState(false);
-    const microphoneRef = useRef(null);
     const [tmpName, setTmpName] = useState('');
     const [tmpType, setTmpType] = useState('');
+    const [tmpLink, setTmpLink] = useState('');
+
 
     // create popup modal
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -59,72 +56,21 @@ const TopLegal = () => {
         setRefreshDoc(oldVal => oldVal + 1);
     };
 
-// declare speech recognition
-    const commands = [
-        {
-            command: 'The name is *',
-            callback: (name: string) => setTmpName(name)
-        },
-        {
-            command: 'The type is *',
-            callback: (type: string) => setTmpType(type)
-        },
-    ]
-    // removing transcript
-    const { resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition({commands});
-
-    if (!browserSupportsSpeechRecognition) {
-        return (
-            <div className="mircophone-container">
-                Browser does not Support Speech Recognition.
-            </div>
-        );
-    }
-
-    const playQuip = async () => {
-        const audio = new Audio(DOC_TALK);
-        await audio.play(); // must be asynchronous
-        audio.onended = function() {
-            setShowModal(true);
-        };
-    }
-
-    const startListener = async () => {
-        flushTmpState();
-        resetTranscript();
-        setIsListening(true);
-        // @ts-ignore
-        microphoneRef.current.classList.add("listening");
-        try {
-            await SpeechRecognition.startListening({
-                continuous: true,
-            });
-        } catch (error) {
-            console.error(error);
-        }
-    };
-    const stopListener = async () => {
-        setIsListening(false);
-        // @ts-ignore
-        microphoneRef.current.classList.remove("listening");
-        try {
-            await SpeechRecognition.stopListening();
-        } catch (error) {
-            console.error(error);
-        }
-    };
     const handleReset = async () => {
-        await stopListener();
-        resetTranscript();
         flushTmpState();
     };
 
     const flushTmpState = () => {
         setTmpName('');
         setTmpType('');
+        setTmpLink('');
     }
     const closeModal = () => {
         return setShowModal(false);
+    }
+
+    const goModal = () => {
+        return setShowModal(true);
     }
 
     useEffect(() => {
@@ -147,18 +93,10 @@ const TopLegal = () => {
                 <p>This is where we keep our legal documents.</p>
                 <h3 className="font-weight-light">Legal Docs
                     {user.roles.includes(("ROLE_MONITOR")) ? <meta/> :
-                        <Button className="spacial-button" variant="primary" onClick={playQuip}>New</Button>}</h3>
-                <Modal show={showModal} onHide={closeModal} ref={microphoneRef} onShow={startListener}>
+                        <Button className="spacial-button" variant="primary" onClick={goModal}>New</Button>}</h3>
+                <Modal show={showModal} onHide={closeModal} >
                     <Modal.Header closeButton>
                         <Modal.Title>New Legal Document</Modal.Title>
-                        {isListening ? (
-                            <div className="led-green" ref={microphoneRef} onClick={stopListener}>
-                            </div>
-                        ) : (
-                            <div className="led-red" ref={microphoneRef} onClick={startListener}>
-                            </div>
-                        )}
-                        {/* <div>{transcript}</div> */}
                     </Modal.Header>
                     <Modal.Body>
                         <Form onSubmit={handleSubmit}>
@@ -174,7 +112,7 @@ const TopLegal = () => {
                             </Form.Group>
                             <Form.Group>
                                 <Form.Label><b>Link</b></Form.Label>
-                                <Form.Control type="text" placeholder="Enter link" id="link" name="link"
+                                <Form.Control type="text" placeholder="Enter link" defaultValue={tmpLink} id="link" name="link"
                                               title="We cannot take this verbally. We suggest you paste the link here."/>
                             </Form.Group>
                             <Button className="buttonMargin" variant="primary" type="submit">

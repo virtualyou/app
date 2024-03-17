@@ -26,6 +26,7 @@ import { Link } from 'react-router-dom';
 type Data = {
     id: number;
     name: string;
+    size: string;
     rxUnit: string;
     note: string;
     item: object;
@@ -44,6 +45,7 @@ const PrescriptionDisplay: React.FC<Props> = ({ data }) => {
             <tr>
                 <th>Id</th>
                 <th>Name</th>
+                <th>RxAmt</th>
                 <th>RxUnit</th>
                 <th>Note</th>
             </tr>
@@ -53,6 +55,7 @@ const PrescriptionDisplay: React.FC<Props> = ({ data }) => {
                 <tr key={index}>
                     <td><Link to={`/prescriptions?id=${item.id}`}>{item.id}</Link></td>
                     <td>{item.name}</td>
+                    <td>{item.size}</td>
                     <td>{item.rxUnit}</td>
                     <td>{item.note}</td>
                 </tr>

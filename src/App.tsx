@@ -116,7 +116,7 @@ class App extends Component<Props, State> {
             <div>
                 <nav className="navbar navbar-expand navbar-dark bg-dark">
                     <Link to={"/"} className="navbar-brand">
-                        <img src="https://dlwhitehurst.com/vy.png" alt="brand icon" width="32" height="32"/> VirtualYou
+                        <img src="https://dlwhitehurst.com/vy.png" alt="brand icon" width="32" height="32"/> VirtualYouPlan
                     </Link>
                     <div className="navbar-nav mr-auto">
                         <li className="nav-item">

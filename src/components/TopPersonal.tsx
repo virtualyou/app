@@ -18,23 +18,18 @@ TopPersonal.tsx - All Personal page (component)
 
 */
 
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useState} from "react";
 import CreatePeep from "../types/createpeep.type.ts";
 import PersonalService from "../services/personal.service.ts";
 import {Button, Form, Modal} from "react-bootstrap";
 import PeepDisplay from "./display/PeepDisplay.tsx";
 import AuthService from "../services/auth.service.ts";
-import 'regenerator-runtime/runtime';
-import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
 import "./custom.css";
 
-const PEEP_TALK = import.meta.env.VITE_APP_BASEPATH + "/speech/v1/assist/create/contact"
 const TopPersonal = () => {
     const [peeps, setPeeps] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [refreshPeep, setRefreshPeep] = useState(0);
-    const [isListening, setIsListening] = useState(false);
-    const microphoneRef = useRef(null);
     const [tmpName, setTmpName] = useState('');
     const [tmpPhone1, setTmpPhone1] = useState('');
     const [tmpPhone2, setTmpPhone2] = useState('');
@@ -42,81 +37,8 @@ const TopPersonal = () => {
     const [tmpAddress, setTmpAddress] = useState('');
     const [tmpNote, setTmpNote] = useState('');
 
-// declare speech recognition
-    const commands = [
-        {
-            command: 'The name is *',
-            callback: (name: string) => setTmpName(name)
-        },
-        {
-            command: 'The phone number one is *',
-            callback: (phone1: string) => setTmpPhone1(phone1)
-        },
-        {
-            command: 'The phone number two is *',
-            callback: (phone2: string) => setTmpPhone2(phone2)
-        },
-        {
-            command: 'The email is *',
-            callback: (email: string) => setTmpEmail(email)
-        },
-        {
-            command: 'The address is *',
-            callback: (address: string) => setTmpAddress(address)
-        },
-        {
-            command: 'The note is *',
-            callback: (note: string) => setTmpNote(note)
-        },
-    ]
-    // removing transcript
-    const { resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition({commands});
-
-    if (!browserSupportsSpeechRecognition) {
-        return (
-            <div className="mircophone-container">
-                Browser does not Support Speech Recognition.
-            </div>
-        );
-    }
-
-    const playQuip = async () => {
-        const audio = new Audio(PEEP_TALK);
-        await audio.play(); // must be asynchronous
-        audio.onended = function() {
-            setShowModal(true);
-        };
-    }
-
-    const startListener = async () => {
-        flushTmpState();
-        resetTranscript();
-        setIsListening(true);
-        // @ts-ignore
-        microphoneRef.current.classList.add("listening");
-        try {
-            await SpeechRecognition.startListening({
-                continuous: true,
-            });
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    const stopListener = async () => {
-        setIsListening(false);
-        // @ts-ignore
-        microphoneRef.current.classList.remove("listening");
-        try {
-            await SpeechRecognition.stopListening();
-        } catch (error) {
-            console.error(error);
-        }
-    };
 
     const handleReset = async () => {
-        await stopListener();
-        resetTranscript();
         flushTmpState();
     };
 
@@ -130,6 +52,10 @@ const TopPersonal = () => {
     }
     const closeModal = () => {
         return setShowModal(false);
+    }
+
+    const goModal = () => {
+        return setShowModal(true);
     }
 
     // create popup modal
@@ -176,19 +102,11 @@ const TopPersonal = () => {
                 <h3 className="font-weight-light">Contacts</h3>
 
                     {user.roles.includes(("ROLE_MONITOR")) ? <meta/> :
-                        <Button className="spacial-button" variant="primary" onClick={playQuip}>New</Button>}
+                        <Button className="spacial-button" variant="primary" onClick={goModal}>New</Button>}
 
-                    <Modal show={showModal} onHide={closeModal} ref={microphoneRef} onShow={startListener}>
+                    <Modal show={showModal} onHide={closeModal} >
                     <Modal.Header closeButton>
                         <Modal.Title>New Contact</Modal.Title>
-                        {isListening ? (
-                            <div className="led-green" ref={microphoneRef} onClick={stopListener}>
-                            </div>
-                        ) : (
-                            <div className="led-red" ref={microphoneRef} onClick={startListener}>
-                            </div>
-                        )}
-                        {/* <div>{transcript}</div> */}
                     </Modal.Header>
                     <Modal.Body>
                         <Form onSubmit={handleSubmit}>

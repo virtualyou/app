@@ -26,6 +26,7 @@ import { Link } from 'react-router-dom';
 type Data = {
     id: number;
     name: string;
+    assetType: string;
     balance: string;
     item: object;
     index: number;
@@ -43,6 +44,7 @@ const AssetDisplay: React.FC<Props> = ({ data }) => {
             <tr>
                 <th>Id</th>
                 <th>Name</th>
+                <th>Type</th>
                 <th>Balance</th>
             </tr>
             </thead>
@@ -51,6 +53,7 @@ const AssetDisplay: React.FC<Props> = ({ data }) => {
                 <tr key={index}>
                     <td><Link to={`/assets?id=${item.id}`}>{item.id}</Link></td>
                     <td>{item.name}</td>
+                    <td>{item.assetType}</td>
                     <td>{item.balance}</td>
                 </tr>
             ))}

@@ -22,18 +22,14 @@ import FinancialService from "../services/financial.service.ts";
 import AssetDisplay from "./display/AssetDisplay.tsx";
 import DebtDisplay from "./display/DebtDisplay.tsx";
 import {Button, Form, Modal} from "react-bootstrap";
-import React, {useState, useEffect, useRef} from "react";
+import React, {useState, useEffect} from "react";
 import CreateAsset from "../types/createasset.type.ts";
 import CreateDebt from "../types/createdebt.type.ts";
 import AuthService from "../services/auth.service.ts";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import 'regenerator-runtime/runtime';
-import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
 import "./custom.css";
 
-const ASSET_TALK = import.meta.env.VITE_APP_BASEPATH + "/speech/v1/assist/create/asset"
-const DEBT_TALK = import.meta.env.VITE_APP_BASEPATH + "/speech/v1/assist/create/debt"
 const TopFinancial = () => {
     const [assets, setAssets] = useState([]);
     const [debts, setDebts] = useState([]);
@@ -42,8 +38,6 @@ const TopFinancial = () => {
     const [refreshAsset, setRefreshAsset] = useState(0);
     const [refreshDebt, setRefreshDebt] = useState(0);
     const [dueDate, setDueDate] = useState<Date | null>(null);
-    const [isListening, setIsListening] = useState(false);
-    const microphoneRef = useRef(null);
     const [tmpAssetName, setTmpAssetName] = useState('');
     const [tmpDebtName, setTmpDebtName] = useState('');
     const [tmpAssetType, setTmpAssetType] = useState('');
@@ -135,153 +129,8 @@ const TopFinancial = () => {
         setRefreshDebt(oldVal => oldVal +1);
     };
 
-    // declare speech recognition
-    const commands = [
-        {
-            command: 'The asset name is *',
-            callback: (name: string) => setTmpAssetName(name)
-        },
-        {
-            command: 'The debt name is *',
-            callback: (name: string) => setTmpDebtName(name)
-        },
-        {
-            command: 'The asset type is *',
-            callback: (assettype: string) => setTmpAssetType(assettype)
-        },
-        {
-            command: 'The debt type is *',
-            callback: (debttype: string) => setTmpDebtType(debttype)
-        },
-        {
-            command: 'The asset account number is *',
-            callback: (accountno: string) => setTmpAssetAccountNo(accountno)
-        },
-        {
-            command: 'The debt account number is *',
-            callback: (accountno: string) => setTmpDebtAccountNo(accountno)
-        },
-        {
-            command: 'The asset website is *',
-            callback: (website: string) => setTmpAssetWebsite(website)
-        },
-        {
-            command: 'The debt website is *',
-            callback: (website: string) => setTmpDebtWebsite(website)
-        },
-        {
-            command: 'The asset website user is *',
-            callback: (webuser: string) => setTmpAssetWebsiteUser(webuser)
-        },
-        {
-            command: 'The debt website user is *',
-            callback: (webuser: string) => setTmpDebtWebsiteUser(webuser)
-        },
-        {
-            command: 'The asset website password is *',
-            callback: (webpass: string) => setTmpAssetWebsitePassword(webpass)
-        },
-        {
-            command: 'The debt website password is *',
-            callback: (webpass: string) => setTmpDebtWebsitePassword(webpass)
-        },
-        {
-            command: 'The asset holding company is *',
-            callback: (hcomp: string) => setTmpAssetHoldingCompany(hcomp)
-        },
-        {
-            command: 'The debt holding company is *',
-            callback: (hcomp: string) => setTmpDebtHoldingCompany(hcomp)
-        },
-        {
-            command: 'The asset holding company address is *',
-            callback: (hcompaddr: string) => setTmpAssetHoldingCompanyAddress(hcompaddr)
-        },
-        {
-            command: 'The debt holding company address is *',
-            callback: (hcompaddr: string) => setTmpDebtHoldingCompanyAddress(hcompaddr)
-        },
-        {
-            command: 'The asset holding company phone is *',
-            callback: (hcompphone: string) => setTmpAssetHoldingCompanyPhone(hcompphone)
-        },
-        {
-            command: 'The debt holding company phone is *',
-            callback: (hcompphone: string) => setTmpDebtHoldingCompanyPhone(hcompphone)
-        },
-        {
-            command: 'The asset balance is *',
-            callback: (balance: string) => setTmpAssetBalance(balance)
-        },
-        {
-            command: 'The debt balance is *',
-            callback: (balance: string) => setTmpDebtBalance(balance)
-        },
-        {
-            command: 'The debt frequency is *',
-            callback: (freq: string) => setTmpDebtFrequency(freq)
-        },
-        {
-            command: 'The debt payment is *',
-            callback: (payment: string) => setTmpDebtPayment(payment)
-        },
 
-    ]
-    // removing transcript
-    const { resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition({commands});
-
-    if (!browserSupportsSpeechRecognition) {
-        return (
-            <div className="mircophone-container">
-                Browser does not Support Speech Recognition.
-            </div>
-        );
-    }
-
-    const playAssetQuip = async () => {
-        const audio = new Audio(ASSET_TALK);
-        await audio.play(); // must be asynchronous
-        audio.onended = function() {
-            setShowAssetModal(true);
-        };
-    }
-
-    const playDebtQuip = async () => {
-        const audio = new Audio(DEBT_TALK);
-        await audio.play(); // must be asynchronous
-        audio.onended = function() {
-            setShowDebtModal(true);
-        };
-    }
-
-    // only one listener per page
-    const startListener = async () => {
-        flushTmpState();
-        resetTranscript();
-        setIsListening(true);
-        // @ts-ignore
-        microphoneRef.current.classList.add("listening")
-        try {
-            await SpeechRecognition.startListening({
-                continuous: true,
-            });
-        } catch (error) {
-            console.error(error);
-        }
-    };
-    const stopListener = async () => {
-        setIsListening(false);
-        // @ts-ignore
-        microphoneRef.current.classList.remove("listening");
-        try {
-            await SpeechRecognition.stopListening();
-        } catch (error) {
-            console.error(error);
-        }
-    };
     const handleReset = async () => {
-        await stopListener();
-        resetTranscript();
         flushTmpState();
     };
 
@@ -318,6 +167,14 @@ const TopFinancial = () => {
         return setShowDebtModal(false);
     }
 
+    const goAssetModal = () => {
+        return setShowAssetModal(true);
+    }
+
+    const goDebtModal = () => {
+        return setShowDebtModal(true);
+    }
+
     useEffect(() => {
         FinancialService.getAssets()
             .then((response) => {
@@ -345,18 +202,10 @@ const TopFinancial = () => {
                 <p>This is where we work with the financials.</p>
                 <h3 className="font-weight-light">Assets
                     {user.roles.includes(("ROLE_MONITOR")) ? <meta/> :
-                        <Button className="spacial-button" variant="primary" onClick={playAssetQuip}>New</Button>}</h3>
-                <Modal show={showAssetModal} onHide={closeAssetModal} ref={microphoneRef} onShow={startListener}>
+                        <Button className="spacial-button" variant="primary" onClick={goAssetModal}>New</Button>}</h3>
+                <Modal show={showAssetModal} onHide={closeAssetModal} >
                     <Modal.Header closeButton>
                         <Modal.Title>New Asset</Modal.Title>
-                        {isListening ? (
-                            <div className="led-green" ref={microphoneRef} onClick={stopListener}>
-                            </div>
-                        ) : (
-                            <div className="led-red" ref={microphoneRef} onClick={startListener}>
-                            </div>
-                        )}
-                        {/* <div>{transcript}</div> */}
                     </Modal.Header>
                     <Modal.Body>
                         <Form onSubmit={handleAssetSubmit}>
@@ -416,18 +265,10 @@ const TopFinancial = () => {
 
                 <h3 className="font-weight-light">Debts
                     {user.roles.includes(("ROLE_MONITOR")) ? <meta/> :
-                        <Button className="spacial-button" variant="primary" onClick={playDebtQuip}>New</Button>}</h3>
-                <Modal show={showDebtModal} onHide={closeDebtModal} ref={microphoneRef} onShow={startListener}>
+                        <Button className="spacial-button" variant="primary" onClick={goDebtModal}>New</Button>}</h3>
+                <Modal show={showDebtModal} onHide={closeDebtModal} >
                     <Modal.Header closeButton>
                         <Modal.Title>New Debt</Modal.Title>
-                        {isListening ? (
-                            <div className="led-green" ref={microphoneRef} onClick={stopListener}>
-                            </div>
-                        ) : (
-                            <div className="led-red" ref={microphoneRef} onClick={startListener}>
-                            </div>
-                        )}
-                        {/* <div>{transcript}</div> */}
                     </Modal.Header>
                     <Modal.Body>
                         <Form onSubmit={handleDebtSubmit}>

@@ -18,7 +18,7 @@ TopAdministration.tsx - All Administration page (component)
 
 */
 
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Button, Form, Modal} from "react-bootstrap";
 import AdministrationService from "../services/administration.service.ts";
 import CreateTask from "../types/createtask.type.ts";
@@ -26,14 +26,10 @@ import TaskDisplay from "./display/TaskDisplay.tsx";
 import AuthService from "../services/auth.service.ts";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import 'regenerator-runtime/runtime';
-import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
 import "./custom.css";
 import CreateNeed from "../types/createneed.type.ts";
 import NeedDisplay from "./display/NeedDisplay.tsx";
 
-const TASK_TALK = import.meta.env.VITE_APP_BASEPATH + "/speech/v1/assist/create/task"
-const NEED_TALK = import.meta.env.VITE_APP_BASEPATH + "/speech/v1/assist/create/need"
 
 const TopAdministration = () => {
     const [tasks, setTasks] = useState([]);
@@ -46,9 +42,6 @@ const TopAdministration = () => {
 
     const [dueDate, setDueDate] = useState<Date | null>(null);
     const [completeDate, setCompleteDate] = useState<Date | null>(null);
-
-    const [isListening, setIsListening] = useState(false);
-    const microphoneRef = useRef(null);
 
     const [tmpTaskName, setTmpTaskName] = useState('');
     const [tmpTaskType, setTmpTaskType] = useState('');
@@ -129,106 +122,11 @@ const TopAdministration = () => {
         setRefreshNeeds(oldVal => oldVal +1);
     };
 
-
-// declare speech recognition
-    const commands = [
-        {
-            command: 'The task name is *',
-            callback: (name: string) => setTmpTaskName(name)
-        },
-        {
-            command: 'The task type is *',
-            callback: (type: string) => setTmpTaskType(type)
-        },
-        {
-            command: 'The task priority is *',
-            callback: (priority: string) => setTmpTaskPriority(priority)
-        },
-        {
-            command: 'The task trigger is *',
-            callback: (trigger: string) => setTmpTaskTrigger(trigger)
-        },
-        {
-            command: 'The task note is *',
-            callback: (note: string) => setTmpTaskNote(note)
-        },
-        {
-            command: 'The need name is *',
-            callback: (name: string) => setTmpNeedName(name)
-        },
-        {
-            command: 'The need quantity is *',
-            callback: (quantity: number) => setTmpNeedQuantity(quantity)
-        },
-        {
-            command: 'The need unit is *',
-            callback: (unit: string) => setTmpNeedUnit(unit)
-        },
-        {
-            command: 'The need urgency is *',
-            callback: (urgency: string) => setTmpNeedUrgency(urgency)
-        },
-        {
-            command: 'The need note is *',
-            callback: (note: string) => setTmpNeedNote(note)
-        },
-
-    ]
-
-    // removing transcript
-    const { resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition({commands});
-
-    if (!browserSupportsSpeechRecognition) {
-        return (
-            <div className="mircophone-container">
-                Browser does not Support Speech Recognition.
-            </div>
-        );
+    const goTaskModal = () => {
+        return setShowTaskModal(true);
     }
 
-    const playTaskQuip = async () => {
-        const audio = new Audio(TASK_TALK);
-        await audio.play(); // must be asynchronous
-        audio.onended = function() {
-            setShowTaskModal(true);
-        };
-    }
-
-    const playNeedQuip = async () => {
-        const audio = new Audio(NEED_TALK);
-        await audio.play(); // must be asynchronous
-        audio.onended = function() {
-            setShowNeedModal(true);
-        };
-    }
-
-    const startTaskListener = async () => {
-        flushTaskTmpState();
-        resetTranscript();
-        setIsListening(true);
-        // @ts-ignore
-        microphoneRef.current.classList.add("listening");
-        try {
-            await SpeechRecognition.startListening({
-                continuous: true,
-            });
-        } catch (error) {
-            console.error(error);
-        }
-    };
-    const stopTaskListener = async () => {
-        setIsListening(false);
-        // @ts-ignore
-        microphoneRef.current.classList.remove("listening");
-        try {
-            await SpeechRecognition.stopListening();
-        } catch (error) {
-            console.error(error);
-        }
-    };
     const handleTaskReset = async() => {
-        await stopTaskListener();
-        resetTranscript();
         flushTaskTmpState();
     };
 
@@ -241,33 +139,10 @@ const TopAdministration = () => {
     }
 
 // needs
-    const startNeedListener = async () => {
-        flushNeedTmpState();
-        resetTranscript();
-        setIsListening(true);
-        // @ts-ignore
-        microphoneRef.current.classList.add("listening");
-        try {
-            await SpeechRecognition.startListening({
-                continuous: true,
-            });
-        } catch (error) {
-            console.error(error);
-        }
-    };
-    const stopNeedListener = async () => {
-        setIsListening(false);
-        // @ts-ignore
-        microphoneRef.current.classList.remove("listening");
-        try {
-            await SpeechRecognition.stopListening();
-        } catch (error) {
-            console.error(error);
-        }
-    };
+    const goNewModal = () => {
+        return setShowNeedModal(true);
+    }
     const handleNeedReset = async() => {
-        await stopNeedListener();
-        resetTranscript();
         flushNeedTmpState();
     };
     const flushNeedTmpState = () => {
@@ -275,7 +150,7 @@ const TopAdministration = () => {
         setTmpNeedQuantity(0);
         setTmpNeedUnit('');
         setTmpNeedUrgency('');
-        setTmpTaskNote('');
+        setTmpNeedNote('');
     }
     const closeTaskModal = () => {
         return setShowTaskModal(false);
@@ -309,31 +184,26 @@ const TopAdministration = () => {
             <header className="jumbotron">
                 <h1 className="display-4">Administration</h1>
                 <p>This is where we attempt to administrate ourselves.</p>
+                {/* {user.roles.includes(("ROLE_MONITOR")) ? <meta/> : */}
                 <h3 className="font-weight-light">Tasks
                     {user.roles.includes(("ROLE_MONITOR")) ? <meta/> :
-                        <Button className="spacial-button" variant="primary" onClick={playTaskQuip}>New</Button>}</h3>
-                <Modal show={showTaskModal} onHide={closeTaskModal} ref={microphoneRef} onShow={startTaskListener}>
+                        <Button className="spacial-button" variant="primary" onClick={goTaskModal}>New</Button>}</h3>
+                <Modal show={showTaskModal} onHide={closeTaskModal}>
                     <Modal.Header closeButton>
                         <Modal.Title>New Task</Modal.Title>
-                        {isListening ? (
-                            <div className="led-green" ref={microphoneRef} onClick={stopTaskListener}>
-                            </div>
-                        ) : (
-                            <div className="led-red" ref={microphoneRef} onClick={startTaskListener}>
-                            </div>
-                        )}
-                        {/* <div>{transcript}</div> */}
                     </Modal.Header>
                     <Modal.Body>
                         <Form onSubmit={handleTaskSubmit}>
                             <Form.Group>
                                 <Form.Label><b>Name</b></Form.Label>
-                                <Form.Control type="text" placeholder="Enter name" defaultValue={tmpTaskName} id="taskName"
+                                <Form.Control type="text" placeholder="Enter name" defaultValue={tmpTaskName}
+                                              id="taskName"
                                               name="taskName"/>
                             </Form.Group>
                             <Form.Group>
                                 <Form.Label><b>Type</b></Form.Label>
-                                <Form.Control type="text" placeholder="Enter type" defaultValue={tmpTaskType} id="taskType"
+                                <Form.Control type="text" placeholder="Enter type" defaultValue={tmpTaskType}
+                                              id="taskType"
                                               name="taskType"/>
                             </Form.Group>
                             <Form.Group>
@@ -384,31 +254,27 @@ const TopAdministration = () => {
                     </Modal.Body>
                 </Modal>
                 <TaskDisplay data={tasks}/>
+                {/* {user.roles.includes(("ROLE_MONITOR")) ? <meta/> : */}
                 <h3 className="font-weight-light">Needs
                     {user.roles.includes(("ROLE_MONITOR")) ? <meta/> :
-                        <Button className="spacial-button" variant="primary" onClick={playNeedQuip}>New</Button>}</h3>
-                <Modal show={showNeedModal} onHide={closeNeedModal} ref={microphoneRef} onShow={startNeedListener}>
+                        <Button className="spacial-button" variant="primary" onClick={goNewModal}>New</Button>}</h3>
+
+                <Modal show={showNeedModal} onHide={closeNeedModal}>
                     <Modal.Header closeButton>
                         <Modal.Title>New Need</Modal.Title>
-                        {isListening ? (
-                            <div className="led-green" ref={microphoneRef} onClick={stopNeedListener}>
-                            </div>
-                        ) : (
-                            <div className="led-red" ref={microphoneRef} onClick={startNeedListener}>
-                            </div>
-                        )}
-                        {/* <div>{transcript}</div> */}
                     </Modal.Header>
                     <Modal.Body>
                         <Form onSubmit={handleNeedSubmit}>
                             <Form.Group>
                                 <Form.Label><b>Name</b></Form.Label>
-                                <Form.Control type="text" placeholder="Enter name" defaultValue={tmpNeedName} id="needName"
+                                <Form.Control type="text" placeholder="Enter name" defaultValue={tmpNeedName}
+                                              id="needName"
                                               name="needName"/>
                             </Form.Group>
                             <Form.Group>
                                 <Form.Label><b>Quantity</b></Form.Label>
-                                <Form.Control type="text" placeholder="Enter quantity" defaultValue={tmpNeedQuantity} id="needQuantity"
+                                <Form.Control type="text" placeholder="Enter quantity" defaultValue={tmpNeedQuantity}
+                                              id="needQuantity"
                                               name="needQuantity"/>
                             </Form.Group>
                             <Form.Group>
@@ -423,7 +289,8 @@ const TopAdministration = () => {
                             </Form.Group>
                             <Form.Group>
                                 <Form.Label><b>Note</b></Form.Label>
-                                <Form.Control type="text" placeholder="Enter note" defaultValue={tmpNeedNote} id="needNote"
+                                <Form.Control type="text" placeholder="Enter note" defaultValue={tmpNeedNote}
+                                              id="needNote"
                                               name="needNote"/>
                             </Form.Group>
                             <Button className="buttonMargin" variant="primary" type="submit">
